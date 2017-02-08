@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from 'fs';
 import stripJsonComments from 'strip-json-comments';
 import isPlainObject from 'is-plain-object';
 import parseJSON from 'parse-json-pretty';
-import getPaths from '../config/paths';
+import getPaths from './paths';
 
 require('./registerBabel');
 

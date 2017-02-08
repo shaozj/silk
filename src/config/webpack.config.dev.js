@@ -5,7 +5,7 @@ import webpack from 'webpack';
 import fs from 'fs';
 import WatchMissingNodeModulesPlugin from 'react-dev-utils/WatchMissingNodeModulesPlugin';
 import SystemBellWebpackPlugin from 'system-bell-webpack-plugin';
-import getPaths from './paths';
+import getPaths from '../utils/paths';
 import getEntry from '../utils/getEntry';
 import getTheme from '../utils/getTheme';
 import getCSSLoaders from '../utils/getCSSLoaders';

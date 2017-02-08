@@ -1,5 +1,5 @@
 'use strict';
-import getPaths from '../config/paths';
+import getPaths from './paths';
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 function generateHtmls(entry) {

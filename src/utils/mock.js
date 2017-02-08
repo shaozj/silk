@@ -2,7 +2,7 @@ import fs from 'fs';
 import assert from 'assert';
 import chokidar from 'chokidar';
 import chalk from 'chalk';
-import getPaths from '../config/paths';
+import getPaths from './paths';
 
 let error = null;
 const CONFIG_FILE = '.roadhogrc.mock.js';

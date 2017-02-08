@@ -6,7 +6,7 @@ import { sync as gzipSize } from 'gzip-size';
 import webpack from 'webpack';
 import recursive from 'recursive-readdir';
 import stripAnsi from 'strip-ansi';
-import getPaths from './config/paths';
+import getPaths from './utils/paths';
 import getConfig from './utils/getConfig';
 import applyWebpackConfig, { warnIfExists } from './utils/applyWebpackConfig';
 
