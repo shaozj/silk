@@ -3,6 +3,8 @@
 const chalk = require('chalk');
 const spawn = require('cross-spawn');
 const os = require('os');
+require('shelljs/global');
+var program = require('commander');
 
 const script = process.argv[2];
 const args = process.argv.slice(3);
@@ -27,24 +29,67 @@ if (((major * 10) + (minor * 1)) < 65) {
 
 require('atool-monitor').emit();
 
-var result; // eslint-disable-line
+var result;
 
-switch (script) {
-  case '-v':
-  case '--version':
-    console.log(require('../package.json').version);
-    break;
-  case 'build':
-  case 'server':
-  case 'test':
+program
+  .version(require('../package.json').version);
+
+program
+  .command('server')
+  .alias('s')
+  .description('start a develop server')
+  .action(function () {
     result = spawn.sync(
       'node',
       [require.resolve(`../lib/${script}`)].concat(args),
-      { stdio: 'inherit' }  // eslint-disable-line
+      { stdio: 'inherit' }
     );
     process.exit(result.status);
-    break;
-  default:
-    console.log(`Unknown script ${chalk.cyan(script)}.`);
-    break;
-}
+  });
+
+program
+  .command('build')
+  .alias('b')
+  .description('build code to build file')
+  .action(function () {
+    result = spawn.sync(
+      'node',
+      [require.resolve(`../lib/${script}`)].concat(args),
+      { stdio: 'inherit' }
+    );
+    process.exit(result.status);
+  });
+
+program
+  .command('test')
+  .description('test')
+  .action(function() {
+    result = spawn.sync(
+      'node',
+      [require.resolve(`../lib/${script}`)].concat(args),
+      { stdio: 'inherit' }
+    );
+    process.exit(result.status);
+  })
+
+program.parse(process.argv);
+
+// switch (script) {
+//   case '-v':
+//   case '--version':
+//     console.log(require('../package.json').version);
+//     break;
+//   case 'build':
+//   case 'server':
+//   case 'test':
+//     result = spawn.sync(
+//       'node',
+//       [require.resolve(`../lib/${script}`)].concat(args),
+//       { stdio: 'inherit' }
+//     );
+//     process.exit(result.status);
+//     break;
+//   default:
+//     console.log(`Unknown script ${chalk.cyan(script)}.`);
+//     break;
+// }
