@@ -16,7 +16,7 @@ import { applyMock, outputError as outputMockError } from './utils/mock';
 
 process.env.NODE_ENV = 'development';
 
-const DEFAULT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
+let DEFAULT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 8000;
 const isInteractive = process.stdout.isTTY;
 const cwd = process.cwd();
 const paths = getPaths(cwd);
@@ -212,6 +212,7 @@ function run(port) {
 function init() {
   readRcConfig();
   readWebpackConfig();
+  DEFAULT_PORT = rcConfig.port || DEFAULT_PORT;
   detect(DEFAULT_PORT).then((port) => {
     if (port === DEFAULT_PORT) {
       run(port);
