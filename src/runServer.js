@@ -212,7 +212,7 @@ function run(port) {
 function init() {
   readRcConfig();
   readWebpackConfig();
-  DEFAULT_PORT = rcConfig.port || DEFAULT_PORT;
+  DEFAULT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : rcConfig.port;
   detect(DEFAULT_PORT).then((port) => {
     if (port === DEFAULT_PORT) {
       run(port);

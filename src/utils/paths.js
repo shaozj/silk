@@ -13,7 +13,7 @@ export default function getPaths(cwd) {
   }
 
   return {
-    appBuild: resolveApp('dist'),
+    appBuild: resolveApp('build'),
     appPublic: resolveApp('public'),
     appPackageJson: resolveApp('package.json'),
     appSrc: resolveApp('src'),

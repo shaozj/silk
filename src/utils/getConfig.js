@@ -25,7 +25,7 @@ function getConfig(configFile, paths) {
   if (existsSync(rcConfig)) {
     return parseJSON(stripJsonComments(readFileSync(rcConfig, 'utf-8')), './roadhogrc');
   } else if (existsSync(jsConfig)) {
-    return require(jsConfig);  // eslint-disable-line
+    return require(jsConfig);
   } else {
     return {};
   }

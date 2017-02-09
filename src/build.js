@@ -56,7 +56,7 @@ export function build(argv) {
     process.exit(1);
   }
 
-  outputPath = argv.outputPath || rcConfig.outputPath || 'dist';
+  outputPath = argv.outputPath || rcConfig.outputPath || 'build';
   appBuild = paths.resolveApp(outputPath);
   config = applyWebpackConfig(
     require('./config/webpack.config.prod')(argv, appBuild, rcConfig, paths),
