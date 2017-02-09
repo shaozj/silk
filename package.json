@@ -73,6 +73,7 @@
     "fs-extra": "^1.0.0",
     "glob": "^7.1.1",
     "gzip-size": "^3.0.0",
+    "happypack": "^3.0.2",
     "html-webpack-plugin": "~2.24.1",
     "http-proxy-middleware": "^0.17.3",
     "is-plain-object": "^2.0.1",

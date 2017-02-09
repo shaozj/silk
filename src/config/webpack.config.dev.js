@@ -5,6 +5,7 @@ import webpack from 'webpack';
 import fs from 'fs';
 import WatchMissingNodeModulesPlugin from 'react-dev-utils/WatchMissingNodeModulesPlugin';
 import SystemBellWebpackPlugin from 'system-bell-webpack-plugin';
+import HappyPack from 'happypack';
 import getPaths from '../utils/paths';
 import getEntry from '../utils/getEntry';
 import getTheme from '../utils/getTheme';
@@ -64,6 +65,7 @@ export default function (config, cwd) {
           test: /\.(js|jsx)$/,
           include: paths.appSrc,
           loader: 'babel',
+          //loaders: ['happypack/loader?id=jsx'],
         },
         {
           test: /\.css$/,
@@ -143,7 +145,12 @@ export default function (config, cwd) {
       new webpack.HotModuleReplacementPlugin(),
       new CaseSensitivePathsPlugin(),
       new WatchMissingNodeModulesPlugin(paths.appNodeModules),
-      new SystemBellWebpackPlugin(),
+      new SystemBellWebpackPlugin()
+      // new HappyPack({
+      //   id: 'jsx',
+      //   threads: 4,
+      //   loaders: ['babel']
+      // })
     ].concat(
       !fs.existsSync(paths.appPublic) ? [] :
         new CopyWebpackPlugin([
