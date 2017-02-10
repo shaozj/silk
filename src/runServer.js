@@ -129,7 +129,7 @@ function setupCompiler(host, port, protocol) {
 }
 
 function addMiddleware(devServer) {
-  const proxy = require(paths.appPackageJson).proxy;  // eslint-disable-line
+  const proxy = require(paths.appPackageJson).proxy;
   devServer.use(historyApiFallback({
     disableDotRule: true,
     htmlAcceptHeaders: proxy ?
