@@ -23,7 +23,7 @@ function getConfig(configFile, paths) {
   const jsConfig = paths.resolveApp(`${configFile}.js`);
 
   if (existsSync(rcConfig)) {
-    return parseJSON(stripJsonComments(readFileSync(rcConfig, 'utf-8')), './roadhogrc');
+    return parseJSON(stripJsonComments(readFileSync(rcConfig, 'utf-8')), './silkrc');
   } else if (existsSync(jsConfig)) {
     return require(jsConfig);
   } else {
@@ -58,5 +58,5 @@ export function realGetConfig(configFile, env, pkg = {}, paths) {
 export default function (env, cwd) {
   const paths = getPaths(cwd);
   const pkg = JSON.parse(readFileSync(paths.appPackageJson, 'utf-8'));
-  return realGetConfig('.roadhogrc', env, pkg, paths);
+  return realGetConfig('.silkrc', env, pkg, paths);
 }

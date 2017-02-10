@@ -45,7 +45,7 @@ function readRcConfig() {
   try {
     rcConfig = getConfig(process.env.NODE_ENV, cwd);
   } catch (e) {
-    console.log(chalk.red('Failed to parse .roadhogrc config.'));
+    console.log(chalk.red('Failed to parse .silkrc config.'));
     console.log();
     console.log(e.message);
     process.exit(1);
@@ -185,8 +185,8 @@ function runDevServer(host, port, protocol) {
 
 function setupWatch(devServer) {
   const files = [
-    paths.resolveApp('.roadhogrc'),
-    paths.resolveApp('.roadhogrc.js'),
+    paths.resolveApp('.silkrc'),
+    paths.resolveApp('.silkrc.js'),
     paths.resolveApp('webpack.config.js'),
   ]
     .concat(typeof rcConfig.theme === 'string' ? paths.resolveApp(rcConfig.theme) : []);
