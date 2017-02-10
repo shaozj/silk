@@ -212,6 +212,7 @@ function run(port) {
 function init() {
   readRcConfig();
   readWebpackConfig();
+  // 命令行设置端口优先级最高，用户配置优先级次之，默认端口8000
   DEFAULT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : rcConfig.port;
   detect(DEFAULT_PORT).then((port) => {
     if (port === DEFAULT_PORT) {
