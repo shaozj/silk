@@ -4,7 +4,8 @@ const chalk = require('chalk');
 const spawn = require('cross-spawn');
 const os = require('os');
 require('shelljs/global');
-var program = require('commander');
+const program = require('commander');
+const yo = require('./yo.js');
 
 const script = process.argv[2];
 const args = process.argv.slice(3);
@@ -33,6 +34,40 @@ var result;
 
 program
   .version(require('../package.json').version);
+
+program
+  .command('new [app]')
+  .description('new a react app/page/component')
+  .action(function (app) {
+    app = app || 'app';
+    var generator = 'generator-react-multipage:' + app;
+    console.log('generator: ' + generator);
+    yo(generator, [], function () {
+      console.log('yo ' + app  + ' success!');
+    });
+  });
+
+program
+  .command('page [name]')
+  .description('new a react page')
+  .action(function (name) {
+    var generator = 'generator-react-multipage:page';
+    console.log('generator: ' + generator);
+    yo(generator, [name], function () {
+      console.log('create page ' + name  + ' success!');
+    });
+  });
+
+program
+  .command('cpnt [name]')
+  .description('new a react component')
+  .action(function (name) {
+    var generator = 'generator-react-multipage:component';
+    console.log('generator: ' + generator);
+    yo(generator, [name], function () {
+      console.log('create component ' + name  + ' success!');
+    });
+  });
 
 program
   .command('server')
