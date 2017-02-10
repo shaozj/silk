@@ -220,7 +220,6 @@ function init() {
       run(port);
       return;
     }
-
     // 当前端口被占用时，分配一个新的端口 port
     if (isInteractive) {
       clearConsoleWrapped();
