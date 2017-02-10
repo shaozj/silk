@@ -3,16 +3,13 @@ import getPaths from './paths';
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 function generateHtmls(entry) {
-  console.log('==========entry: ', entry)
   const chunks = Object.keys(entry);
   const paths = getPaths(process.cwd());
   const appSrc = paths.appSrc;
   const template = process.env.NODE_ENV === 'production' ? `${appSrc}/template-dist.html` : `${appSrc}/template-dev.html`;
-  console.log('==========================template: ' + template);
   let plugins = [];
   // 生成HTML文件
   chunks.forEach((pathname) => {
-    console.log('--------pathname: ' + pathname);
     if (pathname === 'vendor' || pathname === 'mock') {
       return;
     }
