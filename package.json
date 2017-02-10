@@ -1,5 +1,5 @@
 {
-  "name": "silk",
+  "name": "silki",
   "version": "0.1.0",
   "description": "Cli tool for build react app, based on generator-react-multipage, create-react-app, roadhog.",
   "bin": {
