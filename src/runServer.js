@@ -166,9 +166,9 @@ function runDevServer(host, port, protocol) {
 
     process.send('READY');
 
-    // if (isInteractive) {
-    //   clearConsoleWrapped();
-    // }
+    if (isInteractive) {
+      //clearConsoleWrapped();
+    }
     console.log(chalk.cyan('Starting the development server...'));
     console.log();
     if (isInteractive) {
@@ -215,11 +215,13 @@ function init() {
   // 命令行设置端口优先级最高，用户配置优先级次之，默认端口8000
   DEFAULT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : rcConfig.port;
   detect(DEFAULT_PORT).then((port) => {
-    if (port === DEFAULT_PORT) {
+    // 当前端口未被占用
+    if (port == DEFAULT_PORT) {
       run(port);
       return;
     }
 
+    // 当前端口被占用时，分配一个新的端口 port
     if (isInteractive) {
       clearConsoleWrapped();
       const existingProcess = getProcessForPort(DEFAULT_PORT);
