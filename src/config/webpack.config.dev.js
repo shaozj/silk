@@ -37,6 +37,13 @@ export default function (config, cwd) {
         '.web.js', '.web.jsx', '.web.ts', '.web.tsx',
         '.js', '.json', '.jsx', '.ts', 'tsx', '',
       ],
+      alias: {
+        actions: `${paths.appSrc}/actions/`,
+        components: `${paths.appSrc}/components/`,
+        sources: `${paths.appSrc}/sources/`,
+        stores: `${paths.appSrc}/stores/`,
+        'react/lib/ReactMount': 'react-dom/lib/ReactMount'
+      }
     },
     resolveLoader: {
       root: [
