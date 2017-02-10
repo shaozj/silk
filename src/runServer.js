@@ -73,7 +73,7 @@ function setupCompiler(host, port, protocol) {
   let isFirstCompile = true;
   compiler.plugin('done', (stats) => {
     if (isInteractive) {
-      //clearConsoleWrapped();
+      clearConsoleWrapped();
     }
 
     const messages = formatWebpackMessages(stats.toJson({}, true));
@@ -143,11 +143,11 @@ function addMiddleware(devServer) {
 function runDevServer(host, port, protocol) {
   const devServer = new WebpackDevServer(compiler, {
     compress: true,
-    //clientLogLevel: 'none',
+    clientLogLevel: 'none',
     contentBase: paths.appPublic,
     hot: true,
     publicPath: config.output.publicPath,
-    //quiet: true,
+    quiet: true,
     watchOptions: {
       ignored: /node_modules/,
     },
@@ -167,7 +167,7 @@ function runDevServer(host, port, protocol) {
     process.send('READY');
 
     if (isInteractive) {
-      //clearConsoleWrapped();
+      clearConsoleWrapped();
     }
     console.log(chalk.cyan('Starting the development server...'));
     console.log();
