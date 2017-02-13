@@ -1,8 +1,20 @@
-/**
- * 入口文件
- * 请勿在该文件中修改代码, 此处修改代码不支持模块热加载
- */
+import './index.less';
 
-import App from './App';
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      data:[]
+    };
+  }
+
+  render(){
+    return (
+      <div className="<%= style.className %>">
+      
+      </div>
+    );
+  }
+}
 
 ReactDOM.render (<App />, document.getElementById('app'));

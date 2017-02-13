@@ -108,18 +108,18 @@ class PageGenerator extends Generators.Base {
     // Create the style template. Skipped if nostyle is set as command line flag
     if(this.useStyles) {
       this.fs.copyTpl(
-        this.templatePath('App.less'),
-        this.destinationPath(`src/pages/${this.name}/App.less`),
+        this.templatePath('index.less'),
+        this.destinationPath(`src/pages/${this.name}/index.less`),
         settings
       );
     }
 
     // Create the App.js
-    this.fs.copyTpl(
-      this.templatePath('App.js'),
-      this.destinationPath(`src/pages/${this.name}/App.js`),
-      settings
-    );
+    // this.fs.copyTpl(
+    //   this.templatePath('App.js'),
+    //   this.destinationPath(`src/pages/${this.name}/App.js`),
+    //   settings
+    // );
 
     // Create the index.js
     this.fs.copyTpl(
