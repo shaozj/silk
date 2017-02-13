@@ -11,10 +11,8 @@ module.exports = function yo(name, args, cb) {
   var sub = name.split(':')[1] || 'app';
   var genName = resolveName(type);
 
-  // var generatorRoot = path.join(__dirname, genName);
   //var generatorRoot = path.resolve(__dirname, '../node_modules', genName);
   var generatorRoot = path.resolve(__dirname, '../src/generator');
-  //console.log('generatorRoot: ' + generatorRoot);
 
   var resolved = path.join(generatorRoot, sub, 'index.js');
 
