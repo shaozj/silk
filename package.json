@@ -27,13 +27,12 @@
     "lib"
   ],
   "scripts": {
-    "build": "rimraf lib && babel src --out-dir lib",
+    "build": "rimraf lib && babel src --out-dir lib --ignore=generator/* && cp -r src/generator lib/generator",
     "lint": "eslint --ext .js src",
     "test": "npm run lint && npm run build && cross-env NODE_ENV=test nyc mocha --no-timeouts test/**/*-test.js",
     "debug": "cross-env NODE_ENV=test mocha --require babel-register --no-timeouts test/**/*-test.js",
     "report": "nyc report --reporter=html",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "precommit": "npm run lint"
+    "coveralls": "nyc report --reporter=text-lcov | coveralls"
   },
   "nyc": {
     "include": [
@@ -97,7 +96,16 @@
     "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.2",
     "webpack-visualizer-plugin": "^0.1.6",
-    "yargs": "^6.5.0"
+    "yargs": "^6.5.0",
+    "acorn": "^4.0.3",
+    "escodegen": "^1.8.1",
+    "esformatter": "^0.9.6",
+    "esprima": "^3.1.1",
+    "esprima-walk": "^0.1.0",
+    "jsonpath": "^0.2.7",
+    "underscore.string": "^3.2.2",
+    "yeoman-generator": "^0.24.0",
+    "yeoman-welcome": "^1.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.14.0",
@@ -113,6 +121,13 @@
     "husky": "^0.11.9",
     "nyc": "^10.0.0",
     "postcss-pxtorem": "^3.3.1",
-    "rimraf": "^2.5.4"
+    "rimraf": "^2.5.4",
+    "chai": "^3.2.0",
+    "coveralls": "^2.11.12",
+    "fs-extra": "^0.30.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.0.0",
+    "yeoman-assert": "^2.1.1",
+    "yeoman-test": "^1.0.0"
   }
 }
