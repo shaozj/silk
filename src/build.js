@@ -33,6 +33,7 @@ const argv = require('yargs')
   })
   .option('analyze', {
     type: 'boolean',
+    alias: 'a',
     describe: 'Visualize and analyze your Webpack bundle.',
     default: false,
   })
@@ -50,7 +51,7 @@ export function build(argv) {
   try {
     rcConfig = getConfig(process.env.NODE_ENV, argv.cwd);
   } catch (e) {
-    console.log(chalk.red('Failed to parse .roadhogrc config.'));
+    console.log(chalk.red('Failed to parse .silkrc config.'));
     console.log();
     console.log(e.message);
     process.exit(1);
@@ -177,7 +178,7 @@ function doneHandler(previousSizeMap, argv, resolve, err, stats) {
   console.log();
 
   if (argv.analyze) {
-    console.log(`Analyze result is generated at ${chalk.cyan('dist/stats.html')}.`);
+    console.log(`Analyze result is generated at ${chalk.cyan('build/stats.html')}.`);
     console.log();
   }
 

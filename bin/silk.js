@@ -85,6 +85,7 @@ program
 program
   .command('build')
   .alias('b')
+  .option('-a, --analyze', 'Visualize and analyze your Webpack bundle.')
   .description('build code to build file')
   .action(function () {
     result = spawn.sync(

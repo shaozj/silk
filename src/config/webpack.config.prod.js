@@ -8,6 +8,8 @@ import getEntry from '../utils/getEntry';
 import getTheme from '../utils/getTheme';
 import getCSSLoaders from '../utils/getCSSLoaders';
 import normalizeDefine from '../utils/normalizeDefine';
+import entry from '../utils/entry';
+import generateHtml from '../utils/html';
 
 export default function (args, appBuild, config, paths) {
   const { debug, analyze } = args;
@@ -16,10 +18,18 @@ export default function (args, appBuild, config, paths) {
   const publicPath = config.publicPath || '/';
   const cssLoaders = getCSSLoaders(config);
   const theme = JSON.stringify(getTheme(process.cwd(), config));
+  // const entries = getEntry(config, paths.appDirectory)
+
+  // 获取多页面的所有入口，每个入口文件名都为 index.js
+  const entries = entry(`${paths.appSrc}/pages/*/index.js`);
+  // 添加mock数据入口
+  if (fs.existsSync(`${paths.appSrc}/mock/mock.js`)) {
+    entries['mock'] = [`${paths.appSrc}/mock/mock.js`];
+  }
 
   return {
     bail: true,
-    entry: getEntry(config, paths.appDirectory),
+    entry: entries,
     output: {
       path: appBuild,
       filename: '[name].js',
@@ -30,6 +40,13 @@ export default function (args, appBuild, config, paths) {
         '.web.js', '.web.jsx', '.web.ts', '.web.tsx',
         '.js', '.json', '.jsx', '.ts', 'tsx', '',
       ],
+      alias: {
+        actions: `${paths.appSrc}/actions/`,
+        components: `${paths.appSrc}/components/`,
+        sources: `${paths.appSrc}/sources/`,
+        stores: `${paths.appSrc}/stores/`,
+        'react/lib/ReactMount': 'react-dom/lib/ReactMount'
+      }
     },
     resolveLoader: {
       root: [
@@ -91,10 +108,10 @@ export default function (args, appBuild, config, paths) {
             `${cssLoaders.nodeModules.join('!')}!less?{"modifyVars":${theme}}`,
           ),
         },
-        {
-          test: /\.html$/,
-          loader: 'file?name=[name].[ext]',
-        },
+        // {
+        //   test: /\.html$/,
+        //   loader: 'file?name=[name].[ext]',
+        // },
         {
           test: /\.json$/,
           loader: 'json',
@@ -117,6 +134,7 @@ export default function (args, appBuild, config, paths) {
       plugins: [
         require.resolve('babel-plugin-add-module-exports'),
         require.resolve('babel-plugin-react-require'),
+        ["import", { "libraryName": "antd", "libraryDirectory": "lib", "style": "css" }]
       ].concat(config.extraBabelPlugins || []),
       cacheDirectory: true,
     },
@@ -138,6 +156,12 @@ export default function (args, appBuild, config, paths) {
         'process.env': {
           NODE_ENV: JSON.stringify(NODE_ENV),
         },
+      }),
+      new webpack.ProvidePlugin({
+        //$: 'jquery', // 使jquery变成全局变量,不用在自己文件require('jquery')了
+        jQuery: 'jquery',
+        React: 'react',
+        ReactDOM: 'react-dom'
       }),
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.optimize.DedupePlugin(),
@@ -172,11 +196,18 @@ export default function (args, appBuild, config, paths) {
       )
       .concat(
         !config.multipage ? [] :
-          new webpack.optimize.CommonsChunkPlugin('common', 'common.js'),
+        new webpack.optimize.CommonsChunkPlugin(
+          {
+            name: 'vendor',
+            filename: 'vendor.js',
+            minChunks: Infinity
+          }),
       )
       .concat(
         !config.define ? [] :
           new webpack.DefinePlugin(normalizeDefine(config.define)),
+      ).concat(
+        generateHtml(entries)
       ),
     externals: config.externals,
     node: {

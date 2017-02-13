@@ -2,7 +2,7 @@
   "entry": "src/pages/**/index.js",
   "disableCSSModules": true,
   "publicPath": "/",
-  "outputPath": "./dist",
+  "outputPath": "./build",
   "extraBabelPlugins": [],
   "extraPostCSSPlugins": [],
   "autoprefixer": null,
