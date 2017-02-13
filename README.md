@@ -42,3 +42,15 @@ $ silk server
 $ silk build
 ```
 
+> show help
+
+```bash
+$ silk -h
+```
+
+> show version
+
+```bash
+$ silk --version
+```
+
