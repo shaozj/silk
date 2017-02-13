@@ -48,7 +48,7 @@ program
   });
 
 program
-  .command('page [name]')
+  .command('page <name>')
   .description('new a react page')
   .action(function (name) {
     var generator = 'generator-react-multipage:page';
@@ -59,7 +59,7 @@ program
   });
 
 program
-  .command('cpnt [name]')
+  .command('cpnt <name>')
   .description('new a react component')
   .action(function (name) {
     var generator = 'generator-react-multipage:component';
