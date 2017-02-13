@@ -1,0 +1,48 @@
+{
+  "name": "react-webpack-multipage-template",
+  "private": false,
+  "version": "0.1.0",
+  "description": "react webpack multipage template",
+  "main": "",
+  "scripts": {
+    "init": "webpack --config webpack.dll.config.js",
+    "dev": "node server.js --env=dev --mode=hr",
+    "start": "node server.js --env=dev --mode=hmr",
+    "test": "karma start",
+    "test:watch": "karma start --autoWatch=true --singleRun=false",
+    "posttest": "npm run lint",
+    "serve": "node server.js --env=dev",
+    "serve:dist": "node server.js --env=dist",
+    "dist": "webpack --env=dist",
+    "lint": "eslint ./src",
+    "lintcfg": "eslint ./cfg",
+    "copy": "copyfiles -f ./src/index.html ./src/favicon.ico ./dist",
+    "clean": "rimraf build/*",
+    "release:major": "npm version major && npm publish && git push --follow-tags",
+    "release:minor": "npm version minor && npm publish && git push --follow-tags",
+    "release:patch": "npm version patch && npm publish && git push --follow-tags",
+    "dll": "webpack --config webpack.dll.config.js",
+    "fastpush": "npm run dist && git add . && git commit -m 'build' && git push origin daily/1.0.0"
+  },
+  "repository": "https://github.com/shaozj/react-webpack-multipage-template",
+  "keywords": [
+    "react",
+    "webpack",
+    "multipage",
+    "template"
+  ],
+  "author": "澜嵚<zhenjiang.szj@alibaba-inc.com>, 冰浠<bingxi@alibaba-inc.com>",
+  "devDependencies": {},
+  "dependencies": {
+    "antd": "~2.5.1",
+    "classnames": "^2.2.5",
+    "core-js": "^2.0.0",
+    "jquery": "~3.1.1",
+    "normalize.css": "^4.0.0",
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0",
+    "whatwg-fetch": "^2.0.1"
+  },
+  "_from": "react-webpack-multipage-template@0.1.0",
+  "_resolved": "http://registry.npm.alibaba-inc.com/react-webpack-multipage-template/download/react-webpack-multipage-template-0.1.0.tgz"
+}

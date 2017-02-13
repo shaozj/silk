@@ -1,0 +1,16 @@
+{
+  "entry": "src/pages/**/index.js",
+  "disableCSSModules": true,
+  "publicPath": "/",
+  "outputPath": "./dist",
+  "extraBabelPlugins": [],
+  "extraPostCSSPlugins": [],
+  "autoprefixer": null,
+  "proxy": null,
+  "externals": null,
+  "multipage": true,
+  "define": null,
+  "env": null,
+  "theme": null,
+  "port": "8001"
+}
