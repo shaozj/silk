@@ -1,3 +1,4 @@
+import '../style/index.less';
 import <%= component.className %> from './index';
 
 // write your demo code here, below is an example
