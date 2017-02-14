@@ -1,8 +1,7 @@
 'use strict';
 
 import React from 'react';
-
-require('./index.less');
+import './index.less';
 
 class Cpnt extends React.Component {
   render() {
