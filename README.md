@@ -56,3 +56,32 @@ $ silk -h
 $ silk --version
 ```
 
+## Configuration
+
+* Configuration is stored in the **.silkrc** file
+* JSON format, comments allowed
+
+Default configuration:
+
+```JSON
+{
+  "entry": "src/pages/**/index.js",
+  "disableCSSModules": false,
+  "publicPath": "/",
+  "outputPath": "./build",
+  "extraBabelPlugins": [],
+  "extraPostCSSPlugins": [],
+  "autoprefixer": null,
+  "proxy": null,
+  "externals": null,
+  "multipage": true,
+  "define": null,
+  "env": null,
+  "theme": null,
+  "port": 8000
+}
+```
+
+## Advanced features
+
+### Mock

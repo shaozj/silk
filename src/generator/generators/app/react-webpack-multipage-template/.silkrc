@@ -1,6 +1,6 @@
 {
   "entry": "src/pages/**/index.js",
-  "disableCSSModules": true,
+  "disableCSSModules": false,
   "publicPath": "/",
   "outputPath": "./build",
   "extraBabelPlugins": [],
@@ -12,5 +12,5 @@
   "define": null,
   "env": null,
   "theme": null,
-  "port": "8001"
+  "port": 8000
 }
