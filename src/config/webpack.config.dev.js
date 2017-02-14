@@ -20,11 +20,18 @@ export default function (config, cwd) {
   const theme = JSON.stringify(getTheme(process.cwd(), config));
   const paths = getPaths(cwd);
   // 获取多页面的所有入口，每个入口文件名都为 index.js
-  const entries = entry(`${paths.appSrc}/pages/*/index.js`);
+  let entries = entry(`${paths.appSrc}/pages/*/index.js`);
   // 添加mock数据入口
   if (fs.existsSync(`${paths.appSrc}/mock/mock.js`)) {
     entries['mock'] = [`${paths.appSrc}/mock/mock.js`];
   }
+  // 用户配置入口，以 devEntry 优先级最高
+  let configEntry = config.devEntry || config.entry;
+  if (configEntry) {
+    entries = entry(paths.appDirectory+'/'+configEntry);
+  }
+  console.log('==========', configEntry);
+  console.log('++++++++++', entries);
   //const entry = getEntry(config, paths.appDirectory);
 
   return {

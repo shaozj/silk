@@ -82,6 +82,20 @@ Default configuration:
 }
 ```
 
+### entry
+
+An entry is a starting point of a page. The `entry` property specify a webpack entry property. see [webpack entry](https://webpack.js.org/concepts/#entry). The difference between silkrc and webpack config is that silk entry support glob.
+An example is seen below:
+
+**.silkrc**
+
+```
+{
+  "entry": "src/pages/**/index.js",
+}
+```
+
+
 ## Advanced features
 
 ### Mock

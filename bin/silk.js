@@ -108,6 +108,17 @@ program
     process.exit(result.status);
   })
 
+program
+  .command('rc <name>')
+  .description('new a pure react component')
+  .action(function (name) {
+    var generator = 'generator-react-multipage:rc';
+    console.log('generator: ' + generator);
+    yo(generator, [name], function () {
+      console.log('create component ' + name  + ' success!');
+    });
+  });
+
 program.parse(process.argv);
 
 // switch (script) {

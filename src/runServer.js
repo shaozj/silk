@@ -36,9 +36,9 @@ let rcConfig;
 let config;
 
 function clearConsoleWrapped() {
-  if (process.env.CLEAR_CONSOLE !== 'NONE') {
-    clearConsole();
-  }
+  // if (process.env.CLEAR_CONSOLE !== 'NONE') {
+  //   clearConsole();
+  // }
 }
 
 function readRcConfig() {
