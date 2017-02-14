@@ -6,7 +6,13 @@
   "extraBabelPlugins": [],
   "extraPostCSSPlugins": [],
   "autoprefixer": null,
-  "proxy": null,
+  "proxy": [
+    {
+      "context": ["/common/**", "/tair/**", "/video/**", "/system/**", "/*.do"],
+      "target": "http://mytv-test.alibaba.net",
+      "secure": false
+    }
+  ],
   "externals": null,
   "multipage": true,
   "define": null,
