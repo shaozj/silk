@@ -30,8 +30,6 @@ export default function (config, cwd) {
   if (configEntry) {
     entries = entry(paths.appDirectory+'/'+configEntry);
   }
-  console.log('==========', configEntry);
-  console.log('++++++++++', entries);
   //const entry = getEntry(config, paths.appDirectory);
 
   return {
