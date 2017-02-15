@@ -2,7 +2,7 @@
 
 ## Introduction
 
-react app 开发cli工具，包括脚手架以及开发调试功能
+react app 开发cli工具，包括脚手架以及开发调试功能，支持 react 多页面app开发
 
 [view on github](https://github.com/shaozj/silk)
 
@@ -66,6 +66,7 @@ Default configuration:
 ```JSON
 {
   "entry": "src/pages/**/index.js",
+  "devEntry": null,
   "disableCSSModules": false,
   "publicPath": "/",
   "outputPath": "./build",
@@ -95,6 +96,19 @@ An example is seen below:
 }
 ```
 
+### devEntry
+
+Development entry, used in develop environment.
+
+An example is seen below:
+
+**.silkrc**
+
+```
+{
+  "entry": "src/**/index.test.js",
+}
+```
 
 ## Advanced features
 
