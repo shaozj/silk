@@ -153,7 +153,6 @@ export default function (config, cwd) {
         },
       }),
       new webpack.ProvidePlugin({
-        //$: 'jquery', // 使jquery变成全局变量,不用在自己文件require('jquery')了
         jQuery: 'jquery',
         React: 'react',
         ReactDOM: 'react-dom'
