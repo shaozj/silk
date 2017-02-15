@@ -258,3 +258,7 @@ Set develop server port.
 ## Advanced features
 
 ### Mock
+
+##LICENSE
+
+### MIT
