@@ -1,13 +1,13 @@
 'use strict';
 
 import React from 'react';
-import './index.less';
+import style from './index.less';
 
 class Cpnt extends React.Component {
   render() {
     const {params, data} = this.props;
     return (
-      <div className="<%= style.className %>">
+      <div className={style.<%= style.camelClassName %>}>
         render your react component here
       </div>
     );

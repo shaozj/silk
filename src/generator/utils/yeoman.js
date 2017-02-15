@@ -96,6 +96,7 @@ let getAllSettingsFromComponentName = (componentName, style, useCssModules, isPu
           path: path.normalize(`${componentPath.path}/${componentPartPath}/`),
           fileName: `${componentBaseName}/${componentBaseName}${styleSettings.suffix}`,
           className: getComponentStyleName(componentBaseName),
+          camelClassName: getCamelCaseComponentStyleName(componentBaseName),
           suffix: styleSettings.suffix
         },
         component: {
@@ -147,6 +148,14 @@ let getComponentStyleName = (path) => {
   let fileName = path.split('/').pop().toLowerCase();
   return _.slugify(_.humanize(fileName)) + '-component';
 };
+
+/**
+ * get camelCase naming style name
+ */
+let getCamelCaseComponentStyleName = (path) => {
+  let fileName = path.split('/').pop().toLowerCase();
+  return _.slugify(_.humanize(fileName)) + 'Component';
+}
 
 /**
  * Get a js friendly application name
