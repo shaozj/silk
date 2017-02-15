@@ -6,6 +6,7 @@ const os = require('os');
 require('shelljs/global');
 const program = require('commander');
 const yo = require('./yo.js');
+const request = require('request');
 
 const script = process.argv[2];
 const args = process.argv.slice(3);
@@ -15,6 +16,7 @@ const versions = nodeVersion.split('.');
 const major = versions[0];
 const minor = versions[1];
 const platform = os.platform();
+const version = require('../package.json').version;
 
 if (((major * 10) + (minor * 1)) < 65) {
   console.log(chalk.red(`Node version (${major}.${minor}) is not compatibile, ${chalk.cyan('must >= 6.5')}.`));
@@ -30,21 +32,50 @@ if (((major * 10) + (minor * 1)) < 65) {
 
 require('atool-monitor').emit();
 
+/**
+ * generate app
+ */
+function generateApp(app) {
+  app = app || 'app';
+  var generator = 'generator-react-multipage:' + app;
+  yo(generator, [], function () {
+    console.log('yo ' + app  + ' success!');
+  });
+}
+
 var result;
 
 program
-  .version(require('../package.json').version);
+  .version(version);
 
 program
   .command('new [app]')
   .description('new a react app/page/component')
   .action(function (app) {
-    app = app || 'app';
-    var generator = 'generator-react-multipage:' + app;
-    console.log('generator: ' + generator);
-    yo(generator, [], function () {
-      console.log('yo ' + app  + ' success!');
-    });
+    // check update
+    request('http://registry.npmjs.org/silki/latest', function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        let pkg;
+        try {
+          pkg = JSON.parse(body);
+          if (pkg.version !== version) {
+             console.log(chalk.bold('⚠️  find new version: ' + chalk.red(pkg.version) + ', current version: '+chalk.yellow(version)+'.'));
+             console.log(chalk.bold('☻  suggest update: ' + chalk.yellow('npm i silki@latest -g \n')));
+           } else {
+             console.log(chalk.bold.green('✌  current version is the latest version\n'));
+           }
+           generateApp(app);
+        } catch(err) {
+          console.log(chalk.bold.red('☹  parse silki package.json error'), err);
+          console.log('\n');
+          generateApp(app);
+        }
+      } else {
+        console.log(chalk.bold.red('☹  Check latest version failed'));
+        console.log('\n');
+        generateApp(app);
+      }
+    })
   });
 
 program
