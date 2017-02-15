@@ -67,7 +67,6 @@ Default configuration:
 ```JSON
 {
   "entry": "src/pages/**/index.js",
-  "devEntry": null,
   "disableCSSModules": false,
   "publicPath": "/",
   "outputPath": "./build",
@@ -94,20 +93,6 @@ An example is seen below:
 ```
 {
   "entry": "src/pages/**/index.js",
-}
-```
-
-### devEntry
-
-Development entry, used in develop environment.
-
-An example is seen below:
-
-**.silkrc**
-
-```
-{
-  "devEntry": "src/**/index.test.js",
 }
 ```
 

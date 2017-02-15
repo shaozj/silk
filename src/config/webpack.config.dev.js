@@ -25,8 +25,8 @@ export default function (config, cwd) {
   if (fs.existsSync(`${paths.appSrc}/mock/mock.js`)) {
     entries['mock'] = [`${paths.appSrc}/mock/mock.js`];
   }
-  // 用户配置入口，以 devEntry 优先级最高
-  let configEntry = config.devEntry || config.entry;
+  // 用户配置入口
+  let configEntry = config.entry;
   if (configEntry) {
     entries = entry(paths.appDirectory+'/'+configEntry);
   }
