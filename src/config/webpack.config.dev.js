@@ -18,6 +18,7 @@ export default function (config, cwd) {
   const publicPath = '/';
   const cssLoaders = getCSSLoaders(config);
   const theme = JSON.stringify(getTheme(process.cwd(), config));
+  console.log('==========theme========: ', theme);
   const paths = getPaths(cwd);
   // 获取多页面的所有入口，每个入口文件名都为 index.js
   let entries = entry(`${paths.appSrc}/pages/*/index.js`);
@@ -130,6 +131,7 @@ export default function (config, cwd) {
       plugins: [
         require.resolve('babel-plugin-add-module-exports'),
         require.resolve('babel-plugin-react-require'),
+        ['import', [{ libraryName: "antd", style: true }]]
       ].concat(config.extraBabelPlugins || []),
       cacheDirectory: true,
     },

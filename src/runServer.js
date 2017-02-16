@@ -37,7 +37,7 @@ let config;
 
 function clearConsoleWrapped() {
   if (process.env.CLEAR_CONSOLE !== 'NONE') {
-    clearConsole();
+    //clearConsole();
   }
 }
 
