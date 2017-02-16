@@ -200,6 +200,17 @@ function setupWatch(devServer) {
     devServer.close();
     process.send('RESTART');
   });
+  // const pageDir = paths.resolveApp('./src/pages/');
+  // //console.log('==========pageDir: ' + pageDir);
+  // chokidar.watch(pageDir, {ignored: /index|program-list/})
+  // .on('addDir', (path) => {
+  //   if (path.indexOf('pages/') != -1) {
+  //     console.log(chalk.green(`Added ${path.replace(paths.appDirectory, '.')} , try to restart server`));
+  //     watcher.close();
+  //     devServer.close();
+  //     process.send('RESTART');
+  //   }
+  // });
 }
 
 function run(port) {
