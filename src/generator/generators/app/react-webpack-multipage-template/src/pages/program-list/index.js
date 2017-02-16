@@ -1,5 +1,5 @@
 import './index.less';
-import ProgramList from 'components/programList/ProgramListComponent.js';
+import ProgramList from 'components/ProgramList/ProgramListComponent.js';
 
 class App extends React.Component {
   constructor(props) {

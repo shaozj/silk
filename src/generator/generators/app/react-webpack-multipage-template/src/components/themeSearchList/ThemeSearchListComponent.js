@@ -1,5 +1,5 @@
 import { Table, Modal } from 'antd';
-import ProgramListComponent from '../programList/ProgramListComponent';
+import ProgramListComponent from '../ProgramList/ProgramListComponent';
 import ThemeDetailComponent from '../themeDetail/themeDetailComponent';
 
 const confirm = Modal.confirm;
