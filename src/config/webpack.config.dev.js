@@ -21,14 +21,14 @@ export default function (config, cwd) {
   const paths = getPaths(cwd);
   // 获取多页面的所有入口，每个入口文件名都为 index.js
   let entries = entry(`${paths.appSrc}/pages/*/index.js`);
-  // 添加mock数据入口
-  if (fs.existsSync(`${paths.appSrc}/mock/mock.js`)) {
-    entries['mock'] = [`${paths.appSrc}/mock/mock.js`];
-  }
   // 用户配置入口
   let configEntry = config.entry;
   if (configEntry) {
     entries = entry(paths.appDirectory+'/'+configEntry);
+  }
+  // 添加mock数据入口
+  if (fs.existsSync(`${paths.appSrc}/mock/mock.js`)) {
+    entries['mock'] = [`${paths.appSrc}/mock/mock.js`];
   }
   //const entry = getEntry(config, paths.appDirectory);
 
