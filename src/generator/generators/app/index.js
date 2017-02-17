@@ -52,8 +52,8 @@ class AppGenerator extends Generators.Base {
       // Set needed global vars for yo
       this.appName = answers.appName;
       this.style = answers.style;
-      this.cssmodules = answers.cssmodules;
-      this.postcss = answers.postcss;
+      this.cssmodules = answers.cssmodules || true;
+      this.postcss = answers.postcss || true;
       this.generatedWithVersion = parseInt(packageInfo.version.split('.').shift(), 10);
 
       // Set needed keys into config
@@ -86,6 +86,7 @@ class AppGenerator extends Generators.Base {
       dependencies: defaultSettings.dependencies
     };
 
+    /* we do not need install these devDependencies locally
     // Add needed loaders if we have special styles
     let styleConfig = utils.config.getChoiceByKey('style', this.style);
     if(styleConfig && styleConfig.packages) {
@@ -111,6 +112,7 @@ class AppGenerator extends Generators.Base {
         packageSettings.dependencies[dependency.name] = dependency.version;
       }
     }
+    */
 
     this.fs.writeJSON(this.destinationPath('package.json'), packageSettings);
   }

@@ -83,7 +83,6 @@ program
   .description('new a react page')
   .action(function (name) {
     var generator = 'generator-react-multipage:page';
-    console.log('generator: ' + generator);
     yo(generator, [name], function () {
       console.log('create page ' + name  + ' success!');
     });
@@ -94,7 +93,6 @@ program
   .description('new a react component')
   .action(function (name) {
     var generator = 'generator-react-multipage:component';
-    console.log('generator: ' + generator);
     yo(generator, [name], function () {
       console.log('create component ' + name  + ' success!');
     });
@@ -144,7 +142,6 @@ program
   .description('new a pure react component')
   .action(function (name) {
     var generator = 'generator-react-multipage:rc';
-    console.log('generator: ' + generator);
     yo(generator, [name], function () {
       console.log('create component ' + name  + ' success!');
     });
