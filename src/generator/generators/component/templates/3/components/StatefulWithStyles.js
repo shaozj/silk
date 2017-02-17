@@ -2,12 +2,12 @@
 
 import React from 'react';
 
-require('./<%= style.webpackPath %>');
+import style from './<%= style.webpackPath %>';
 
 class <%= component.className %> extends React.Component {
   render() {
     return (
-      <div className="<%= style.className %>">
+      <div className={style.<%= style.camelClassName %>}>
         Please edit <%= component.path %><%= component.fileName %> to update this component!
       </div>
     );

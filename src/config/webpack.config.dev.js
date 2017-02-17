@@ -67,9 +67,9 @@ export default function (config, cwd) {
           exclude: [
             /\.html$/,
             /\.(js|jsx)$/,
-            /\.(css|less)$/,
+            /\.(css|less|sass|scss|styl)$/,
             /\.json$/,
-            /\.svg$/,
+            /\.(mp4|ogg|svg)$/,
           ],
           loader: 'url',
           query: {
@@ -103,21 +103,32 @@ export default function (config, cwd) {
           include: paths.appNodeModules,
           loader: `style!${cssLoaders.nodeModules.join('!')}!less?{"modifyVars":${theme}}`,
         },
-        // {
-        //   test: /\.html$/,
-        //   loader: 'file?name=[name].[ext]',
-        // },
+        {
+          test: /\.sass$/,
+          include: paths.appSrc,
+          loader: `style!${cssLoaders.own.join('!')}!sass?outputStyle=expanded&indentedSyntax`
+        },
+        {
+          test: /\.scss$/,
+          include: paths.appSrc,
+          loader: `style!${cssLoaders.own.join('!')}!sass?outputStyle=expanded`
+        },
+        {
+          test: /\.styl$/,
+          include: paths.appSrc,
+          loader: `style!${cssLoaders.own.join('!')}!stylus`
+        },
         {
           test: /\.json$/,
           loader: 'json',
         },
         {
-          test: /\.svg$/,
+          test: /\.(mp4|ogg|svg)$/,
           loader: 'file',
           query: {
             name: 'static/[name].[hash:8].[ext]',
           },
-        },
+        }
       ],
     },
     babel: {

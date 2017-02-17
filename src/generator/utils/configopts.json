@@ -65,6 +65,15 @@
   "style": {
     "options": [
       {
+        "name": "less",
+        "value": "less",
+        "suffix": ".less",
+        "packages": [
+          { "name": "less-loader", "version": "^2.2.3" },
+          { "name": "less", "version": "^2.7.1" }
+        ]
+      },
+      {
         "name": "css",
         "value": "css",
         "suffix": ".css"
@@ -88,15 +97,6 @@
         ]
       },
       {
-        "name": "less",
-        "value": "less",
-        "suffix": ".less",
-        "packages": [
-          { "name": "less-loader", "version": "^2.2.3" },
-          { "name": "less", "version": "^2.7.1" }
-        ]
-      },
-      {
         "name": "stylus",
         "value": "stylus",
         "suffix": ".styl",
@@ -107,6 +107,6 @@
         ]
       }
     ],
-    "default": "css"
+    "default": "less"
   }
 }

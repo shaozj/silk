@@ -108,8 +108,8 @@ class PageGenerator extends Generators.Base {
     // Create the style template. Skipped if nostyle is set as command line flag
     if(this.useStyles) {
       this.fs.copyTpl(
-        this.templatePath('index.less'),
-        this.destinationPath(`src/pages/${this.name}/index.less`),
+        this.templatePath(`index${settings.style.suffix}`),
+        this.destinationPath(`src/pages/${this.name}/index${settings.style.suffix}`),
         settings
       );
     }

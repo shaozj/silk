@@ -1,4 +1,4 @@
-import './index.less';
+import style from './index<%= style.suffix %>';
 
 class App extends React.Component {
   constructor(props) {
@@ -10,7 +10,7 @@ class App extends React.Component {
 
   render(){
     return (
-      <div className="<%= style.className %>">
+      <div className={style.<%= style.camelClassName %>}>
       
       </div>
     );

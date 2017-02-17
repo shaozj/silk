@@ -66,9 +66,9 @@ export default function (args, appBuild, config, paths) {
           exclude: [
             /\.html$/,
             /\.(js|jsx)$/,
-            /\.(css|less)$/,
+            /\.(css|less|sass|scss|styl)$/,
             /\.json$/,
-            /\.svg$/,
+            /\.(mp4|ogg|svg)$/,
           ],
           loader: 'url',
           query: {
@@ -113,20 +113,41 @@ export default function (args, appBuild, config, paths) {
             `${cssLoaders.nodeModules.join('!')}!less?{"modifyVars":${theme}}`,
           ),
         },
-        // {
-        //   test: /\.html$/,
-        //   loader: 'file?name=[name].[ext]',
-        // },
+        {
+          test: /\.sass/,
+          include: paths.appSrc,
+          loader: ExtractTextPlugin.extract('style',
+            `${cssLoaders.own.join('!')}!sass?outputStyle=expanded&indentedSyntax`
+          )
+        },
+        {
+          test: /\.scss/,
+          include: paths.appSrc,
+          loader: ExtractTextPlugin.extract('style',
+            `${cssLoaders.own.join('!')}!sass?outputStyle=expanded`
+          )
+        },
+        {
+          test: /\.styl/,
+          include: paths.appSrc,
+          loader: ExtractTextPlugin.extract('style',
+            `${cssLoaders.own.join('!')}!stylus`
+          )
+        },
         {
           test: /\.json$/,
           loader: 'json',
         },
         {
-          test: /\.svg$/,
+          test: /\.(mp4|ogg|svg)$/,
           loader: 'file',
           query: {
             name: 'static/[name].[hash:8].[ext]',
           },
+        },
+        {
+          test: /\.(png|jpg|gif|woff|woff2)$/,
+          loader: 'url-loader?limit=8192'
         },
       ],
     },
