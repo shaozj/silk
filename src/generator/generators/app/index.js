@@ -144,6 +144,12 @@ class AppGenerator extends Generators.Base {
         } else {
           if (item === '.npmignore') {
             this.copy(item, '.gitignore');
+          } else if (item === '_README.md') {
+            this.fs.copyTpl(
+              this.templatePath('../react-webpack-multipage-template/_README.md'),
+              this.destinationPath('README.md'),
+              this
+            )
           } else {
             this.copy(item, item);
           }
@@ -154,15 +160,10 @@ class AppGenerator extends Generators.Base {
 
   install() {
 
-    // Currently buggy!
-    //if(this.postcss) {
-    //  const postcss = require('./postcss');
-    //  postcss.write(path.join(this.destinationRoot(), 'conf/webpack/Base.js'));
-    //}
-
     if(!this.options['skip-install']) {
       this.installDependencies({ bower: false });
     }
+
   }
 }
 
