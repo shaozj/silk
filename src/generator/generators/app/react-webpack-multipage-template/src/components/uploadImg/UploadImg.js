@@ -1,5 +1,3 @@
-'use strict';
-
 import './UploadImg.less';
 import { Upload, Icon, Modal } from 'antd';
 import classNames from 'classnames';

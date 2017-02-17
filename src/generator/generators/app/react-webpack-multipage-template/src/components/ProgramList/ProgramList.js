@@ -1,7 +1,7 @@
 import './ProgramList.less'
 import { Checkbox, Row, Pagination, Card, Button, Modal} from 'antd';
 import programListMockData from '../../mock/programList';
-import RequestManager from 'components/request-manager/request-manager';
+import RequestManager from '../RequestManager/RequestManager';
 
 const programListData = programListMockData;
 const PAGE_SIZE = 49;

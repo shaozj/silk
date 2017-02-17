@@ -1,9 +1,7 @@
 import './index.less';
-
-import AdvancedSearchForm from 'components/themeSearchForm/ThemeSearchFormComponent.js';
-import ThemeSearchListComponent from 'components/themeSearchList/ThemeSearchListComponent.js';
+import AdvancedSearchForm from 'components/ThemeSearchForm/ThemeSearchForm.js';
+import ThemeSearchListComponent from 'components/ThemeSearchList/ThemeSearchList.js';
 import {Form} from 'antd';
-
 
 class App extends React.Component {
   constructor(props) {

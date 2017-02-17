@@ -1,4 +1,4 @@
-import './themeDetail.less'
+import './ThemeDetail.less';
 import {Row, Col} from 'antd';
 
 export default class ThemeDetailComponent extends React.Component {
