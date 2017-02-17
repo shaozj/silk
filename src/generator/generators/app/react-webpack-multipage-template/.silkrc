@@ -3,16 +3,12 @@
   "disableCSSModules": false,
   "publicPath": "/",
   "outputPath": "./build",
-  "extraBabelPlugins": [],
+  "extraBabelPlugins": [
+    ["import", [{ "libraryName": "antd", "style": true }]]
+  ],
   "extraPostCSSPlugins": [],
   "autoprefixer": null,
-  "proxy": [
-    {
-      "context": ["/common/**", "/tair/**", "/video/**", "/system/**", "/*.do"],
-      "target": "http://mytv-test.alibaba.net",
-      "secure": false
-    }
-  ],
+  "proxy": null,
   "externals": null,
   "multipage": true,
   "define": null,

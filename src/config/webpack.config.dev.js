@@ -129,8 +129,7 @@ export default function (config, cwd) {
       ],
       plugins: [
         require.resolve('babel-plugin-add-module-exports'),
-        require.resolve('babel-plugin-react-require'),
-        ['import', [{ libraryName: "antd", style: true }]]
+        require.resolve('babel-plugin-react-require')
       ].concat(config.extraBabelPlugins || []),
       cacheDirectory: true,
     },

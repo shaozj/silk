@@ -138,8 +138,7 @@ export default function (args, appBuild, config, paths) {
       ],
       plugins: [
         require.resolve('babel-plugin-add-module-exports'),
-        require.resolve('babel-plugin-react-require'),
-        ["import", { "libraryName": "antd", "libraryDirectory": "lib", "style": "css" }]
+        require.resolve('babel-plugin-react-require')
       ].concat(config.extraBabelPlugins || []),
       cacheDirectory: true,
     },
@@ -163,7 +162,6 @@ export default function (args, appBuild, config, paths) {
         },
       }),
       new webpack.ProvidePlugin({
-        //$: 'jquery', // 使jquery变成全局变量,不用在自己文件require('jquery')了
         jQuery: 'jquery',
         React: 'react',
         ReactDOM: 'react-dom'
