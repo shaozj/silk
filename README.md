@@ -1,6 +1,6 @@
 # silk
 
-## Introduction
+## 介绍
 
 react app 开发cli工具，包括脚手架以及开发调试功能，支持开发 react 多页面 app。 
   
@@ -9,13 +9,13 @@ react app 开发cli工具，包括脚手架以及开发调试功能，支持开�
 
 [view on github](https://github.com/shaozj/silk)
 
-## Installation
+## 下载安装
 
 ```bash
 $ sudo npm install silki -g
 ```
 
-## Usage
+## 使用
 
 > new a react multiple page app
 
@@ -59,7 +59,7 @@ $ silk -h
 $ silk --version
 ```
 
-## Configuration
+## 配置
 
 * Configuration is stored in the **.silkrc** file
 * JSON format, comments allowed
@@ -247,7 +247,7 @@ Example:
 Set develop server port.
 
 
-## Advanced features
+## 高级功能
 
 ### Mock
 
