@@ -17,43 +17,43 @@ $ sudo npm install silki -g
 
 ## 使用
 
-> new a react multiple page app
+> 新建一个 react 多页面应用
 
 ```bash
 $ silk new
 ```
 
-> new a react app page
+> 新建一个页面
 
 ```bash
 $ silk page <name>
 ```
 
-> new a react app component
+> 新建一个组件
 
 ```bash
 $ silk cpnt <name>
 ```
 
-> build code & start a develop server
+> 编译代码（在内存中），并启动调试服务器
 
 ```bash
 $ silk server
 ```
 
-> build code to file, default to ./build folder
+> 将代码编译并存储在文件中, 默认在 ./build 目录下
 
 ```bash
 $ silk build
 ```
 
-> show help
+> 显示帮助文档
 
 ```bash
 $ silk -h
 ```
 
-> show version
+> 现实版本
 
 ```bash
 $ silk --version
@@ -61,10 +61,10 @@ $ silk --version
 
 ## 配置
 
-* Configuration is stored in the **.silkrc** file
-* JSON format, comments allowed
+* 配置文件为 **.silkrc** ，在项目的根目录下
+* JSON 格式，支持注释
 
-Default configuration:
+默认配置如下:
 
 ```JSON
 {
