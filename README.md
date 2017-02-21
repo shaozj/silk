@@ -87,8 +87,9 @@ $ silk --version
 
 ### entry
 
-An entry is a starting point of a page. The `entry` property specify a webpack entry property. see [webpack entry](https://webpack.js.org/concepts/#entry). The difference between silkrc and webpack config is that silk entry support glob.
-An example is seen below:
+`entry` 是一个页面的入口点。`entry` 选项对应了 webpack 配置文件中的 `entry`。参见[webpack entry](https://webpack.js.org/concepts/#entry)。 不同之处是，.silkrc 中，支持 glob 格式的 ｀entry｀。
+  
+一个例子如下所示:
 
 **.silkrc**
 
@@ -100,40 +101,40 @@ An example is seen below:
 
 ### disableCSSModules
 
-Disable css modules, default false. [see css modules](https://github.com/css-modules/css-modules)
+禁用 css modules, 默认为 false. 参见 [css modules](https://github.com/css-modules/css-modules)
 
 ### publicPath
 
-Set production environment publicPath, develop environment default '/' . [see webpack output.publicPath](http://webpack.github.io/docs/configuration.html#output-publicpath)
+设置生产环境下的 publicPath, 开发环境下默认为 '/' . 参见 [webpack output.publicPath](http://webpack.github.io/docs/configuration.html#output-publicpath)
 
 ### outputPath
 
-Set output directory. [see webpack output.path](http://webpack.github.io/docs/configuration.html#output-path)
+设置 output 路径. 参见 [webpack output.path](http://webpack.github.io/docs/configuration.html#output-path)
 
 ### extraBabelPlugins
 
-Set extra babel plugins. Only support add, not support replace and delete.
-Below is an babel-plugin-import example:
+设置额外的 babel 插件。只支持添加, 不支持替换和删除。
+下面是添加 babel-plugin-import 插件的例子:
 
 **.silkrc**
 
 ```
 {
   "extraBabelPlugins": [
-  ["import", { "libraryName": "antd", "libraryDirectory": "lib", "style": "css" }]
-    ]
+    ["import", { "libraryName": "antd", "libraryDirectory": "lib", "style": "css" }]
+  ]
 }
 ```
 
 ### extraPostCSSPlugins
 
-Set extra postcss plugins. Current not support.
+设置额外的 postcss 插件. 目前还未支持.
 
 ### autoprefixer
 
-Set autoprefixer, see [autoprefixer](https://github.com/postcss/autoprefixer) and [browserslist](https://github.com/ai/browserslist#queries)
+设置 autoprefixer, 参见 [autoprefixer](https://github.com/postcss/autoprefixer) 和 [browserslist](https://github.com/ai/browserslist#queries)
 
-Example:
+例子:
 
 **.silkrc**
 
@@ -149,9 +150,9 @@ Example:
 
 ### proxy
 
-Set proxy, see [webpack dev server proxy](https://webpack.github.io/docs/webpack-dev-server.html#proxy)
+设置代理, 参见 [webpack dev server proxy](https://webpack.github.io/docs/webpack-dev-server.html#proxy)
 
-Example:
+例子:
 
 **.silkrc**
 
@@ -169,15 +170,15 @@ Example:
 
 ### externals
 
-Set webpack externals. see [webpack externals](http://webpack.github.io/docs/configuration.html#externals)
+设置 webpack externals. 参见 [webpack externals](http://webpack.github.io/docs/configuration.html#externals)
 
 ### multipage
 
-Speficy if has multiple pages. Default true.
+是否是多页面应用. 默认为 true.
 
 ### define
 
-Specify the DefinePlugin configuration of webpack. The value will be transform by JSON.stringify automatically. see [webpack DefinePlugin](http://webpack.github.io/docs/list-of-plugins.html#defineplugin)
+对应 webpack 中的 DefinePlugin 配置. 值将自动做 JSON.stringify 处理. 参见 [webpack DefinePlugin](http://webpack.github.io/docs/list-of-plugins.html#defineplugin)
 
 Example:
 
@@ -194,9 +195,9 @@ Example:
 
 ### env
 
-Set specific options for certain environment. `development` is for server, and `production` is for build.
+设置某个环境下的配置. `development` 为开发环境, `production` 为生产环境.
 
-Example:
+例子:
 
 **.silkrc**
 
@@ -211,13 +212,15 @@ Example:
 }
 ```
 
-Then, in development environment, `extraBabelPlugins` is `["transform-runtime", "dva-hmr"]`, in production environment, `extraBabelPlugins` is `["transform-runtime"]`.
+配置后, 在开发环境下, `extraBabelPlugins` 为 `["transform-runtime", "dva-hmr"]`, 在生产环境下, `extraBabelPlugins` 为 `["transform-runtime"]`.
+  
+注意：如果配置项值为数组或对象，则最终得到配置为合并后的数组或对象，如果配置项的值为字符串等其他类型，则会被 env 中配置的值所替换。
 
 ### theme
 
-Set antd theme. Support Object and String with filepath.
+设置 antd 主题。 支持对象和表示less文件路径的字符串。
 
-Example:
+例子:
 
 **.silkrc**
 
@@ -240,11 +243,11 @@ Example:
 
 ```
 
-[how to config antd theme](https://ant.design/docs/react/customize-theme)
+[如何配置 antd 主题](https://ant.design/docs/react/customize-theme)
 
 ### port
 
-Set develop server port.
+设置开发服务器的端口.
 
 
 ## 高级功能
