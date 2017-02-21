@@ -6,7 +6,7 @@ react app 开发cli工具，包括脚手架以及开发调试功能，支持开�
   
 支持多种css预处理语言，包括 less sass/scss stylus.
 
-
+[View README in English](https://github.com/shaozj/silk/blob/master/README_en-us.md)
 [view on github](https://github.com/shaozj/silk)
 
 ## 下载安装
