@@ -3,9 +3,8 @@
 ## Introduction
 
 react app 开发cli工具，包括脚手架以及开发调试功能，支持开发 react 多页面 app。 
-React app develop cli tool, include scaffold and develop debug features, support react multiple pages develop.  
   
-Support css less sass/scss stylus.
+支持多种css预处理语言，包括 less sass/scss stylus.
 
 
 [view on github](https://github.com/shaozj/silk)
