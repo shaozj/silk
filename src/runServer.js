@@ -207,7 +207,6 @@ function setupWatch(devServer) {
    * 监听是否有新建页面，（是否有新的页面入口）
    * 如果有新建页面，则重启服务器
    */
-  // 获取多页面的所有入口，每个入口文件名都为 index.js
   let globPath = rcConfig.entry ? paths.appDirectory+'/'+rcConfig.entry  : `${paths.appSrc}/pages/*/index.js`;
   entries = glob.sync(globPath);
   
