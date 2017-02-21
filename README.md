@@ -53,7 +53,7 @@ $ silk build
 $ silk -h
 ```
 
-> 现实版本
+> 显示版本
 
 ```bash
 $ silk --version
