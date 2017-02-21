@@ -13,6 +13,7 @@ import getPaths from './utils/paths';
 import getConfig from './utils/getConfig';
 import applyWebpackConfig, { warnIfExists } from './utils/applyWebpackConfig';
 import { applyMock, outputError as outputMockError } from './utils/mock';
+import glob from 'glob';
 
 process.env.NODE_ENV = 'development';
 
@@ -34,6 +35,7 @@ const argv = require('yargs')
 
 let rcConfig;
 let config;
+let entries; // 页面入口，当页面入口发生变化时（新建页面时），重启服务器
 
 function clearConsoleWrapped() {
   if (process.env.CLEAR_CONSOLE !== 'NONE') {
@@ -200,17 +202,39 @@ function setupWatch(devServer) {
     devServer.close();
     process.send('RESTART');
   });
-  // const pageDir = paths.resolveApp('./src/pages/');
-  // //console.log('==========pageDir: ' + pageDir);
-  // chokidar.watch(pageDir, {ignored: /index|program-list/})
-  // .on('addDir', (path) => {
-  //   if (path.indexOf('pages/') != -1) {
-  //     console.log(chalk.green(`Added ${path.replace(paths.appDirectory, '.')} , try to restart server`));
-  //     watcher.close();
-  //     devServer.close();
-  //     process.send('RESTART');
-  //   }
-  // });
+
+  /**
+   * 监听是否有新建页面，（是否有新的页面入口）
+   * 如果有新建页面，则重启服务器
+   */
+  // 获取多页面的所有入口，每个入口文件名都为 index.js
+  let globPath = rcConfig.entry ? paths.appDirectory+'/'+rcConfig.entry  : `${paths.appSrc}/pages/*/index.js`;
+  entries = glob.sync(globPath);
+  
+  const pageDir = paths.resolveApp('./src/pages/');
+  chokidar.watch(pageDir).on('add',
+    (path) => {
+      let curEntries = glob.sync(globPath);
+      let diff = false;
+      let len = curEntries.length;
+      if (len != entries.length) {
+        diff = true;
+      } else {
+        for (let i = 0; i < len; i++) {
+          if (curEntries[i] != entries[i]) {
+            diff = true;
+            break;
+          }
+        }
+      }
+      if (diff) {
+        console.log(chalk.green(`Added ${path.replace(paths.appDirectory, '.')} , try to restart server`));
+        watcher.close();
+        devServer.close();
+        process.send('RESTART');
+        entries = curEntries;
+      }
+  });
 }
 
 function run(port) {
