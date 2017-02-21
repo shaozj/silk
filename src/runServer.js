@@ -36,6 +36,7 @@ const argv = require('yargs')
 let rcConfig;
 let config;
 let entries; // 页面入口，当页面入口发生变化时（新建页面时），重启服务器
+let startTime, endTime; // 计算编译时间
 
 function clearConsoleWrapped() {
   if (process.env.CLEAR_CONSOLE !== 'NONE') {
@@ -70,6 +71,7 @@ function setupCompiler(host, port, protocol) {
       clearConsoleWrapped();
     }
     console.log('Compiling...');
+    startTime = (new Date()).getTime();
   });
 
   let isFirstCompile = true;
@@ -86,6 +88,8 @@ function setupCompiler(host, port, protocol) {
 
     if (isSuccessful) {
       console.log(chalk.green('Compiled successfully!'));
+      // show compile time
+      console.log(chalk.yellow('Compile time: ' + ((new Date()).getTime() - startTime) / 1000 + 's'));
     }
 
     if (showInstructions) {
@@ -237,6 +241,7 @@ function setupWatch(devServer) {
 }
 
 function run(port) {
+  startTime = (new Date()).getTime();
   const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
   const host = process.env.HOST || 'localhost';
   setupCompiler(host, port, protocol);
