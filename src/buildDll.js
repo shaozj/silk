@@ -18,7 +18,6 @@ const argv = require('yargs')
   .argv;
 
 export function build(argv) {
-  console.log('argv.cwd: ' + argv.cwd);
   const paths = getPaths(argv.cwd);
 
   try {
