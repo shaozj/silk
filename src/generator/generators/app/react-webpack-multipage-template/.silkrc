@@ -14,5 +14,6 @@
   "define": null,
   "env": null,
   "theme": null,
-  "port": 8000
+  "port": 8000,
+  "dll": false
 }
