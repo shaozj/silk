@@ -47,6 +47,12 @@ $ silk server
 $ silk build
 ```
 
+> 生成 vendor.dll.js 文件
+
+```
+$ silk dll
+```
+
 > 显示帮助文档
 
 ```bash
@@ -248,6 +254,10 @@ Example:
 ### port
 
 设置开发服务器的端口.
+
+### dll
+
+是否开启webpack dll功能。默认为 false。如果开启了dll功能，需要先执行一遍 silk dll，生成 vender.dll.js（注意，该指令只需执行一遍）。之后用 silk server 启动开发调试服务器。
 
 
 ## 智能重启
