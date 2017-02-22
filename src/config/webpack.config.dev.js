@@ -13,6 +13,7 @@ import getCSSLoaders from '../utils/getCSSLoaders';
 import normalizeDefine from '../utils/normalizeDefine';
 import generateHtml from '../utils/html';
 import entry from '../utils/entry';
+import path from 'path';
 
 export default function (config, cwd) {
   const publicPath = '/';
@@ -20,12 +21,8 @@ export default function (config, cwd) {
   const theme = JSON.stringify(getTheme(process.cwd(), config));
   const paths = getPaths(cwd);
   // 获取多页面的所有入口，每个入口文件名都为 index.js
-  let entries = entry(`${paths.appSrc}/pages/*/index.js`);
-  // 用户配置入口
-  let configEntry = config.entry;
-  if (configEntry) {
-    entries = entry(paths.appDirectory+'/'+configEntry);
-  }
+  let configEntry = config.entry ? paths.appDirectory+'/'+config.entry : `${paths.appSrc}/pages/*/index.js`;
+  let entries = entry(configEntry, config);
   // 添加mock数据入口
   if (fs.existsSync(`${paths.appSrc}/mock/mock.js`)) {
     entries['mock'] = [`${paths.appSrc}/mock/mock.js`];
@@ -81,7 +78,7 @@ export default function (config, cwd) {
           test: /\.(js|jsx)$/,
           include: paths.appSrc,
           loader: 'babel',
-          //loaders: ['happypack/loader?id=jsx'],
+          // loader: path.resolve(__dirname, '../../node_modules', 'happypack/loader') + '?id=jsx',
         },
         {
           test: /\.css$/,
@@ -171,12 +168,24 @@ export default function (config, cwd) {
       new webpack.HotModuleReplacementPlugin(),
       new CaseSensitivePathsPlugin(),
       new WatchMissingNodeModulesPlugin(paths.appNodeModules),
-      new SystemBellWebpackPlugin()
+      new SystemBellWebpackPlugin(),
       // new HappyPack({
       //   id: 'jsx',
-      //   threads: 4,
-      //   loaders: ['babel']
-      // })
+      //   threads: 8,
+      //   loaders: ['babel?' + JSON.stringify({
+      //     babelrc: false,
+      //     presets: [
+      //       require.resolve('babel-preset-es2015'),
+      //       require.resolve('babel-preset-react'),
+      //       require.resolve('babel-preset-stage-0'),
+      //     ],
+      //     plugins: [
+      //       require.resolve('babel-plugin-add-module-exports'),
+      //       require.resolve('babel-plugin-react-require')
+      //     ].concat(config.extraBabelPlugins || []),
+      //     cacheDirectory: true,
+      //   })]
+      // }),
     ].concat(
       !fs.existsSync(paths.appPublic) ? [] :
         new CopyWebpackPlugin([
@@ -186,7 +195,7 @@ export default function (config, cwd) {
           },
         ]),
     ).concat(
-      !config.multipage ? [] :
+      (!config.multipage || config.dll) ? [] :
         new webpack.optimize.CommonsChunkPlugin(
           {
             name: 'vendor',
@@ -198,6 +207,12 @@ export default function (config, cwd) {
         new webpack.DefinePlugin(normalizeDefine(config.define)),
     ).concat(
       generateHtml(entries)
+    ).concat(
+      !config.dll ? [] :
+      new webpack.DllReferencePlugin({
+        context: paths.appDirectory,
+        manifest: require(path.join(paths.appPublic, 'vendor-manifest.json'))
+      }),
     ),
     externals: config.externals,
     node: {

@@ -40,7 +40,7 @@ let startTime, endTime; // 计算编译时间
 
 function clearConsoleWrapped() {
   if (process.env.CLEAR_CONSOLE !== 'NONE') {
-    clearConsole();
+    //clearConsole();
   }
 }
 

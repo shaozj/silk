@@ -3,14 +3,14 @@ let glob = require('glob');
 
 const isProduction = process.env.NODE_ENV === 'production';
 // 获取所有入口文件
-let getEntry = function(globPath) {
-  let entries;
+let getEntry = function(globPath, config) {
+  let entries = {};
 
   if (isProduction) {
     entries = {
       vendor: ['react','react-dom', 'whatwg-fetch'] // 类库
     };
-  } else {
+  } else if (!config.dll){
     entries = {
       vendor: ['whatwg-fetch'] // 类库
     };

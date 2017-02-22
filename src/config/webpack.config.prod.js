@@ -21,12 +21,8 @@ export default function (args, appBuild, config, paths) {
   // const entries = getEntry(config, paths.appDirectory)
 
   // 获取多页面的所有入口，每个入口文件名都为 index.js
-  let entries = entry(`${paths.appSrc}/pages/*/index.js`);
-  // 用户配置入口，以 devEntry 优先级最高
-  let configEntry = config.entry;
-  if (configEntry) {
-    entries = entry(paths.appDirectory+'/'+configEntry);
-  }
+  let configEntry = config.entry ? paths.appDirectory+'/'+config.entry : `${paths.appSrc}/pages/*/index.js`;
+  let entries = entry(configEntry, config);
   // 添加mock数据入口
   if (fs.existsSync(`${paths.appSrc}/mock/mock.js`)) {
     entries['mock'] = [`${paths.appSrc}/mock/mock.js`];

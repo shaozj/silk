@@ -147,6 +147,18 @@ program
     });
   });
 
+program
+  .command ('dll')
+  .description('build vendor.dll.js')
+  .action(function() {
+    result = spawn.sync(
+      'node',
+      [require.resolve(`../lib/buildDll`)].concat(args),
+      { stdio: 'inherit' }
+    );
+    process.exit(result.status);
+  });
+
 program.parse(process.argv);
 
 // switch (script) {
