@@ -78,9 +78,7 @@ $ silk --version
   "disableCSSModules": false,
   "publicPath": "/",
   "outputPath": "./build",
-  "extraBabelPlugins": [
-    ["import", [{ "libraryName": "antd", "style": true }]]
-  ],
+  "extraBabelPlugins": [],
   "extraPostCSSPlugins": [],
   "autoprefixer": null,
   "proxy": null,
@@ -89,9 +87,7 @@ $ silk --version
   "define": null,
   "env": null,
   "theme": null,
-  "port": 8000,
-  "dll": false,
-  "dllEntry": []
+  "port": 8000
 }
 ```
 
@@ -272,7 +268,7 @@ Example:
 
 ```
 {
-  "dllEntry": ['react', 'react-dom', 'antd', 'whatwg-fetch']
+  "dllEntry": ["react", "react-dom", "antd", "whatwg-fetch"]
 }
 ```
   
