@@ -10,8 +10,6 @@
     "posttest": "npm run lint",
     "build": "silk build",
     "lint": "eslint ./src",
-    "lintcfg": "eslint ./cfg",
-    "copy": "copyfiles -f ./src/index.html ./src/favicon.ico ./dist",
     "clean": "rimraf build/*",
     "release:major": "npm version major && npm publish && git push --follow-tags",
     "release:minor": "npm version minor && npm publish && git push --follow-tags",
