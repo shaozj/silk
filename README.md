@@ -78,7 +78,9 @@ $ silk --version
   "disableCSSModules": false,
   "publicPath": "/",
   "outputPath": "./build",
-  "extraBabelPlugins": [],
+  "extraBabelPlugins": [
+    ["import", [{ "libraryName": "antd", "style": true }]]
+  ],
   "extraPostCSSPlugins": [],
   "autoprefixer": null,
   "proxy": null,
@@ -87,7 +89,9 @@ $ silk --version
   "define": null,
   "env": null,
   "theme": null,
-  "port": 8000
+  "port": 8000,
+  "dll": false,
+  "dllEntry": []
 }
 ```
 
