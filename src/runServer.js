@@ -1,3 +1,5 @@
+import fs from 'fs';
+import spawn from 'cross-spawn';
 import detect from 'detect-port';
 import clearConsole from 'react-dev-utils/clearConsole';
 import getProcessForPort from 'react-dev-utils/getProcessForPort';
@@ -250,7 +252,18 @@ function run(port) {
 
 function init() {
   readRcConfig();
+  // 如果配置了dll功能，首先看是否存在了 vendor.dll.js 文件，如果不存在，则需要先运行 silk dll
+  if (rcConfig.dll) {
+    if (!fs.existsSync(`${paths.appPublic}/vendor.dll.js`)) {
+      console.log(' ️⚠️  ️You are using webpack dll. ');
+      console.log('Please run ' + chalk.yellow('silk dll') + ' first');
+      console.log('and add code ' + chalk.green('<script src="/vendor.dll.js"></script>') + 
+        ' to your template-dev.html ');
+      return;
+    }
+  }
   readWebpackConfig();
+  
   // 命令行设置端口优先级最高，用户配置优先级次之，默认端口8000
   DEFAULT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : rcConfig.port;
   detect(DEFAULT_PORT).then((port) => {

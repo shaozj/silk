@@ -2,9 +2,13 @@ import path from 'path';
 import webpack from 'webpack';
 
 export default function (args, config, paths) {
+  let dllEntry = ['react', 'react-dom', 'antd', 'whatwg-fetch'];
+  if (config.dllEntry && config.dllEntry.length && config.dllEntry.length > 0) {
+    dllEntry = config.dllEntry;
+  }
   return {
     entry: {
-      vendor: ['react', 'react-dom', 'antd', 'whatwg-fetch']
+      vendor: dllEntry
     },
     output: {
       path: paths.appPublic,

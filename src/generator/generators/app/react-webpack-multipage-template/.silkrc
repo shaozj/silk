@@ -15,5 +15,6 @@
   "env": null,
   "theme": null,
   "port": 8000,
-  "dll": false
+  "dll": false,
+  "dllEntry": []
 }
