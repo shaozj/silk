@@ -36,7 +36,7 @@ class AppGenerator extends Generators.Base {
 
     if(!this.options['skip-welcome-message']) {
       this.log(require('yeoman-welcome'));
-      this.log('Out of the box I include Webpack and some default React components.\n');
+      //this.log('Out of the box I include Webpack and some default React components.\n');
     }
   }
 
