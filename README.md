@@ -260,6 +260,20 @@ Example:
 是否开启webpack dll功能。默认为 false。如果开启了dll功能，需要先执行一遍 silk dll，生成 vender.dll.js（注意，该指令只需执行一遍）。同时，需要在 template-dev.html 中添加如下代码：
 `<script src="/vendor.dll.js"></script>` 。之后用 silk server 启动开发调试服务器。
 
+### dllEntry
+
+要编译到 vendor.dll.js 中的代码，数组。成员为需要编译到 dll 中的库的路径。
+  
+例子：
+
+```
+{
+  "dllEntry": ['react', 'react-dom', 'antd', 'whatwg-fetch']
+}
+```
+  
+当 dllEntry 为空时，编译 dll 时，默认要编译库即为 `['react', 'react-dom', 'antd', 'whatwg-fetch']`。
+
 
 ## 智能重启
 
