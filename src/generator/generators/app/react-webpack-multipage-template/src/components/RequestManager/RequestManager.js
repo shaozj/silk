@@ -2,6 +2,7 @@
  * 数据请求管理
  * 采用 fetch api 请求数据
  */
+import fetchJsonp from 'fetch-jsonp';
 
 class RequestManager {
   /**
@@ -25,6 +26,16 @@ class RequestManager {
     });
   }
 
+  /**
+   * jsonp 请求例子
+   * 根据标签 id 获取标签名字
+   * @param {String} tags 标签的id串，用逗号隔开id
+   */
+  static fetch_jsonp(tags) {
+    let u = setUrlSearchParams({tags: tags});
+    return fetchJsonpW('/common/jsonp/getTagName.htm?'+u);
+  }
+
 }
 
 /**
@@ -41,6 +52,18 @@ function fetchW(req, opt) {
     console.log('fetch succeeded with JSON response, ', data);
     return data;
   });
+}
+
+/**
+ * 对 fetch-jsonp 过程对通用包装
+ */
+function fetchJsonpW(req) {
+  return fetchJsonp(req)
+  .then(parseJSON)
+  .then(data => {
+    console.log('fetch jsonp succeeded with JSON response, ', data);
+    return data;
+  })
 }
 
 /**
@@ -99,4 +122,3 @@ function parseJSON(response) {
 }
 
 export default RequestManager;
-
