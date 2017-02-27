@@ -1,22 +1,22 @@
 #!/usr/bin/env node
 
-const chalk = require('chalk');
-const spawn = require('cross-spawn');
-const os = require('os');
+var chalk = require('chalk');
+var spawn = require('cross-spawn');
+var os = require('os');
 require('shelljs/global');
-const program = require('commander');
-const yo = require('./yo.js');
-const request = require('request');
+var program = require('commander');
+var yo = require('./yo.js');
+var request = require('request');
 
-const script = process.argv[2];
-const args = process.argv.slice(3);
+var script = process.argv[2];
+var args = process.argv.slice(3);
 
-const nodeVersion = process.versions.node;
-const versions = nodeVersion.split('.');
-const major = versions[0];
-const minor = versions[1];
-const platform = os.platform();
-const version = require('../package.json').version;
+var nodeVersion = process.versions.node;
+var versions = nodeVersion.split('.');
+var major = versions[0];
+var minor = versions[1];
+var platform = os.platform();
+var version = require('../package.json').version;
 
 if (((major * 10) + (minor * 1)) < 65) {
   console.log(chalk.red(`Node version (${major}.${minor}) is not compatibile, ${chalk.cyan('must >= 6.5')}.`));
@@ -55,7 +55,7 @@ program
     // check update
     request('http://registry.npmjs.org/silki/latest', function (error, response, body) {
       if (!error && response.statusCode == 200) {
-        let pkg;
+        var pkg;
         try {
           pkg = JSON.parse(body);
           if (pkg.version !== version) {
