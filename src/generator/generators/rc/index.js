@@ -1,6 +1,7 @@
 'use strict';
 const Generators = require('yeoman-generator');
 const utils = require('../../utils/all');
+const prompts = require('./prompts');
 const C = utils.constants;
 const getAllSettingsFromComponentName = utils.yeoman.getAllSettingsFromComponentName;
 
@@ -72,6 +73,14 @@ class ComponentGenerator extends Generators.Base {
     this._cssClsPrefix = (val === '') ? '' : `${val}-`;
   }
 
+  prompting() {
+
+    return this.prompt(prompts).then((answers) => {
+      // Set needed keys into config
+      this.type = answers.type;
+    });
+  }
+
   configuring() {
     // Read the requested major version or default it to the latest stable
     this.generatorVersion = this.config.get('generatedWithVersion') || 3;
@@ -105,6 +114,8 @@ class ComponentGenerator extends Generators.Base {
         this.cssClsPrefix
       );
 
+    const isPureRc = this.type == 'pure' ? true : false;
+
     // Create the style template. Skipped if nostyle is set as command line flag
     if(this.useStyles) {
       this.fs.copyTpl(
@@ -116,14 +127,14 @@ class ComponentGenerator extends Generators.Base {
 
     // Create the component
     this.fs.copyTpl(
-      this.templatePath('component.js'),
+      isPureRc ? this.templatePath('component-pure.js') : this.templatePath('component.js'),
       this.destinationPath('src/' + settings.component.fileName.split('/')[0] + '/index.js'),
       settings
     );
 
     // Create the demo
     this.fs.copyTpl(
-      this.templatePath('demo.js'),
+      isPureRc ? this.templatePath('demo-pure.js') : this.templatePath('demo.js'),
       this.destinationPath('src/' + settings.component.fileName.split('/')[0] + '/index.test.js'),
       settings
     );

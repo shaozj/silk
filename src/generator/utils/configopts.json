@@ -108,5 +108,18 @@
       }
     ],
     "default": "less"
+  },
+  "rcType": {
+    "options": [
+      {
+        "name": "pure react",
+        "value": "pure"
+      },
+      {
+        "name": "wrapped react",
+        "value": "wrapped"
+      }
+    ],
+    "default": "pure"
   }
 }
