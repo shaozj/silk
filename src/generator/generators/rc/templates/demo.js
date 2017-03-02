@@ -2,8 +2,8 @@ import '../style/index.less';
 import <%= component.className %> from './index';
 
 // write your demo code here, below is an example
-data = "hello world";
-params = {
+let data = "hello world";
+let params = {
   "name": "Jack"
 }
 const mountNode = document.getElementById('app');
