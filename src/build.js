@@ -79,7 +79,9 @@ export function build(argv) {
 
       // Remove all content but keep the directory so that
       // if you're in it, you don't end up in Trash
-      fs.emptyDirSync(appBuild);
+      if (!rcConfig.notClearBuild) {
+        fs.emptyDirSync(appBuild);
+      }
 
       // Start the webpack build
       realBuild(previousSizeMap, resolve, argv);

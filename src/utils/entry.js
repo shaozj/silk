@@ -17,7 +17,9 @@ let getEntry = function(globPath, config) {
   }
 
   glob.sync(globPath).forEach(entry => {
-    let pathname = entry.split('/').splice(-2).join('/').split('.')[0];
+    // let pathname = entry.split('/').splice(-2).join('/').split('.')[0];
+    let reg = /\.(js|jsx)$/;
+    let pathname = entry.split('/').splice(-2).join('/').replace(reg, '');
     if (isProduction) {
       entries[pathname] = [entry];
     } else {
