@@ -12,7 +12,7 @@ let getEntry = function(globPath, config) {
     };
   } else if (!config.dll){
     entries = {
-      vendor: ['whatwg-fetch'] // 类库
+      vendor: ['react', 'react-dom', 'whatwg-fetch'] // 类库
     };
   }
 
