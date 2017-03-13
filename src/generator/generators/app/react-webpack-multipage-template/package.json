@@ -25,7 +25,11 @@
   ],
   "author": "澜嵚<zhenjiang.szj@alibaba-inc.com>, 冰浠<bingxi@alibaba-inc.com>",
   "devDependencies": {
-    "babel-plugin-import": "^1.1.0"
+    "babel-plugin-import": "^1.1.0",
+    "babel-eslint": "^7.1.1",
+    "eslint": "^3.17.1",
+    "eslint-loader": "^1.6.3",
+    "eslint-plugin-react": "^6.10.0",
   },
   "dependencies": {
     "antd": "~2.5.1",
