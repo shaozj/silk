@@ -25,17 +25,12 @@
   ],
   "author": "澜嵚<zhenjiang.szj@alibaba-inc.com>, 冰浠<bingxi@alibaba-inc.com>",
   "devDependencies": {
-    "babel-plugin-import": "^1.1.0",
-    "babel-eslint": "^7.1.1",
-    "eslint": "^3.17.1",
-    "eslint-loader": "^1.6.3",
-    "eslint-plugin-react": "^6.10.0",
+    "babel-plugin-import": "^1.1.0"
   },
   "dependencies": {
     "antd": "~2.5.1",
     "classnames": "^2.2.5",
     "core-js": "^2.0.0",
-    "jquery": "~3.1.1",
     "normalize.css": "^4.0.0",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
