@@ -1,25 +1,25 @@
 import autoprefixer from 'autoprefixer';
-import CaseSensitivePathsPlugin from 'case-sensitive-paths-webpack-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
 import webpack from 'webpack';
 import fs from 'fs';
-import WatchMissingNodeModulesPlugin from 'react-dev-utils/WatchMissingNodeModulesPlugin';
-import SystemBellWebpackPlugin from 'system-bell-webpack-plugin';
-import HappyPack from 'happypack';
-import getPaths from '../utils/paths';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import Visualizer from 'webpack-visualizer-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import getEntry from '../utils/getEntry';
 import getTheme from '../utils/getTheme';
 import getCSSLoaders from '../utils/getCSSLoaders';
 import normalizeDefine from '../utils/normalizeDefine';
-import generateHtml from '../utils/html';
 import entry from '../utils/entry';
-import path from 'path';
+import generateHtml from '../utils/html';
 
-export default function (config, cwd) {
-  const publicPath = '/';
+export default function (args, appBuild, config, paths) {
+  const { debug, analyze } = args;
+  const NODE_ENV = debug ? 'development' : process.env.NODE_ENV;
+
+  const publicPath = config.publicPath || '/';
   const cssLoaders = getCSSLoaders(config);
   const theme = JSON.stringify(getTheme(process.cwd(), config));
-  const paths = getPaths(cwd);
+  // const entries = getEntry(config, paths.appDirectory)
+
   // 获取多页面的所有入口，每个入口文件名都为 index.js
   let configEntry = config.entry ? paths.appDirectory+'/'+config.entry : `${paths.appSrc}/pages/*/index.js`;
   let entries = entry(configEntry, config);
@@ -27,15 +27,14 @@ export default function (config, cwd) {
   if (fs.existsSync(`${paths.appSrc}/mock/mock.js`)) {
     entries['mock'] = [`${paths.appSrc}/mock/mock.js`];
   }
-  //const entry = getEntry(config, paths.appDirectory);
+  delete entries.vendor;
 
   return {
-    devtool: 'cheap-module-source-map',
+    bail: true,
     entry: entries,
     output: {
-      path: paths.appBuild,
+      path: appBuild,
       filename: '[name].js',
-      pathinfo: true,
       publicPath,
     },
     resolve: {
@@ -78,42 +77,59 @@ export default function (config, cwd) {
           test: /\.(js|jsx)$/,
           include: paths.appSrc,
           loader: 'babel',
-          // loader: path.resolve(__dirname, '../../node_modules', 'happypack/loader') + '?id=jsx',
         },
         {
           test: /\.css$/,
           include: paths.appSrc,
-          loader: `style!${cssLoaders.own.join('!')}`,
+          loader: ExtractTextPlugin.extract(
+            'style',
+            cssLoaders.own.join('!'),
+          ),
         },
         {
           test: /\.less$/,
           include: paths.appSrc,
-          loader: `style!${cssLoaders.own.join('!')}!less?{"modifyVars":${theme}}`,
+          loader: ExtractTextPlugin.extract(
+            'style',
+            `${cssLoaders.own.join('!')}!less?{"modifyVars":${theme}}`,
+          ),
         },
         {
           test: /\.css$/,
           include: paths.appNodeModules,
-          loader: `style!${cssLoaders.nodeModules.join('!')}`,
+          loader: ExtractTextPlugin.extract(
+            'style',
+            cssLoaders.nodeModules.join('!'),
+          ),
         },
         {
           test: /\.less$/,
           include: paths.appNodeModules,
-          loader: `style!${cssLoaders.nodeModules.join('!')}!less?{"modifyVars":${theme}}`,
+          loader: ExtractTextPlugin.extract(
+            'style',
+            `${cssLoaders.nodeModules.join('!')}!less?{"modifyVars":${theme}}`,
+          ),
         },
         {
-          test: /\.sass$/,
+          test: /\.sass/,
           include: paths.appSrc,
-          loader: `style!${cssLoaders.own.join('!')}!sass?outputStyle=expanded&indentedSyntax`
+          loader: ExtractTextPlugin.extract('style',
+            `${cssLoaders.own.join('!')}!sass?outputStyle=expanded&indentedSyntax`
+          )
         },
         {
-          test: /\.scss$/,
+          test: /\.scss/,
           include: paths.appSrc,
-          loader: `style!${cssLoaders.own.join('!')}!sass?outputStyle=expanded`
+          loader: ExtractTextPlugin.extract('style',
+            `${cssLoaders.own.join('!')}!sass?outputStyle=expanded`
+          )
         },
         {
-          test: /\.styl$/,
+          test: /\.styl/,
           include: paths.appSrc,
-          loader: `style!${cssLoaders.own.join('!')}!stylus`
+          loader: ExtractTextPlugin.extract('style',
+            `${cssLoaders.own.join('!')}!stylus`
+          )
         },
         {
           test: /\.json$/,
@@ -125,7 +141,11 @@ export default function (config, cwd) {
           query: {
             name: 'static/[name].[hash:8].[ext]',
           },
-        }
+        },
+        {
+          test: /\.(png|jpg|gif|woff|woff2)$/,
+          loader: 'url-loader?limit=8192'
+        },
       ],
     },
     babel: config.useBabelrc ? {} : {
@@ -157,63 +177,46 @@ export default function (config, cwd) {
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+          NODE_ENV: JSON.stringify(NODE_ENV),
         },
       }),
-      new webpack.ProvidePlugin({
-        jQuery: 'jquery',
-        React: 'react',
-        ReactDOM: 'react-dom'
-      }),
-      new webpack.HotModuleReplacementPlugin(),
-      new CaseSensitivePathsPlugin(),
-      new WatchMissingNodeModulesPlugin(paths.appNodeModules),
-      new SystemBellWebpackPlugin(),
-      // new HappyPack({
-      //   id: 'jsx',
-      //   threads: 8,
-      //   loaders: ['babel?' + JSON.stringify({
-      //     babelrc: false,
-      //     presets: [
-      //       require.resolve('babel-preset-es2015'),
-      //       require.resolve('babel-preset-react'),
-      //       require.resolve('babel-preset-stage-0'),
-      //     ],
-      //     plugins: [
-      //       require.resolve('babel-plugin-add-module-exports'),
-      //       require.resolve('babel-plugin-react-require')
-      //     ].concat(config.extraBabelPlugins || []),
-      //     cacheDirectory: true,
-      //   })]
-      // }),
-    ].concat(
-      !fs.existsSync(paths.appPublic) ? [] :
-        new CopyWebpackPlugin([
-          {
-            from: paths.appPublic,
-            to: paths.appBuild,
+      new webpack.optimize.OccurrenceOrderPlugin(),
+      new webpack.optimize.DedupePlugin(),
+      new ExtractTextPlugin('[name].css'),
+    ]
+      .concat(
+        debug ? [] : new webpack.optimize.UglifyJsPlugin({
+          compress: {
+            screw_ie8: true, // React doesn't support IE8
+            warnings: false,
           },
-        ]),
-    ).concat(
-      ((!config.multipage || config.dll) && !config.vendor) ? [] :
-        new webpack.optimize.CommonsChunkPlugin(
-          {
-            name: 'vendor',
-            filename: 'vendor.js',
-            minChunks: Infinity
-          }),
-    ).concat(
-      !config.define ? [] :
-        new webpack.DefinePlugin(normalizeDefine(config.define)),
-    ).concat(
-      generateHtml(entries)
-    ).concat(
-      !config.dll ? [] :
-      new webpack.DllReferencePlugin({
-        context: paths.appDirectory,
-        manifest: require(path.join(paths.appPublic, 'vendor-manifest.json'))
-      }),
-    ),
+          mangle: {
+            screw_ie8: true,
+          },
+          output: {
+            comments: false,
+            screw_ie8: true,
+          },
+        }),
+      )
+      .concat(
+        analyze ? new Visualizer() : [],
+      )
+      .concat(
+        !fs.existsSync(paths.appPublic) ? [] :
+          new CopyWebpackPlugin([
+            {
+              from: paths.appPublic,
+              to: paths.appBuild,
+            },
+          ]),
+      )
+      .concat(
+        !config.define ? [] :
+          new webpack.DefinePlugin(normalizeDefine(config.define)),
+      ).concat(
+        generateHtml(entries)
+      ),
     externals: config.externals,
     node: {
       fs: 'empty',

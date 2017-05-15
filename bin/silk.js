@@ -126,6 +126,20 @@ program
   });
 
 program
+  .command('buildMod')
+  .alias('bm')
+  .option('-a, --analyze', 'Visualize and analyze your Webpack bundle.')
+  .description('build code to build file')
+  .action(function () {
+    result = spawn.sync(
+      'node',
+      [require.resolve(`../lib/${script}`)].concat(args),
+      { stdio: 'inherit' }
+    );
+    process.exit(result.status);
+  });
+
+program
   .command('test')
   .description('test')
   .action(function() {
