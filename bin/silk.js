@@ -129,6 +129,7 @@ program
 program
   .command('buildMod')
   .alias('bm')
+  .option('-d, --debug', 'debug mode')
   .option('-a, --analyze', 'Visualize and analyze your Webpack bundle.')
   .description('build code to build file')
   .action(function () {
