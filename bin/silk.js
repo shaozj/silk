@@ -101,6 +101,7 @@ program
 program
   .command('server')
   .alias('s')
+  .option('-m, --mod', 'create youku mod server') // react 和 react-dom 用静态资源引入
   .description('start a develop server')
   .action(function () {
     result = spawn.sync(

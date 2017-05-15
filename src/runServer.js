@@ -32,6 +32,12 @@ const argv = require('yargs')
     describe: 'Open url in browser after started',
     default: true,
   })
+  .option('mod', {
+    type: 'boolean',
+    alias: 'm',
+    describe: 'create youku mod server',
+    default: false,
+  })
   .help('h')
   .argv;
 
@@ -58,10 +64,17 @@ function readRcConfig() {
 }
 
 function readWebpackConfig() {
-  config = applyWebpackConfig(
-    require('./config/webpack.config.dev')(rcConfig, cwd),
-    process.env.NODE_ENV,
-  );
+  if(argv.mod) {
+    config = applyWebpackConfig(
+      require('./config/webpack.config.mod.dev')(rcConfig, cwd),
+      process.env.NODE_ENV,
+    );
+  } else {
+    config = applyWebpackConfig(
+      require('./config/webpack.config.dev')(rcConfig, cwd),
+      process.env.NODE_ENV,
+    );
+  }
 }
 
 
