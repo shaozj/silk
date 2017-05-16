@@ -1,0 +1,26 @@
+@import './base/mixin.less';
+.cpnt-fouritem-scroll{
+	padding: 0 10px;
+	box-sizing: border-box;
+	background: @color-bg;
+	.ui-flex();
+	overflow: scroll;
+	.ui-item{
+		width: percentage(219/749);
+		min-width: percentage(219/749);
+		box-sizing: border-box;
+		border: 5px solid transparent;
+		border-width: 0px 0px 0px 10px/@base-radio ;
+		&:nth-child(1){
+			margin-left: -5px;
+		}
+		.ui-bg{
+			.ui-flex();
+		}
+		.ui-item(3, 2);
+	}
+	overflow-y: hidden;
+	overflow-x: scroll;
+	-webkit-overflow-scrolling: touch;
+}
+

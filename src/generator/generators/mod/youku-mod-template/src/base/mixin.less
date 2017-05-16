@@ -1,0 +1,224 @@
+@color-font: #333;
+@color-midlight: #666;
+@color-lowlight: #999;
+@color-light:#fff;
+@color-bg: #fff;
+@color-bg-mod: #fff;
+@space: 6px;            
+@root-size: 100px;
+@header-height: 44px; //页头高度
+@line-height:1.231;
+@base-radio:2;
+//公用mixin方法
+.ui-text-overflow(){
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ui-text-overflow-lines(@line: 2, @lineHeight: @line-height){
+	display: -webkit-box;
+	-webkit-line-clamp: @line;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	@height: @lineHeight * @line;
+	max-height: ~'@{height}em';
+}
+
+.ui-text-overflow-normal(){
+  white-space: normal;
+  text-overflow: clip;
+}
+
+.ui-center(){
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ui-fix-float(){
+  &::after{
+    content: '\20';
+    height: 0;
+    display: block;
+    clear: both;
+  }
+}
+.ui-flex(){
+  display: flex;
+}
+.ui-flex-avg(){
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: block; //-webkit-box-flex时需要
+  //当内容超过均分的内容时需要
+  //for -webkit-box
+  width: 1px;
+  //for flex
+  flex-basis: 1px;
+}
+
+
+
+.ui-responsive(@padding-top: 100%, @position: relative){
+  position: @position;
+  &::before{
+    content: '\20';
+    padding-top: @padding-top;
+    display: block;
+  }
+}
+
+.ui-img-responsive(@padding-top: 100%, @position: relative){
+  .ui-responsive(@padding-top, @position);
+  img{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}
+
+.ui-relative-font-size(@font-size, @base-font-size){
+  font-size: @font-size / @base-font-size;
+}
+
+.change-item:before{
+  content: " ";
+  width: 100%;
+  background: rgba(73, 169, 238, 0.46);
+  height: 5px;
+  line-height: 5px;
+  position: absolute;
+  top: -5px;
+  left: 0px;
+  font-size: 10px;
+  //color: rgb(0,0,255);
+}
+
+
+/**组件+item， for cms**/
+.ui-img-plus(){
+    background: #666 url(//gw.alicdn.com/tfs/TB1Gjb3QpXXXXaXXXXXXXXXXXXX-32-32.png) center center no-repeat;
+}
+.ui-item-base(){
+  .ui-item{
+    display: block;
+    position: relative;
+  }
+}
+//坑位样式
+.ui-item(@x,@y){
+  .ui-item-base();
+  position: relative;
+  &[data-from="1"]:before{
+    display: block;
+    content: " ";
+    width: 12px;
+    height: 6px;
+    background: #49a9ee;
+    top: 0px;
+    left: 0px;
+    position: absolute;
+    border-radius: 0 0 6px 6px;
+    z-index: 9;
+    box-shadow: 0 0 8px #ecf6fd;
+  }
+  .ui-bg{
+    .ui-img-responsive(percentage(@x/@y));
+    background: #666 url(//img.alicdn.com/tfs/TB1HvejQVXXXXcLaXXXXXXXXXXX-90-33.png) no-repeat center center;
+    background-size: 45px 16px;
+    overflow: hidden;
+    border-radius: 4px;
+    >img{
+      border-radius: 4px;
+    }
+    .ui-tip{
+      position: absolute;
+      bottom: 10px/@base-radio;
+      left: 0px;
+      color: @color-light;
+      font-size: 22px/@base-radio;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+      padding-left: 10px/@base-radio;
+      box-sizing: border-box;
+    }
+    &.ui-img-plus{
+      background: #666 url(//gw.alicdn.com/tfs/TB1Gjb3QpXXXXaXXXXXXXXXXXXX-32-32.png) center center no-repeat;
+    }
+  }
+  .ui-info{
+    padding: 7px 0 12px;
+    display: block;
+  }
+  .ui-title{
+    font-size: 28px/@base-radio;
+    color: @color-font;
+    line-height: @line-height;
+    white-space: nowrap;
+    overflow: hidden;
+      text-overflow: ellipsis;
+  }
+  .ui-sub-title{
+    font-size: 24px/@base-radio;
+    color: @color-lowlight;
+    line-height: @line-height;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .ui-tag{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    padding: 0 10px/@base-radio;
+    color: @color-light;
+    font-size: 22px/@base-radio;
+    background: rgba(0,0,0,.5);
+    line-height: 36px/@base-radio;
+
+  }
+  .ui-more{
+    font-size: 24px/@base-radio;
+    color: @color-lowlight;
+    background: url(//gw.alicdn.com/tfs/TB1XHLqQXXXXXb6aXXXXXXXXXXX-32-32.png) no-repeat left center;
+    background-size:26px/@base-radio;
+    padding-left: 30px/@base-radio;
+    margin-top: 0px;
+  }
+  .ui-score();
+}
+.ui-score(){
+  .ui-score{
+    display: block;
+    color: #3d4245;
+    font-family: Helvetica, Arial, sans-serif;
+    position: absolute;
+    bottom: 10px/@base-radio;
+    left: 10px/@base-radio;
+    font-size: 22px/@base-radio;
+    color: #ff9800;
+    u{
+        text-decoration: none;
+        font-size: 36px/@base-radio;
+    }
+    s{
+      text-decoration: none;
+      font-size: 26px/@base-radio;
+    }
+  }
+}
+
+//用于后台cms
+div[data-type="0"] .ui-item .ui-bg,div[data-type="-1"] .ui-item .ui-bg, div[data-type="3"] .ui-item .ui-bg{
+  background: #666;
+}
+div[data-type="0"] .ui-bg.ui-img-plus,div[data-type="-1"] .ui-bg.ui-img-plus, div[data-type="3"] .ui-bg.ui-img-plus{
+  background: #666 url(//gw.alicdn.com/tfs/TB1Gjb3QpXXXXaXXXXXXXXXXXXX-32-32.png) center center no-repeat;
+}
+

@@ -32,9 +32,7 @@ if (((major * 10) + (minor * 1)) < 65) {
 
 require('atool-monitor').emit();
 
-/**
- * generate app
- */
+// generate app
 function generateApp(app) {
   app = app || 'app';
   var generator = 'generator-react-multipage:' + app;

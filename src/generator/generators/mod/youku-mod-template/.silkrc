@@ -1,0 +1,25 @@
+{
+  "entry": "src/index.test.js",
+  "disableCSSModules": true,
+  "publicPath": "/",
+  "outputPath": "./build",
+  "useBabelrc": false,
+  "extraBabelPlugins": [],
+  "extraBabelPresets": [],
+  "extraPostCSSPlugins": [],
+  "autoprefixer": null,
+  "proxy": null,
+  "externals": null,
+  "multipage": false,
+  "define": null,
+  "env": {
+    "production": {
+      "entry": "src/index.js"
+    }
+  },
+  "theme": null,
+  "port": 8003,
+  "dll": false,
+  "dllEntry": [],
+  "vendor": true
+}
