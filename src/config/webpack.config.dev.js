@@ -38,6 +38,9 @@ export default function (config, cwd) {
       pathinfo: true,
       publicPath,
     },
+    devServer: {
+      disableHostCheck: true
+    },
     resolve: {
       extensions: [
         '.web.js', '.web.jsx', '.web.ts', '.web.tsx',

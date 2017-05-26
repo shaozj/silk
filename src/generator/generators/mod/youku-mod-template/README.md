@@ -8,6 +8,7 @@
 ⚠️ 注意：依赖于 react 开发工具 [silki](https://www.npmjs.com/package/silki)  
 
 `tnpm i silki@latest -g`  
+`silk new mod` // 新建一个优酷 h5 组件  
 `tnpm install`  
 `npm start` // 开启调试服务器  
 `npm run build` // 编译
