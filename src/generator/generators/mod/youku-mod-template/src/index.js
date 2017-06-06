@@ -5,46 +5,44 @@
 // ⚠️ 的库中，也不能有 import 'react' 或者 import 'react-dom' 这会导致同样的问题，这点需要切记
 
 import './index.less';
-import Base from './base/base.js';
-import ComponentWrap  from './utils/ComponentWrap.js';
-import {Item, Tag, Img, Summary, SubTitle, Title} from './utils/Elements.js';
-
+import {YKComponent,YKItem, YKTag, YKImg, YKSummary, YKSubTitle, YKTitle, Base} from '@ali/yk-base';
 class App extends Base {
   constructor(props) {
     super(props);
     this.state = {...props};
   }
-  
   render() {
-    const {data, coverLay, env} = this.props;
-    const items = data.componentItem||[];
+    const {data = {componentItem:[],type:""}, coverLay, env} = this.state;
+    const items =  (data && data.componentItem)||[];
     return (
-      <ComponentWrap {...data}
-        className = "cpnt-fouritem-scroll"
-        dataType = {data.type}
+      <YKComponent {...data}
+        className = "ykui-two-items"
+        dataType = {data && data.type}
         env = {env}
         addItem={::this.addItem}>
           {
             items.map((item,index)=>{
               return (
-                <Item href="#" coverLay={coverLay} env={env} coverLayPos={index} key={index} data={item}>
+                <YKItem href="#" className="ui-item item" coverLay={coverLay} env={env} coverLayPos={index} key={index} data={item}>
                   <div className="ui-bg">
-                    <Img data={item} />
-                    <Summary data={item} />
-                    <Tag data={item} />
+                    <YKImg data={item} />
+                    <YKSummary data={item} />
+                    <YKTag data={item} />
                   </div>
                   <div className="ui-info">
-                    <Title data={item} />
-                    <SubTitle data={item} />
+                    <YKTitle data={item} />
+                    <YKSubTitle data={item} />
                   </div>
-                </Item>
+                </YKItem>
               );
           })}
-      </ComponentWrap>
+      </YKComponent>
     );
   }
 }
 
 export default App;
-window.App = App;
+window.YKComponent = window.YKComponent || {};
+window.YKComponent.ykui = window.YKComponent.ykui || {};
+window.YKComponent.ykui['ykui-two-items'] = App;
 

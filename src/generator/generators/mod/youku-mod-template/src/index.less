@@ -1,26 +1,19 @@
-@import './base/mixin.less';
-.cpnt-fouritem-scroll{
+@import '~@ali/yk-base/lib/Base/mixin.less';
+.ykui-two-items{
 	padding: 0 10px;
 	box-sizing: border-box;
 	background: @color-bg;
 	.ui-flex();
-	overflow: scroll;
+	flex-wrap: wrap;
 	.ui-item{
-		width: percentage(219/749);
-		min-width: percentage(219/749);
+		width: 50%;
 		box-sizing: border-box;
-		border: 5px solid transparent;
-		border-width: 0px 0px 0px 10px/@base-radio ;
-		&:nth-child(1){
-			margin-left: -5px;
+		border: 6px/@base-radio solid transparent;
+		border-width: 0px 0px 3px/@base-radio 3px/@base-radio;
+		&:nth-child(2n+1){
+			border-width: 0px 3px/@base-radio 3px/@base-radio 0px;
 		}
-		.ui-bg{
-			.ui-flex();
-		}
-		.ui-item(3, 2);
+		.ui-item(198, 352);
 	}
-	overflow-y: hidden;
-	overflow-x: scroll;
-	-webkit-overflow-scrolling: touch;
 }
 

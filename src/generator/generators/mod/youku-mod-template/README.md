@@ -8,7 +8,8 @@
 ⚠️ 注意：依赖于 react 开发工具 [silki](https://www.npmjs.com/package/silki)  
 
 `tnpm i silki@latest -g`  
-`silk new mod` // 新建一个优酷 h5 组件  
+`mkdir newModName && cd newModName`  
+`silk new mod` // 新建一个优酷 h5 组件    
 `tnpm install`  
 `npm start` // 开启调试服务器  
 `npm run build` // 编译
@@ -24,42 +25,7 @@
 * 用于后台的盖在坑位上的层
 
 ### 组件元素
-
-###### ComponentWrap
-``` javascript
-<ComponentWrap {...data}
-  className = "cpnt-fouritem-scroll"
-  dataType = {data.type}
-  env = {env}
-  addItem={::this.addItem}>
-```
-* dataType:表示数据类型
-* env:表示组件所在的环境
-* addItem: 增加坑位按钮，这个this.addItem已在Base.js中定义
-* env和addItem需配合使用
-
-###### Item
-
-``` javascript
-<Item href="#" coverLay={coverLay} env={env} coverLayPos={index} key={index} data={item}></Item>
-```
-* 表示一个坑位，如果是坑位需要这个包裹
-
-
-###### Img
-* 图片
-
-###### Title
-* 标题
-
-###### Summary
-* 腰封
-
-###### SubTitle
-* 子标题
-
-###### Tag
-* 角标
+见[http://gitlab.alibaba-inc.com/ykui/yk-base/wikis/home](http://gitlab.alibaba-inc.com/ykui/yk-base/wikis/home)
 
 ##### 组件数据结构
 [http://dip.alibaba-inc.com/api/v2/services/schema/mock/58963](http://dip.alibaba-inc.com/api/v2/services/schema/mock/58963)
