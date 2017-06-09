@@ -1,6 +1,6 @@
 {
   "name": "silki",
-  "version": "0.1.34",
+  "version": "0.1.36",
   "description": "Cli tool for build react app, based on generator-react-multipage, create-react-app, roadhog. Support react multiple pages app develop.",
   "bin": {
     "silk": "./bin/silk.js"
