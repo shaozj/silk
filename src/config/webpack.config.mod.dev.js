@@ -205,7 +205,11 @@ export default function (config, cwd) {
         manifest: require(path.join(paths.appPublic, 'vendor-manifest.json'))
       }),
     ),
-    externals: config.externals,
+    externals: {
+      "react": "React",
+      "react-dom": "ReactDOM",
+      ...config.externals
+    },
     node: {
       fs: 'empty',
       net: 'empty',

@@ -217,7 +217,11 @@ export default function (args, appBuild, config, paths) {
       ).concat(
         generateHtml(entries)
       ),
-    externals: config.externals,
+    externals: {
+      "react": "React",
+      "react-dom": "ReactDOM",
+      ...config.externals
+    },
     node: {
       fs: 'empty',
       net: 'empty',
