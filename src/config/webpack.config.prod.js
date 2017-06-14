@@ -216,7 +216,7 @@ export default function (args, appBuild, config, paths) {
           ]),
       )
       .concat(
-        !config.multipage ? [] :
+        (!config.multipage || config.noVendor) ? [] : // 或配置了 noVendor
         new webpack.optimize.CommonsChunkPlugin(
           {
             name: 'vendor',

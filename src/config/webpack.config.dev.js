@@ -198,7 +198,7 @@ export default function (config, cwd) {
           },
         ]),
     ).concat(
-      ((!config.multipage || config.dll) && !config.vendor) ? [] :
+      (!config.multipage || config.dll || config.noVendor) ? [] :
         new webpack.optimize.CommonsChunkPlugin(
           {
             name: 'vendor',

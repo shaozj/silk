@@ -206,8 +206,6 @@ export default function (config, cwd) {
       }),
     ),
     externals: {
-      "react": "React",
-      "react-dom": "ReactDOM",
       ...config.externals
     },
     node: {

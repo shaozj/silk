@@ -6,14 +6,10 @@ const isProduction = process.env.NODE_ENV === 'production';
 let getEntry = function(globPath, config) {
   let entries = {};
 
-  if (isProduction) {
+  if (!config.noVendor && (isProduction || !config.dll)) {
     entries = {
       vendor: ['react','react-dom', 'whatwg-fetch'] // 类库
-    };
-  } else if (!config.dll){
-    entries = {
-      vendor: ['react', 'react-dom', 'whatwg-fetch'] // 类库
-    };
+    }
   }
 
   glob.sync(globPath).forEach(entry => {

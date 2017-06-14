@@ -218,8 +218,6 @@ export default function (args, appBuild, config, paths) {
         generateHtml(entries)
       ),
     externals: {
-      "react": "React",
-      "react-dom": "ReactDOM",
       ...config.externals
     },
     node: {
