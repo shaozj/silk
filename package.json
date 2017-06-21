@@ -1,6 +1,6 @@
 {
   "name": "silki",
-  "version": "0.1.39",
+  "version": "0.1.40",
   "description": "Cli tool for build react app, based on generator-react-multipage, create-react-app, roadhog. Support react multiple pages app develop.",
   "bin": {
     "silk": "./bin/silk.js"
@@ -110,6 +110,7 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.14.0",
     "webpack-dev-server": "^1.16.2",
+    "webpack-parallel-uglify-plugin": "^0.4.2",
     "webpack-visualizer-plugin": "^0.1.6",
     "yargs": "^6.5.0",
     "yeoman-generator": "^0.24.0",

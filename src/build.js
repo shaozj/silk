@@ -16,6 +16,7 @@ const argv = require('yargs')
   .usage('Usage: roadhog build [options]')
   .option('debug', {
     type: 'boolean',
+    alias: 'd',
     describe: 'Build without compress',
     default: false,
   })
@@ -44,6 +45,8 @@ let rcConfig;
 let outputPath;
 let appBuild;
 let config;
+
+let startTime, endTime; // 计算编译时间
 
 export function build(argv) {
   const paths = getPaths(argv.cwd);
@@ -184,6 +187,9 @@ function doneHandler(previousSizeMap, argv, resolve, err, stats) {
     console.log();
   }
 
+  // show compile time
+  console.log(chalk.yellow('Compile time: ' + ((new Date()).getTime() - startTime) / 1000 + 's'));
+
   resolve();
 }
 
@@ -194,6 +200,14 @@ function realBuild(previousSizeMap, resolve, argv) {
   } else {
     console.log('Creating an optimized production build...');
   }
+  
+  // 打印出用户 build 的页面
+  console.log(chalk.red('您 build 的页面包括如下页面，请保证您要上线的页面都被 build!'));
+  Object.keys(config.entry).map((key, index) => {
+    console.log(chalk.yellow(key));
+  });
+
+  startTime = (new Date()).getTime();
 
   const compiler = webpack(config);
   const done = doneHandler.bind(null, previousSizeMap, argv, resolve);
