@@ -8,6 +8,7 @@ import getEntry from '../utils/getEntry';
 import getTheme from '../utils/getTheme';
 import getCSSLoaders from '../utils/getCSSLoaders';
 import normalizeDefine from '../utils/normalizeDefine';
+import ParallelUglifyPlugin from 'webpack-parallel-uglify-plugin';
 import entry from '../utils/entry';
 import generateHtml from '../utils/html';
 
@@ -185,19 +186,36 @@ export default function (args, appBuild, config, paths) {
       new ExtractTextPlugin('[name].css'),
     ]
       .concat(
-        debug ? [] : new webpack.optimize.UglifyJsPlugin({
-          compress: {
-            screw_ie8: true, // React doesn't support IE8
-            warnings: false,
-          },
-          mangle: {
-            screw_ie8: true,
-          },
-          output: {
-            comments: false,
-            screw_ie8: true,
-          },
-        }),
+        debug ? [] :
+        // new webpack.optimize.UglifyJsPlugin({
+        //   compress: {
+        //     screw_ie8: true, // React doesn't support IE8
+        //     warnings: false,
+        //   },
+        //   mangle: {
+        //     screw_ie8: true,
+        //   },
+        //   output: {
+        //     comments: false,
+        //     screw_ie8: true,
+        //   },
+        // }),
+        new ParallelUglifyPlugin({
+          cacheDir: '.cache/', // 设置 cache 地址，加速压缩
+          uglifyJS: {
+            compress: {
+              screw_ie8: true, // React doesn't support IE8
+              warnings: false,
+            },
+            mangle: {
+              screw_ie8: true,
+            },
+            output: {
+              comments: false,
+              screw_ie8: true,
+            }
+          }
+        })
       )
       .concat(
         analyze ? new Visualizer() : [],
