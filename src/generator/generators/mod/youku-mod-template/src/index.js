@@ -1,8 +1,4 @@
 // 我是组件代码主体文件，在构建组件线上版本时，我是入口文件
-// ⚠️ !important, 由于我们现在的设计，通过拖拽组件生成页面，我们没有在服务端做一次构建的过程
-// ⚠️ 为了能将组件组装成页面，需要将组件挂载到 window 上，同时，我们不能在代码中 import 'react'
-// ⚠️ 或者 import 'react-dom'，因为这样会把 react 和 react-dom 打包进组件，同时，在我们引用
-// ⚠️ 的库中，也不能有 import 'react' 或者 import 'react-dom' 这会导致同样的问题，这点需要切记
 
 import './index.less';
 import {YKComponent,YKItem, YKTag, YKImg, YKSummary, YKSubTitle, YKTitle, Base} from '@ali/yk-base';
