@@ -7,3 +7,7 @@ npm-debug.log*
 
 # tnpm cache directory
 /test/**/.cache
+
+# vscode
+.vscode
+.vscode/
