@@ -38,3 +38,6 @@ build/.DS_Store
 .happypack/
 .happypack
 
+# cache
+.cache
+.cache/

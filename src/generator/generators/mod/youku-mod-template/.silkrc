@@ -20,6 +20,5 @@
   "theme": null,
   "port": 8003,
   "dll": false,
-  "dllEntry": [],
-  "vendor": true
+  "dllEntry": []
 }
