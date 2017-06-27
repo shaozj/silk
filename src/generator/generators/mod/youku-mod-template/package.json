@@ -8,7 +8,7 @@
     "start": "silk server -m",
     "test": "silk test",
     "posttest": "npm run lint",
-    "build": "silk buildMod && copyfiles -u 1 ./src/mock/data.js ./build",
+    "build": "silk buildMod && copyfiles -u 1 ./src/mock/mock.js ./build",
     "lint": "eslint ./src",
     "clean": "rimraf build/*",
     "release:major": "npm version major && npm publish && git push --follow-tags",
