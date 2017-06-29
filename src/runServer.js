@@ -163,6 +163,7 @@ function addMiddleware(devServer) {
 
 function runDevServer(host, port, protocol) {
   const devServer = new WebpackDevServer(compiler, {
+    disableHostCheck: true, // fix invalid host error
     compress: true,
     clientLogLevel: 'none',
     contentBase: paths.appPublic,

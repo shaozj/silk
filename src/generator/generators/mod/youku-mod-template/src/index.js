@@ -8,7 +8,7 @@ class App extends Base {
     this.state = {...props};
   }
   render() {
-    const {data = {componentItem:[],type:""}, coverLay, env} = this.state;
+    const {data = {componentItem: [], type: ''}, coverLay, env} = this.state;
     const items =  (data && data.componentItem)||[];
     return (
       <YKComponent {...data}
