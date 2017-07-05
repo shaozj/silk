@@ -29,22 +29,40 @@ $ silk new
 $ silk page <name>
 ```
 
+> 新建一个独立 h5 组件
+
+```bash
+silk new mod
+```
+
 > 新建一个组件
 
 ```bash
 $ silk cpnt <name>
 ```
 
-> 编译代码（在内存中），并启动调试服务器
+> 编译代码（在内存中），并启动 react app 调试服务器
 
 ```bash
 $ silk server
+```
+
+> 编译代码 (在内存中)，并启动 h5 组件 调试服务器
+
+```bash
+silk server -m
 ```
 
 > 将代码编译并存储在文件中, 默认在 ./build 目录下
 
 ```bash
 $ silk build
+```
+
+> 编译 h5 组件
+
+```bash
+silk buildMod
 ```
 
 > 生成 vendor.dll.js 文件
@@ -78,8 +96,11 @@ $ silk --version
   "disableCSSModules": false,
   "publicPath": "/",
   "outputPath": "./build",
+  "useBabelrc": false,
   "extraBabelPlugins": [
     ["import", [{ "libraryName": "antd", "style": true }]]
+  ],
+  "extraBabelPresets": [
   ],
   "extraPostCSSPlugins": [],
   "autoprefixer": null,
@@ -91,7 +112,9 @@ $ silk --version
   "theme": null,
   "port": 8000,
   "dll": false,
-  "dllEntry": []
+  "dllEntry": [],
+  "noVendor": false,
+  "notClearBuild": false
 }
 
 ```
@@ -122,9 +145,13 @@ $ silk --version
 
 设置 output 路径. 参见 [webpack output.path](http://webpack.github.io/docs/configuration.html#output-path)
 
+### useBabelrc
+
+是否使用本工程下的 .babelrc 文件，默认 false 不使用，如果开启使用，那么得在本工程下安装相应的 babel plugins 和 babel presets。
+
 ### extraBabelPlugins
 
-设置额外的 babel 插件。只支持添加, 不支持替换和删除。
+设置额外的 babel 插件。`useBabelrc=false` 时生效。只支持添加, 不支持替换和删除。
 下面是添加 babel-plugin-import 插件的例子:
 
 **.silkrc**
@@ -133,6 +160,19 @@ $ silk --version
 {
   "extraBabelPlugins": [
     ["import", { "libraryName": "antd", "libraryDirectory": "lib", "style": "css" }]
+  ]
+}
+```
+
+### extraBabelPresets
+
+设置额外的 babel presets。`useBabelrc=false` 时生效。只支持添加, 不支持替换和删除。
+
+**.silkrc**
+
+```
+{
+  "extraBabelPresets": ['babel-preset-stage-2']
   ]
 }
 ```
@@ -278,6 +318,15 @@ Example:
 ```
   
 当 dllEntry 为空时，编译 dll 时，默认要编译库即为 `['react', 'react-dom', 'antd', 'whatwg-fetch']`。
+
+
+### noVendor
+
+不提取 vendor.js，默认 false。在希望每个页面独立编译时，设置 true。
+
+### notClearBuild
+
+每次 build 时不清理 build 目录。默认 false，希望不清理时设为 true。
 
 
 ## 智能重启

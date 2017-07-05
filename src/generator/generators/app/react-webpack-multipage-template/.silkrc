@@ -3,8 +3,11 @@
   "disableCSSModules": false,
   "publicPath": "/",
   "outputPath": "./build",
+  "useBabelrc": false,
   "extraBabelPlugins": [
     ["import", [{ "libraryName": "antd", "style": true }]]
+  ],
+  "extraBabelPresets": [
   ],
   "extraPostCSSPlugins": [],
   "autoprefixer": null,
@@ -16,5 +19,7 @@
   "theme": null,
   "port": 8000,
   "dll": false,
-  "dllEntry": []
+  "dllEntry": [],
+  "noVendor": false,
+  "notClearBuild": false
 }
