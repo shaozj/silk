@@ -127,6 +127,7 @@ export default function (config, cwd) {
           loader: 'file',
           query: {
             name: 'static/[name].[hash:8].[ext]',
+            publicPath: publicPath
           },
         }
       ],

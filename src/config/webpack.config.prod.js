@@ -71,6 +71,7 @@ export default function (args, appBuild, config, paths) {
           query: {
             limit: 10000,
             name: 'static/[name].[hash:8].[ext]',
+            publicPath: publicPath
           },
         },
         {
@@ -140,6 +141,7 @@ export default function (args, appBuild, config, paths) {
           loader: 'file',
           query: {
             name: 'static/[name].[hash:8].[ext]',
+            publicPath: publicPath
           },
         },
         {
