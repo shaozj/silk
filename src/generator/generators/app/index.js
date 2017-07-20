@@ -70,8 +70,7 @@ class AppGenerator extends Generators.Base {
 
     // Generate our package.json. Make sure to also include the required dependencies for styles
     let defaultSettings = this.fs.readJSON(`${baseRootPath}/package.json`);
-    this.log('defaultSettings: ', defaultSettings);
-    this.log('baseRootPath: ', defaultSettings);
+    // this.log('defaultSettings: ', JSON.stringify(defaultSettings));
     let packageSettings = {
       name: this.appName,
       private: true,

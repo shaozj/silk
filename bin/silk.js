@@ -163,6 +163,16 @@ program
   });
 
 program
+  .command('template <name>')
+  .description('new a react template page')
+  .action(function (name) {
+    var generator = 'generator-react-multipage:template';
+    yo(generator, [name], function() {
+      console.log('create page template ' + name + 'success!');
+    });
+  });
+
+program
   .command ('dll')
   .description('build vendor.dll.js')
   .action(function() {

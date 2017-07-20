@@ -121,5 +121,16 @@
       }
     ],
     "default": "pure"
+  },
+  "pageTemplate": {
+    "options": [
+      {
+        "name": "form-table-template",
+        "value": "form-table-template",
+        "packages": [
+          { "name": "@ali/uniform-react-components", "version": "^0.0.19"}
+        ]
+      }
+    ]
   }
 }
