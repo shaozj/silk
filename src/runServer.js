@@ -16,6 +16,7 @@ import getConfig from './utils/getConfig';
 import applyWebpackConfig, { warnIfExists } from './utils/applyWebpackConfig';
 import { applyMock, outputError as outputMockError } from './utils/mock';
 import glob from 'glob';
+import babelCompile from './babel';
 
 process.env.NODE_ENV = 'development';
 
@@ -256,6 +257,24 @@ function setupWatch(devServer) {
   });
 }
 
+// watch 需要 babel 直接编译的文件 
+function watchBabel() {
+  let globPath = `${paths.appSrc}/workers/**/*.js`;
+  const babelCmd = rcConfig.babelCmd;
+  let watchDir = babelCmd ?   babelCmd.split(/\s+/)[1] : 'src/workers';
+  if (babelCmd) {
+    globPath = `${watchDir}/**/*.js`;
+  }
+  entries = glob.sync(globPath);
+  
+  watchDir = paths.resolveApp(watchDir);
+  const watcher = chokidar.watch(watchDir).on('change',
+    (path) => {
+      console.log(chalk.green(`Changed ${path.replace(paths.appDirectory, '.')} , try to recompile`));
+      babelCompile(rcConfig);
+  });
+}
+
 function run(port) {
   startTime = (new Date()).getTime();
   const protocol = process.env.HTTPS === 'true' ? 'https' : 'http';
@@ -277,7 +296,13 @@ function init() {
     }
   }
   readWebpackConfig();
-  
+
+  // 处理需要直接用 babel 编译的文件，无需 webpack 处理
+  if (rcConfig.useBabelCmd) {
+    babelCompile(rcConfig);
+    watchBabel();
+  }
+
   // 命令行设置端口优先级最高，用户配置优先级次之，默认端口8000
   DEFAULT_PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : rcConfig.port;
   detect(DEFAULT_PORT).then((port) => {

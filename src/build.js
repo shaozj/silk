@@ -9,6 +9,7 @@ import stripAnsi from 'strip-ansi';
 import getPaths from './utils/paths';
 import getConfig from './utils/getConfig';
 import applyWebpackConfig, { warnIfExists } from './utils/applyWebpackConfig';
+import babelCompile from './babel';
 
 process.env.NODE_ENV = 'production';
 
@@ -66,6 +67,11 @@ export function build(argv) {
     require('./config/webpack.config.prod')(argv, appBuild, rcConfig, paths),
     process.env.NODE_ENV,
   );
+
+  // 处理需要直接用 babel 编译的文件，无需 webpack 处理
+  if (rcConfig.useBabelCmd) {
+    babelCompile(rcConfig);
+  }
 
   return new Promise((resolve) => {
     // First, read the current file sizes in build directory.
