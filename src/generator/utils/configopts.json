@@ -112,7 +112,11 @@
   "rcType": {
     "options": [
       {
-        "name": "pure react",
+        "name": "independent react component (独立的 react 组件)",
+        "value": "independent"
+      },
+      {
+        "name": "pure react (for uniform-react-components)",
         "value": "pure"
       },
       {
@@ -120,7 +124,7 @@
         "value": "wrapped"
       }
     ],
-    "default": "pure"
+    "default": "independent"
   },
   "pageTemplate": {
     "options": [

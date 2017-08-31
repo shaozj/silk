@@ -1,10 +1,13 @@
 'use strict';
 const Generators = require('yeoman-generator');
+const fs = require('fs');
+const path = require('path');
 const utils = require('../../utils/all');
 const prompts = require('./prompts');
 const C = utils.constants;
 const getAllSettingsFromComponentName = utils.yeoman.getAllSettingsFromComponentName;
 
+const baseRootPath = path.join(__dirname, 'templates/independent');
 
 class ComponentGenerator extends Generators.Base {
 
@@ -114,44 +117,103 @@ class ComponentGenerator extends Generators.Base {
         this.cssClsPrefix
       );
 
-    const isPureRc = this.type == 'pure' ? true : false;
+    settings.cpntName = this.name;
+    console.log('this.type:', this.type);
+    const independent = this.type == 'independent';
 
-    // Create the style template. Skipped if nostyle is set as command line flag
-    if(this.useStyles) {
+    if (independent) {
+      const excludeList = [
+        'LICENSE',
+        'CHANGELOG.md',
+        'node_modules',
+        '.istanbul.yml',
+        '.travis.yml'
+      ];
+
+      const tplList = [
+        'README.md',
+        'package.json'
+      ];
+
+      const srcTplList = [
+        'src/index.js',
+        'src/index.less',
+        'src/index.test.js'
+      ];
+  
+      // Get all files in our repo and copy the ones we should
+      fs.readdir(baseRootPath, (err, items) => {
+        for(let item of items) {
+          // Skip the item if it is in our exclude list
+          if(excludeList.indexOf(item) !== -1) {
+            continue;
+          }
+          console.log(item);
+          // Copy all items to our root
+          let fullPath = path.join(baseRootPath, item);
+          if(fs.lstatSync(fullPath).isDirectory()) {
+            this.bulkDirectory(`./independent/${item}`, item);
+          } else {
+            if (tplList.indexOf(item) !== -1) {
+              this.fs.copyTpl(
+                this.templatePath(`./independent/${item}`),
+                this.destinationPath(item),
+                settings
+              );
+            } else {
+              this.copy(`./independent/${item}`, item);
+            }
+          }
+        }
+      });
+
+      srcTplList.map(item => {
+        this.fs.copyTpl(
+          this.templatePath(`./independent/${item}`),
+          this.destinationPath(item),
+          settings
+        );
+      });
+
+    } else {
+      const isPureRc = this.type == 'pure' ? true : false;
+      // Create the style template. Skipped if nostyle is set as command line flag
+      if(this.useStyles) {
+        this.fs.copyTpl(
+          this.templatePath('style.less'),
+          this.destinationPath('src/' + settings.style.fileName.split('/')[0] + '/index.less'),
+          settings
+        );
+      }
+  
+      // Create the component
       this.fs.copyTpl(
-        this.templatePath('style.less'),
-        this.destinationPath('src/' + settings.style.fileName.split('/')[0] + '/index.less'),
+        isPureRc ? this.templatePath('component-pure.js') : this.templatePath('component.js'),
+        this.destinationPath('src/' + settings.component.fileName.split('/')[0] + '/index.js'),
+        settings
+      );
+  
+      // Create the demo
+      this.fs.copyTpl(
+        isPureRc ? this.templatePath('demo-pure.js') : this.templatePath('demo.js'),
+        this.destinationPath('src/' + settings.component.fileName.split('/')[0] + '/index.test.js'),
+        settings
+      );
+  
+      // Create the README.md
+      this.fs.copyTpl(
+        this.templatePath('README.md'),
+        this.destinationPath('src/' + settings.component.fileName.split('/')[0] + '/README.md'),
+        settings
+      );
+  
+      // Create the unit test
+      this.fs.copyTpl(
+        this.templatePath('test.js'),
+        this.destinationPath(settings.test.path + settings.test.fileName),
         settings
       );
     }
-
-    // Create the component
-    this.fs.copyTpl(
-      isPureRc ? this.templatePath('component-pure.js') : this.templatePath('component.js'),
-      this.destinationPath('src/' + settings.component.fileName.split('/')[0] + '/index.js'),
-      settings
-    );
-
-    // Create the demo
-    this.fs.copyTpl(
-      isPureRc ? this.templatePath('demo-pure.js') : this.templatePath('demo.js'),
-      this.destinationPath('src/' + settings.component.fileName.split('/')[0] + '/index.test.js'),
-      settings
-    );
-
-    // Create the README.md
-    this.fs.copyTpl(
-      this.templatePath('README.md'),
-      this.destinationPath('src/' + settings.component.fileName.split('/')[0] + '/README.md'),
-      settings
-    );
-
-    // Create the unit test
-    this.fs.copyTpl(
-      this.templatePath('test.js'),
-      this.destinationPath(settings.test.path + settings.test.fileName),
-      settings
-    );
   }
 }
 

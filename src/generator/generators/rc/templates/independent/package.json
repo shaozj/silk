@@ -1,0 +1,44 @@
+{
+  "name": "@ali/<%= cpntName %>",
+  "private": false,
+  "version": "0.0.1",
+  "description": "",
+  "main": "lib/index.js",
+  "publishConfig": {
+    "registry": "http://registry.npm.alibaba-inc.com"
+  },
+  "scripts": {
+    "start": "silk server",
+    "test": "silk test",
+    "compile": "rimraf lib && babel src --out-dir lib && copyfiles -u 1 ./src/**/*.less ./lib",
+    "posttest": "npm run lint",
+    "build": "silk build",
+    "lint": "eslint ./src",
+    "clean": "rimraf build/*",
+    "release:major": "npm version major && npm publish && git push --follow-tags",
+    "release:minor": "npm version minor && npm publish && git push --follow-tags",
+    "release:patch": "npm version patch && npm publish && git push --follow-tags",
+    "fastpush": "npm run build && git add . && git commit -m 'build' && git push origin daily/1.0.0"
+  },
+  "repository": "",
+  "keywords": [],
+  "author": "Your name here",
+  "devDependencies": {
+    "babel-cli": "^6.23.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-import": "^1.1.0",
+    "babel-plugin-react-require": "^3.0.0",
+    "babel-preset-es2015": "^6.22.0",
+    "babel-preset-react": "^6.23.0",
+    "babel-preset-stage-0": "^6.22.0",
+    "copyfiles": "^1.2.0",
+    "rimraf": "^2.6.1"
+  },
+  "dependencies": {
+    "react": "^15.0.0",
+    "react-dom": "^15.0.0",
+    "prop-types": "^15.5.10",
+    "whatwg-fetch": "^2.0.1",
+    "fetch-jsonp": "^1.0.5"
+  }
+}
