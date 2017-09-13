@@ -13,3 +13,7 @@
  模板 eslint 添加
 "semi": 1,
 "quotes": [1, "single"],
+
+## 9.13 [0.1.50]
+
+fix: Cannot resolve module 'url-loader' , use require.resolve('url-loader')
