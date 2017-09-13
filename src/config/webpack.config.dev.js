@@ -114,6 +114,11 @@ export default function (config, cwd) {
           loader: `style!${cssLoaders.own.join('!')}!sass?outputStyle=expanded`
         },
         {
+          test: /\.scss$/,
+          include: paths.appNodeModules,
+          loader: `style!${cssLoaders.nodeModules.join('!')}!sass?outputStyle=expanded`
+        },
+        {
           test: /\.styl$/,
           include: paths.appSrc,
           loader: `style!${cssLoaders.own.join('!')}!stylus`

@@ -126,6 +126,13 @@ export default function (args, appBuild, config, paths) {
           )
         },
         {
+          test: /\.scss/,
+          include: paths.appNodeModules,
+          loader: ExtractTextPlugin.extract('style',
+            `${cssLoaders.nodeModules.join('!')}!sass?outputStyle=expanded`
+          )
+        },
+        {
           test: /\.styl/,
           include: paths.appSrc,
           loader: ExtractTextPlugin.extract('style',
