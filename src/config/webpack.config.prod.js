@@ -55,7 +55,7 @@ export default function (args, appBuild, config, paths) {
         paths.ownNodeModules,
         paths.appNodeModules,
       ],
-      moduleTemplates: ['*-loader'],
+      moduleTemplates: ['*-loader']
     },
     module: {
       loaders: [
@@ -67,7 +67,7 @@ export default function (args, appBuild, config, paths) {
             /\.json$/,
             /\.(mp4|ogg|svg)$/,
           ],
-          loader: 'url',
+          loader: require.resolve('url-loader'),
           query: {
             limit: 10000,
             name: 'static/[name].[hash:8].[ext]',
@@ -146,7 +146,7 @@ export default function (args, appBuild, config, paths) {
         },
         {
           test: /\.(png|jpg|gif|woff|woff2)$/,
-          loader: 'url-loader?limit=8192'
+          loader: require.resolve('url-loader') + '?limit=8192'
         },
       ],
     },
