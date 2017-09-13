@@ -146,7 +146,8 @@ export default function (args, appBuild, config, paths) {
         },
         {
           test: /\.(png|jpg|gif|woff|woff2)$/,
-          loader: require.resolve('url-loader') + '?limit=8192'
+          loader: require.resolve('url-loader') + '?limit=8192',
+          publicPath: publicPath
         },
       ],
     },
