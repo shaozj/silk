@@ -17,3 +17,8 @@
 ## 9.13 [0.1.50]
 
 fix: Cannot resolve module 'url-loader' , use require.resolve('url-loader')
+
+# 9.13 [0.1.51]
+
+url-loader add config: publicPath: publicPath
+
