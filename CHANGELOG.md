@@ -22,3 +22,7 @@ fix: Cannot resolve module 'url-loader' , use require.resolve('url-loader')
 
 url-loader add config: publicPath: publicPath
 
+# 9.13 [0.1.52]
+
+support node_modules scss 
+
