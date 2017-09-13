@@ -126,8 +126,7 @@ export default function (config, cwd) {
           test: /\.(mp4|ogg|svg)$/,
           loader: 'file',
           query: {
-            name: 'static/[name].[hash:8].[ext]',
-            publicPath: publicPath
+            name: 'static/[name].[hash:8].[ext]'
           },
         }
       ],
