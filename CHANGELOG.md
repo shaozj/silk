@@ -26,3 +26,7 @@ url-loader add config: publicPath: publicPath
 
 support node_modules scss 
 
+# 9.20 [0.1.53]
+
+init project add page form-table-template 
+
