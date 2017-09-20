@@ -30,12 +30,11 @@
   "dependencies": {
     "antd": "^2.8.1",
     "classnames": "^2.2.5",
-    "core-js": "^2.0.0",
-    "normalize.css": "^4.0.0",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
     "whatwg-fetch": "^2.0.1",
-    "fetch-jsonp": "^1.0.5"
+    "fetch-jsonp": "^1.0.5",
+    "@ali/uniform-react-components": "^0.0.19"
   },
   "_from": "react-webpack-multipage-template@0.1.0",
   "_resolved": "http://registry.npm.alibaba-inc.com/react-webpack-multipage-template/download/react-webpack-multipage-template-0.1.0.tgz"

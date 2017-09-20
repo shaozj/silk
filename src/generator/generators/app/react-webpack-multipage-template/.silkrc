@@ -1,6 +1,6 @@
 {
   "entry": "src/pages/**/index.js",
-  "disableCSSModules": false,
+  "disableCSSModules": true,
   "publicPath": "/",
   "outputPath": "./build",
   "useBabelrc": false,
