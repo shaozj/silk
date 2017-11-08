@@ -181,6 +181,9 @@ function runDevServer(host, port, protocol) {
   addMiddleware(devServer);
   applyMock(devServer);
 
+  if (isInteractive) {
+    clearConsoleWrapped();
+  }
   console.log(chalk.cyan('Starting the development server...'));
   devServer.listen(port, (err) => {
     if (err) {
@@ -228,7 +231,7 @@ function setupWatch(devServer) {
    * 监听是否有新建页面，（是否有新的页面入口）
    * 如果有新建页面，则重启服务器
    */
-  let globPath = rcConfig.entry ? paths.appDirectory+'/'+rcConfig.entry  : `${paths.appSrc}/pages/*/index.js`;
+  let globPath = rcConfig.entry ? paths.appDirectory + '/' + rcConfig.entry  : `${paths.appSrc}/pages/*/index.js`;
   entries = glob.sync(globPath);
   
   const pageDir = paths.resolveApp('./src/pages/');
