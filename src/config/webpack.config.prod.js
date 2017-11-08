@@ -146,7 +146,7 @@ export default function (args, appBuild, config, paths) {
         {
           test: /\.scss/,
           include: paths.appSrc,
-          loader: ExtractTextPlugin.extract({
+          use: ExtractTextPlugin.extract({
             fallback: 'style-loader',
             use: [
               ...cssLoaders.own,
@@ -160,7 +160,7 @@ export default function (args, appBuild, config, paths) {
         {
           test: /\.scss/,
           include: paths.appNodeModules,
-          loader: ExtractTextPlugin.extract({
+          use: ExtractTextPlugin.extract({
             fallback: 'style-loader',
             use: [
               ...cssLoaders.nodeModules,
