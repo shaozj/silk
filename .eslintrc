@@ -8,7 +8,6 @@
     "generator-star-spacing": [0],
     "consistent-return": [0],
     "react/forbid-prop-types": [0],
-    "react/jsx-filename-extension": [1, { "extensions": [".js"] }],
     "global-require": [0],
     "import/prefer-default-export": [0],
     "react/jsx-no-bind": [0],
@@ -28,7 +27,8 @@
     "require-yield": [1],
     "no-param-reassign": [0],
     "no-shadow": [0],
-    "no-underscore-dangle": [0]
+    "no-underscore-dangle": [0],
+    "no-unused-vars": 1
   },
   "parserOptions": {
     "ecmaFeatures": {

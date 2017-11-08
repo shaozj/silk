@@ -78,7 +78,6 @@ function readWebpackConfig() {
   }
 }
 
-
 function setupCompiler(host, port, protocol) {
   compiler = webpack(config);
 
@@ -182,6 +181,7 @@ function runDevServer(host, port, protocol) {
   addMiddleware(devServer);
   applyMock(devServer);
 
+  console.log(chalk.cyan('Starting the development server...'));
   devServer.listen(port, (err) => {
     if (err) {
       return console.log(err);

@@ -209,7 +209,7 @@ function realBuild(previousSizeMap, resolve, argv) {
   
   // 打印出用户 build 的页面
   console.log(chalk.red('您 build 的页面包括如下页面，请保证您要上线的页面都被 build!'));
-  Object.keys(config.entry).map((key, index) => {
+  Object.keys(config.entry).map((key) => {
     console.log(chalk.yellow(key));
   });
 

@@ -135,7 +135,7 @@ export default function (config, cwd) {
     babel: config.useBabelrc ? {} : {
       babelrc: false,
       presets: [
-        require.resolve('babel-preset-es2015'),
+        require.resolve('babel-preset-env'),
         require.resolve('babel-preset-react'),
         require.resolve('babel-preset-stage-0'),
       ].concat(config.extraBabelPresets || []),

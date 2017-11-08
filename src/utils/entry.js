@@ -16,7 +16,7 @@ let getEntry = function(globPath, config) {
     // let pathname = entry.split('/').splice(-2).join('/').split('.')[0];
     let reg = /\.(js|jsx)$/;
     let pathname = entry.split('/').splice(-2).join('/').replace(reg, '');
-    if (!config.multipage && (globPath.indexOf('*') == -1)) {
+    if (!config.multipage && (globPath.indexOf('*') === -1)) {
       pathname = 'index';
     }
     if (isProduction) {
