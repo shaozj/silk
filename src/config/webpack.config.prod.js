@@ -34,6 +34,7 @@ export default function (args, appBuild, config, paths) {
       path: appBuild,
       filename: '[name].js',
       publicPath,
+      chunkFilename: '[name].chunk.js',
     },
     resolve: {
       extensions: [
@@ -218,19 +219,6 @@ export default function (args, appBuild, config, paths) {
     ]
       .concat(
         debug ? [] :
-        // new webpack.optimize.UglifyJsPlugin({
-        //   compress: {
-        //     screw_ie8: true, // React doesn't support IE8
-        //     warnings: false,
-        //   },
-        //   mangle: {
-        //     screw_ie8: true,
-        //   },
-        //   output: {
-        //     comments: false,
-        //     screw_ie8: true,
-        //   },
-        // }),
         new ParallelUglifyPlugin({
           cacheDir: '.cache/', // 设置 cache 地址，加速压缩
           uglifyJS: {

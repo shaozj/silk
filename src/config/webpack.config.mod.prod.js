@@ -1,16 +1,15 @@
 import autoprefixer from 'autoprefixer';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 import webpack from 'webpack';
 import fs from 'fs';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import Visualizer from 'webpack-visualizer-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
-import getEntry from '../utils/getEntry';
 import getTheme from '../utils/getTheme';
 import getCSSLoaders from '../utils/getCSSLoaders';
 import normalizeDefine from '../utils/normalizeDefine';
-import ParallelUglifyPlugin from 'webpack-parallel-uglify-plugin';
-import entry from '../utils/entry';
+import getEntry from '../utils/entry';
 import generateHtml from '../utils/html';
+import ParallelUglifyPlugin from 'webpack-parallel-uglify-plugin';
 
 export default function (args, appBuild, config, paths) {
   const { debug, analyze } = args;
@@ -18,12 +17,11 @@ export default function (args, appBuild, config, paths) {
 
   const publicPath = config.publicPath || '/';
   const cssLoaders = getCSSLoaders(config);
-  const theme = JSON.stringify(getTheme(process.cwd(), config));
-  // const entries = getEntry(config, paths.appDirectory)
+  const theme = getTheme(process.cwd(), config);
 
   // 获取多页面的所有入口，每个入口文件名都为 index.js
-  let configEntry = config.entry ? paths.appDirectory+'/'+config.entry : `${paths.appSrc}/pages/*/index.js`;
-  let entries = entry(configEntry, config);
+  let configEntry = config.entry ? paths.appDirectory + '/' + config.entry : `${paths.appSrc}/pages/*/index.js`;
+  let entries = getEntry(configEntry, config);
   // 添加mock数据入口
   if (fs.existsSync(`${paths.appSrc}/mock/mock.js`)) {
     entries['mock'] = [`${paths.appSrc}/mock/mock.js`];
@@ -41,25 +39,25 @@ export default function (args, appBuild, config, paths) {
     resolve: {
       extensions: [
         '.web.js', '.web.jsx', '.web.ts', '.web.tsx',
-        '.js', '.json', '.jsx', '.ts', 'tsx', '',
+        '.js', '.json', '.jsx', '.ts', 'tsx',
       ],
       alias: {
-        actions: `${paths.appSrc}/actions/`,
         components: `${paths.appSrc}/components/`,
-        sources: `${paths.appSrc}/sources/`,
-        stores: `${paths.appSrc}/stores/`,
-        'react/lib/ReactMount': 'react-dom/lib/ReactMount'
-      }
+        containers: `${paths.appSrc}/containers/`,
+        utils: `${paths.appSrc}/utils/`,
+        mods: `${paths.appSrc}/mods/`,
+        images: `${paths.appSrc}/images/`,
+        'react/lib/ReactMount': 'react-dom/lib/ReactMount',
+      },
     },
     resolveLoader: {
-      root: [
+      modules: [
         paths.ownNodeModules,
         paths.appNodeModules,
       ],
-      moduleTemplates: ['*-loader'],
     },
     module: {
-      loaders: [
+      rules: [
         {
           exclude: [
             /\.html$/,
@@ -68,138 +66,159 @@ export default function (args, appBuild, config, paths) {
             /\.json$/,
             /\.(mp4|ogg|svg)$/,
           ],
-          loader: 'url',
-          query: {
-            limit: 10000,
-            name: 'static/[name].[hash:8].[ext]',
+          use: {
+            loader: 'url-loader',
+            options: {
+              limit: 10000,
+              name: 'static/[name].[ext]',
+              publicPath: publicPath,              
+            },
           },
         },
         {
           test: /\.(js|jsx)$/,
           include: paths.appSrc,
-          loader: 'babel',
+          use: {
+            loader: 'babel-loader',
+            options: config.useBabelrc ? {} : {
+              babelrc: false,
+              presets: [
+                require.resolve('babel-preset-env'),
+                require.resolve('babel-preset-react'),
+                require.resolve('babel-preset-stage-0'),
+              ].concat(config.extraBabelPresets || []),
+              plugins: [
+                require.resolve('babel-plugin-add-module-exports'),
+                require.resolve('babel-plugin-react-require'),
+                require.resolve('babel-plugin-syntax-dynamic-import')
+              ].concat(config.extraBabelPlugins || []),
+              cacheDirectory: true,
+            },
+          },
         },
         {
           test: /\.css$/,
           include: paths.appSrc,
-          loader: ExtractTextPlugin.extract(
-            'style',
-            cssLoaders.own.join('!'),
-          ),
-        },
-        {
-          test: /\.less$/,
-          include: paths.appSrc,
-          loader: ExtractTextPlugin.extract(
-            'style',
-            `${cssLoaders.own.join('!')}!less?{"modifyVars":${theme}}`,
-          ),
+          use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: cssLoaders.own,
+          }),
         },
         {
           test: /\.css$/,
           include: paths.appNodeModules,
-          loader: ExtractTextPlugin.extract(
-            'style',
-            cssLoaders.nodeModules.join('!'),
-          ),
+          use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: cssLoaders.nodeModules,
+          }),
+        },
+        {
+          test: /\.less$/,
+          include: paths.appSrc,
+          use: ExtractTextPlugin.extract({
+            fallback: "style-loader",
+            use: [
+              ...cssLoaders.own,
+              {
+                loader: 'less-loader',
+                options: {
+                  modifyVars: theme,
+                },
+              },
+            ],
+          }),
         },
         {
           test: /\.less$/,
           include: paths.appNodeModules,
-          loader: ExtractTextPlugin.extract(
-            'style',
-            `${cssLoaders.nodeModules.join('!')}!less?{"modifyVars":${theme}}`,
-          ),
-        },
-        {
-          test: /\.sass/,
-          include: paths.appSrc,
-          loader: ExtractTextPlugin.extract('style',
-            `${cssLoaders.own.join('!')}!sass?outputStyle=expanded&indentedSyntax`
-          )
+          use: ExtractTextPlugin.extract({
+            fallback: "style-loader",
+            use: [
+              ...cssLoaders.nodeModules,
+              {
+                loader: 'less-loader',
+                options: {
+                  modifyVars: theme,
+                },
+              },
+            ],
+          }),
         },
         {
           test: /\.scss/,
           include: paths.appSrc,
-          loader: ExtractTextPlugin.extract('style',
-            `${cssLoaders.own.join('!')}!sass?outputStyle=expanded`
-          )
+          use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: [
+              ...cssLoaders.own,
+              {
+                loader: 'sass-loader',
+                options: config.sassOptions,
+              },
+            ],
+          }),
         },
         {
-          test: /\.styl/,
-          include: paths.appSrc,
-          loader: ExtractTextPlugin.extract('style',
-            `${cssLoaders.own.join('!')}!stylus`
-          )
-        },
-        {
-          test: /\.json$/,
-          loader: 'json',
+          test: /\.scss/,
+          include: paths.appNodeModules,
+          use: ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: [
+              ...cssLoaders.nodeModules,
+              {
+                loader: 'sass-loader',
+                options: config.sassOptions,
+              },
+            ],
+          }),
         },
         {
           test: /\.(mp4|ogg|svg)$/,
-          loader: 'file',
-          query: {
-            name: 'static/[name].[hash:8].[ext]',
+          use: {
+            loader: 'file-loader',
+            options: {
+              name: 'static/[name].[ext]',
+              publicPath: publicPath,
+            }
           },
         },
-        {
-          test: /\.(png|jpg|gif|woff|woff2)$/,
-          loader: 'url-loader?limit=8192'
-        },
       ],
-    },
-    babel: config.useBabelrc ? {} : {
-      babelrc: false,
-      presets: [
-        require.resolve('babel-preset-env'),
-        require.resolve('babel-preset-react'),
-        require.resolve('babel-preset-stage-0'),
-      ].concat(config.extraBabelPresets || []),
-      plugins: [
-        require.resolve('babel-plugin-add-module-exports'),
-        require.resolve('babel-plugin-react-require')
-      ].concat(config.extraBabelPlugins || []),
-      cacheDirectory: true,
-    },
-    postcss() {
-      return [
-        autoprefixer(config.autoprefixer || {
-          browsers: [
-            '>1%',
-            'last 4 versions',
-            'Firefox ESR',
-            'not ie < 9', // React doesn't support IE8 anyway
-          ],
-        }),
-      ]
-        .concat(config.extraPostCSSPlugins ? config.extraPostCSSPlugins : []);
     },
     plugins: [
       new webpack.DefinePlugin({
         'process.env': {
           NODE_ENV: JSON.stringify(NODE_ENV),
         },
+        ...(!config.define ? {} : normalizeDefine(config.define))
       }),
-      new webpack.optimize.OccurrenceOrderPlugin(),
-      new webpack.optimize.DedupePlugin(),
-      new ExtractTextPlugin('[name].css'),
+      new webpack.ProvidePlugin({
+        jQuery: 'jquery',
+        React: 'react',
+        ReactDOM: 'react-dom'
+      }),
+      new webpack.LoaderOptionsPlugin({
+        options: {
+          context: __dirname,
+          postcss: [
+            autoprefixer(config.autoprefixer || {
+              browsers: [
+                '>1%',
+                'last 4 versions',
+                'Firefox ESR',
+                'not ie < 9', // React doesn't support IE8 anyway
+              ],
+            }),
+            ...(config.extraPostCSSPlugins ? config.extraPostCSSPlugins : []),
+          ],
+        },
+      }),
+      new ExtractTextPlugin({
+        filename: '[name].css',
+        allChunks: true,
+      }),
     ]
       .concat(
         debug ? [] :
-        // new webpack.optimize.UglifyJsPlugin({
-        //   compress: {
-        //     screw_ie8: true, // React doesn't support IE8
-        //     warnings: false,
-        //   },
-        //   mangle: {
-        //     screw_ie8: true,
-        //   },
-        //   output: {
-        //     comments: false,
-        //     screw_ie8: true,
-        //   },
-        // }),
         new ParallelUglifyPlugin({
           cacheDir: '.cache/', // 设置 cache 地址，加速压缩
           uglifyJS: {
@@ -230,14 +249,9 @@ export default function (args, appBuild, config, paths) {
           ]),
       )
       .concat(
-        !config.define ? [] :
-          new webpack.DefinePlugin(normalizeDefine(config.define)),
-      ).concat(
         generateHtml(entries)
       ),
-    externals: {
-      ...config.externals
-    },
+    externals: config.externals || '',
     node: {
       fs: 'empty',
       net: 'empty',

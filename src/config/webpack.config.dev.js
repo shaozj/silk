@@ -34,6 +34,7 @@ export default function (config, cwd) {
       filename: '[name].js',
       pathinfo: true,
       publicPath,
+      chunkFilename: '[name].chunk.js',
     },
     devServer: {
       disableHostCheck: true
@@ -173,7 +174,7 @@ export default function (config, cwd) {
               name: 'static/[name].[ext]',
             },
           },
-        }
+        },
       ],
     },
     plugins: [

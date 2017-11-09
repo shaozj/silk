@@ -175,7 +175,7 @@ function runDevServer(host, port, protocol) {
     },
     https: protocol === 'https',
     host,
-    proxy: rcConfig.proxy
+    proxy: rcConfig.proxy || {}
   });
 
   addMiddleware(devServer);
@@ -185,7 +185,7 @@ function runDevServer(host, port, protocol) {
     clearConsoleWrapped();
   }
   console.log(chalk.cyan('Starting the development server...'));
-  devServer.listen(port, (err) => {
+  devServer.listen(port, '0.0.0.0', (err) => {
     if (err) {
       return console.log(err);
     }
