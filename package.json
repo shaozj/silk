@@ -3,7 +3,7 @@
   "version": "3.0.0",
   "description": "Cli tool for build react app, based on generator-react-multipage, create-react-app, roadhog. Support react multiple pages app develop.",
   "bin": {
-    "silk3": "./bin/silk.js"
+    "silk": "./bin/silk.js"
   },
   "keywords": [
     "silk",
