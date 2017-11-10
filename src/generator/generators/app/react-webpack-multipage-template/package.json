@@ -25,13 +25,16 @@
   ],
   "author": "澜嵚<zhenjiang.szj@alibaba-inc.com>, 冰浠<bingxi@alibaba-inc.com>",
   "devDependencies": {
-    "babel-plugin-import": "^1.1.0"
+    "babel-plugin-import": "^1.1.0",
+    "eslint": "^4.10.0",
+    "babel-eslint": "^8.0.2",
+    "eslint-plugin-react": "^6.0.0"
   },
   "dependencies": {
     "antd": "^2.8.1",
     "classnames": "^2.2.5",
-    "react": "^15.0.0",
-    "react-dom": "^15.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "whatwg-fetch": "^2.0.1",
     "fetch-jsonp": "^1.0.5",
     "@ali/uniform-react-components": "^0.0.19"
