@@ -14,7 +14,7 @@ import generateHtml from '../utils/html';
 import path from 'path';
 
 export default function (config, cwd) {
-  const publicPath = '/';
+  const publicPath = config.localPublicPath || '/';
   const cssLoaders = getCSSLoaders(config);
   const theme = getTheme(process.cwd(), config);
   const paths = getPaths(cwd);

@@ -141,6 +141,10 @@ $ silk --version
 
 设置生产环境下的 publicPath, 开发环境下默认为 '/' . 参见 [webpack output.publicPath](http://webpack.github.io/docs/configuration.html#output-publicpath)
 
+### localPublicPath
+
+在本地开发环境强制设置 publicPath (不设置默认为 '/')，为了能在异步加载 js 的线上环境调试
+
 ### outputPath
 
 设置 output 路径. 参见 [webpack output.path](http://webpack.github.io/docs/configuration.html#output-path)
