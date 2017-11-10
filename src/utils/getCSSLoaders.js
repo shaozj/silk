@@ -7,6 +7,11 @@ export default function getCSSLoaders(config) {
     importLoaders: 1,
     sourceMap: !config.disableCSSSourceMap,
   };
+  
+  const ENV = process.env.NODE_ENV;
+  if (ENV === 'production') {
+    baseCSSOptions.minimize = true
+  }
 
   if (config.disableCSSModules) {
     own.push({
