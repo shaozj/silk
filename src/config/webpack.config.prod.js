@@ -34,7 +34,7 @@ export default function (args, appBuild, config, paths) {
       path: appBuild,
       filename: '[name].js',
       publicPath,
-      chunkFilename: '[name].chunk.js',
+      chunkFilename: '[name].[chunkhash:8].chunk.js',
     },
     resolve: {
       extensions: [
