@@ -15,7 +15,7 @@ export default function (args, appBuild, config, paths) {
   const { debug, analyze } = args;
   const NODE_ENV = debug ? 'development' : process.env.NODE_ENV;
 
-  const publicPath = config.publicPath || '/';
+  const publicPath = config.publicPath;
   const cssLoaders = getCSSLoaders(config);
   const theme = getTheme(process.cwd(), config);
 
