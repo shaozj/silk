@@ -10,7 +10,7 @@ export default function getCSSLoaders(config) {
   
   const ENV = process.env.NODE_ENV;
   if (ENV === 'production') {
-    baseCSSOptions.minimize = true
+    baseCSSOptions.minimize = config.minimizeCss;
   }
 
   if (config.disableCSSModules) {
