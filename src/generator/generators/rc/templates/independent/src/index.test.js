@@ -11,3 +11,4 @@ class Test extends React.Component {
 }
 
 ReactDOM.render(<Test />, document.getElementById('app'));
+window.<%= component.className %> = <%= component.className %>;
