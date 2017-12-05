@@ -23,5 +23,7 @@
   "theme": null,
   "port": 8003,
   "dll": false,
-  "dllEntry": []
+  "dllEntry": [],
+  "noVendor": true,
+  "notClearBuild": false
 }
