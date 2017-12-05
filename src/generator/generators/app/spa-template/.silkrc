@@ -1,0 +1,29 @@
+{
+  "entry": "src/pages/index/index.js",
+  "disableCSSModules": false,
+  "outputPath": "./build",
+  "useBabelrc": false,
+  "extraBabelPlugins": [
+    ["import", [{ "libraryName": "antd", "style": true }]]
+  ],
+  "extraBabelPresets": [
+  ],
+  "extraPostCSSPlugins": [],
+  "autoprefixer": null,
+  "proxy": [
+    {
+      "context": [],
+      "secure": false
+    }
+  ],
+  "externals": null,
+  "multipage": true,
+  "define": null,
+  "env": null,
+  "theme": "./theme-config.js",
+  "port": 8008,
+  "dll": false,
+  "dllEntry": [],
+  "noVendor": true,
+  "notClearBuild": false
+}

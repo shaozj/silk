@@ -8,7 +8,7 @@ const packageInfo = require('../../package.json');
 
 
 const baseRootPath = path.join(__dirname, 'react-webpack-multipage-template');
-const spaRootPath = path.join(__dirname, 'testtest');
+const spaRootPath = path.join(__dirname, 'spa-template');
 
 /**
  * Base generator. Will copy all required files from react-webpack-multipage-template
@@ -70,6 +70,7 @@ class AppGenerator extends Generators.Base {
     if (this.appType === 'spa') {
       this.sourceRoot(spaRootPath);
     }
+    console.log('this.sourceRoot(): ', this.sourceRoot())
     // Generate our package.json. Make sure to also include the required dependencies for styles
     let defaultSettings = this.fs.readJSON(`${this.sourceRoot()}/package.json`);
     let packageSettings = {
@@ -110,7 +111,7 @@ class AppGenerator extends Generators.Base {
         }
 
         // Copy all items to our root
-        let fullPath = path.join(baseRootPath, item);
+        let fullPath = path.join(this.sourceRoot(), item);
         if(fs.lstatSync(fullPath).isDirectory()) {
           this.bulkDirectory(item, item);
         } else {
