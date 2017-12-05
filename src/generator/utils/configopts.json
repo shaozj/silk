@@ -109,6 +109,19 @@
     ],
     "default": "less"
   },
+  "appType": {
+    "options": [
+      {
+        "name": "single page application (单页面应用)",
+        "value": "spa"
+      },
+      {
+        "name": "multiple page application (多页面应用)",
+        "value": "mpa"
+      }
+    ],
+    "default": "spa"
+  },
   "rcType": {
     "options": [
       {

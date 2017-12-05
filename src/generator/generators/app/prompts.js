@@ -3,6 +3,13 @@ const utils = require('../../utils/all');
 
 module.exports = [
   {
+    type: 'list',
+    name: 'appType',
+    message: '您想生成哪种类型的 app?',
+    choices: utils.config.getChoices('appType'),
+    default: utils.config.getDefaultChoice('appType')
+  },
+  {
     type: 'input',
     name: 'appName',
     message: 'Please choose your application name',

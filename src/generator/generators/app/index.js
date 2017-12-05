@@ -8,6 +8,7 @@ const packageInfo = require('../../package.json');
 
 
 const baseRootPath = path.join(__dirname, 'react-webpack-multipage-template');
+const spaRootPath = path.join(__dirname, 'testtest');
 
 /**
  * Base generator. Will copy all required files from react-webpack-multipage-template
@@ -33,15 +34,12 @@ class AppGenerator extends Generators.Base {
   }
 
   initializing() {
-
     if(!this.options['skip-welcome-message']) {
       this.log(require('yeoman-welcome'));
-      //this.log('Out of the box I include Webpack and some default React components.\n');
     }
   }
 
   prompting() {
-
     return this.prompt(prompts).then((answers) => {
 
       // Make sure to get the correct app name if it is not the default
@@ -50,6 +48,7 @@ class AppGenerator extends Generators.Base {
       }
 
       // Set needed global vars for yo
+      this.appType = answers.appType;
       this.appName = answers.appName;
       this.style = answers.style;
       this.cssmodules = answers.cssmodules || true;
@@ -57,6 +56,7 @@ class AppGenerator extends Generators.Base {
       this.generatedWithVersion = parseInt(packageInfo.version.split('.').shift(), 10);
 
       // Set needed keys into config
+      this.config.set('appType', this.appType);
       this.config.set('appName', this.appName);
       this.config.set('appPath', this.appPath);
       this.config.set('style', this.style);
@@ -67,10 +67,11 @@ class AppGenerator extends Generators.Base {
   }
 
   configuring() {
-
+    if (this.appType === 'spa') {
+      this.sourceRoot(spaRootPath);
+    }
     // Generate our package.json. Make sure to also include the required dependencies for styles
-    let defaultSettings = this.fs.readJSON(`${baseRootPath}/package.json`);
-    // this.log('defaultSettings: ', JSON.stringify(defaultSettings));
+    let defaultSettings = this.fs.readJSON(`${this.sourceRoot()}/package.json`);
     let packageSettings = {
       name: this.appName,
       private: true,
@@ -85,39 +86,10 @@ class AppGenerator extends Generators.Base {
       dependencies: defaultSettings.dependencies
     };
 
-    /* we do not need install these devDependencies locally
-    // Add needed loaders if we have special styles
-    let styleConfig = utils.config.getChoiceByKey('style', this.style);
-    if(styleConfig && styleConfig.packages) {
-
-      for(let dependency of styleConfig.packages) {
-        packageSettings.devDependencies[dependency.name] = dependency.version;
-      }
-    }
-
-    // Add postcss module if enabled
-    let postcssConfig = utils.config.getChoiceByKey('postcss', 'postcss');
-    if(this.postcss && postcssConfig && postcssConfig.packages) {
-
-      for(let dependency of postcssConfig.packages) {
-        packageSettings.devDependencies[dependency.name] = dependency.version;
-      }
-    }
-
-    // Add cssmodules if enabled
-    const cssmoduleConfig = utils.config.getChoiceByKey('cssmodules', 'cssmodules');
-    if(this.cssmodules && cssmoduleConfig && cssmoduleConfig.packages) {
-      for(let dependency of cssmoduleConfig.packages) {
-        packageSettings.dependencies[dependency.name] = dependency.version;
-      }
-    }
-    */
-
     this.fs.writeJSON(this.destinationPath('package.json'), packageSettings);
   }
 
   writing() {
-
     const excludeList = [
       'LICENSE',
       'README.md',
@@ -130,7 +102,6 @@ class AppGenerator extends Generators.Base {
 
     // Get all files in our repo and copy the ones we should
     fs.readdir(this.sourceRoot(), (err, items) => {
-
       for(let item of items) {
 
         // Skip the item if it is in our exclude list
@@ -147,7 +118,7 @@ class AppGenerator extends Generators.Base {
             this.copy(item, '.gitignore');
           } else if (item === '_README.md') {
             this.fs.copyTpl(
-              this.templatePath('../react-webpack-multipage-template/_README.md'),
+              this.templatePath(`${this.sourceRoot()}/_README.md`),
               this.destinationPath('README.md'),
               this
             )
@@ -160,11 +131,9 @@ class AppGenerator extends Generators.Base {
   }
 
   install() {
-
     if(!this.options['skip-install']) {
       this.installDependencies({ bower: false });
     }
-
   }
 }
 
