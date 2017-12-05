@@ -9,7 +9,10 @@
   "extraPostCSSPlugins": [],
   "autoprefixer": null,
   "proxy": null,
-  "externals": null,
+  "externals": {
+    "react": "React",
+    "react-dom": "ReactDOM"
+  },
   "multipage": false,
   "define": null,
   "env": {

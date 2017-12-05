@@ -10,6 +10,10 @@
       "jsx": true
     }
   },
+  "globals": {
+    "React": true,
+    "ReactDOM": true
+  },
   "env": {
     "browser": true,
     "amd": true,
@@ -18,6 +22,11 @@
     "mocha": true
   },
   "rules": {
+    "semi": 1,
+    "quotes": [
+      1,
+      "single"
+    ],
     "comma-dangle": 1,
     "no-undef": 1,
     "global-strict": 0,
@@ -25,7 +34,12 @@
     "no-underscore-dangle": 0,
     "no-console": 1,
     "no-unused-vars": 1,
-    "no-trailing-spaces": [1, { "skipBlankLines": true }],
+    "no-trailing-spaces": [
+      1,
+      {
+        "skipBlankLines": true
+      }
+    ],
     "no-unreachable": 1,
     "no-alert": 0,
     "react/jsx-uses-react": 1,
