@@ -184,6 +184,19 @@ program
     process.exit(result.status);
   });
 
+program
+  .command('code <name>')
+  .description('get code snippet')
+  .action(function (name) {
+    result = spawn.sync(
+      'node',
+      [require.resolve(`../lib/snippet`)].concat(args),
+      { stdio: 'inherit' }
+    );
+    process.exit(result.status);
+  });
+
+
 program.parse(process.argv);
 
 // switch (script) {

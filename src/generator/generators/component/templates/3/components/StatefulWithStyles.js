@@ -1,10 +1,23 @@
 'use strict';
 
-import React from 'react';
-
+import PropTypes from 'prop-types';
 import style from './<%= style.webpackPath %>';
 
 class <%= component.className %> extends React.Component {
+  static propTypes = {
+    prop: PropTypes.string
+  }
+
+  static defaultProps = {
+    prop: 'value'
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.state = {};
+  }
+
   render() {
     return (
       <div className={style.<%= style.camelClassName %>}>
@@ -15,9 +28,5 @@ class <%= component.className %> extends React.Component {
 }
 
 <%= component.className %>.displayName = '<%= component.displayName %>';
-
-// Uncomment properties you need
-// <%= component.className %>.propTypes = {};
-// <%= component.className %>.defaultProps = {};
 
 export default <%= component.className %>;
