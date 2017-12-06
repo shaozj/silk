@@ -40,46 +40,14 @@ const modal2Snippet = `
 const formSnippet = `
 'use strict';
 
-import React from 'react';
-import { Form, Button, message, Modal, Select } from 'antd';
+import { Form, Button, message, Modal, Select, Input } from 'antd';
 import ShowSelect from 'components/ShowSelect/ShowSelect';
-import VideoCategorySelect from 'components/VideoCategorySelect/VideoCategorySelect';
 import Fetcher from '../../Fetcher';
 import './EditForm.less';
 const FormItem = Form.Item;
 const { Option } = Select;
 
 class EditForm extends React.Component {
-  state = {
-    poster: ''
-  }
-
-  componentDidMount() {
-    const { isAdd } = this.props;
-    // 编辑的情况，获取节目封面图片
-    if (!isAdd) {
-      this.getPoster();
-    }
-  }
-
-  // 获取节目封面图片
-  getPoster() {
-    const { data } = this.props;
-    const { showid } = data;
-    Fetcher.getShowByIds(showid + '')
-    .then(res => {
-      if (res.success !== true) {
-        message.error('获取节目封面出错，' + res.message);
-        return;
-      }
-      if (res.data && res.data[showid]) {
-        this.setState({ poster: res.data[showid].showThumbUrlBig });
-      } else {
-        message.error('不存在对应的节目信息');
-      }
-    });
-  }
-
   save = () => {
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
@@ -89,12 +57,6 @@ class EditForm extends React.Component {
           values.showid = values.showInfo.key;
           values.showname = values.showInfo.label;
           delete values.showInfo;
-        }
-        if (values.stageType) {
-          values.stageType = +values.stageType;
-        }
-        if (values.showid) {
-          values.showid = +values.showid;
         }
         if (isAdd) {
           Fetcher.addLinkVideoConfig(values)
@@ -141,56 +103,48 @@ class EditForm extends React.Component {
   }
 
   render() {
-    const { list } = this.props;
-    const { poster } = this.state;
     const data = this.props.data || {};
     const { getFieldDecorator } = this.props.form;
     const formItemLayout = {
-      labelCol: { span: 4 },
-      wrapperCol: { span: 20 }
+      labelCol: { span: 5 },
+      wrapperCol: { span: 15 }
     };
-    const selected = list.map(item => item.category);
 
     return (
       <Form className="short-link-long-editformComponent">
-        <div className="left-form">
-          <FormItem
-            {...formItemLayout}
-            label='频道分类'
-          >
-            {getFieldDecorator('category',{
-              initialValue: data.category
-            })(
-              <VideoCategorySelect platform="pgy" multiple={false} type="name" selected={selected} />
-            )}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label='关联节目'
-          >
-            {getFieldDecorator('showInfo', {
-              initialValue: { key: data.showid && data.showid + '' || '', label: data.showname || '' }
-            })(
-              <ShowSelect onShowChange={this.handleShowChange} />
-            )}
-          </FormItem>
-          <FormItem
-            {...formItemLayout}
-            label='关联剧集'
-          >
-            {getFieldDecorator('stageType', {
-              initialValue: data.stageType && data.stageType + '' || '1'
-            })(
-              <Select>
-                <Option value="1">第一集（期）</Option>
-                <Option value="-1">最新一集（期）</Option>
-              </Select>
-            )}
-          </FormItem>
-        </div>
-        <div className="right-form">
-          <img className="poster-img" src={poster} />
-        </div>
+        <FormItem
+          {...formItemLayout}
+          label='名称'
+        >
+          {getFieldDecorator('name',{
+            initialValue: data.name
+          })(
+            <Input />
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label='关联节目'
+        >
+          {getFieldDecorator('showInfo', {
+            initialValue: { key: data.showid && data.showid + '' || '', label: data.showname || '' }
+          })(
+            <ShowSelect onShowChange={this.handleShowChange} />
+          )}
+        </FormItem>
+        <FormItem
+          {...formItemLayout}
+          label='关联剧集'
+        >
+          {getFieldDecorator('stageType', {
+            initialValue: data.stageType && data.stageType + '' || '1'
+          })(
+            <Select>
+              <Option value="1">第一集（期）</Option>
+              <Option value="-1">最新一集（期）</Option>
+            </Select>
+          )}
+        </FormItem>
 
         <div className="modal-footer">
           <Button type="primary" size="large" onClick={this.save}>保存</Button>
