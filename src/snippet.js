@@ -258,7 +258,127 @@ const wrappedQueryForm = Form.create()(QueryForm);
 export default wrappedQueryForm;
 `;
 
-let copyStr = '没有可复制代码，可选 modal, form, modal2, form2';
+const tableSnippet = `
+    this.columns = [
+      {
+        title: 'ID',
+        dataIndex: 'id',
+        key: 'id'
+      },
+      {
+        title: '适用范围',
+        dataIndex: 'type',
+        key: 'type',
+        render: type => window.g_PRE_CONFIG_TYPE_MAP[type + '']
+      },
+      {
+        title: '开关板名称',
+        dataIndex: 'name',
+        key: 'name'
+      },
+      {
+        title: '前贴片',
+        dataIndex: 'config.headVideoInfo.thumbnail',
+        key: 'config.headVideoInfo.thumbnail',
+        render: (img, record) => {
+          const config = record.config || {};
+          const headVideoInfo = config.headVideoInfo || {};
+          const vid = headVideoInfo.videoId;
+          const url = vid ? URL_BEFORE + vid + URL_AFTER : '';
+          const seconds = headVideoInfo.seconds;
+          return (
+            <a target="_blank" href={url}>
+              <div className="img-wrap">
+                <img src={img} />
+                { seconds ? <span className="duration-info">{seconds} 秒</span> : '' }
+              </div>
+            </a>
+          );
+        }
+      },
+      {
+        title: '后贴片',
+        dataIndex: 'config.tailVideoInfo.thumbnail',
+        key: 'config.tailVideoInfo.thumbnail',
+        render: (img, record) => {
+          const config = record.config || {};
+          const tailVideoInfo = config.tailVideoInfo || {};
+          const vid = tailVideoInfo.videoId;
+          const url = vid ? URL_BEFORE + vid + URL_AFTER : '';
+          const seconds = tailVideoInfo.seconds;
+          return (
+            <a target="_blank" href={url}>
+              <div className="img-wrap">
+                <img src={img} />
+                { seconds ? <span className="duration-info">{seconds} 秒</span> : '' }
+              </div>
+            </a>
+          );
+        }
+      },
+      {
+        title: '是否裁剪',
+        dataIndex: 'config.startCutSeconds',
+        key: 'config.startCutSeconds',
+        render: (img, record) => {
+          const config = record.config || {};
+          const startCutSeconds = config.startCutSeconds;
+          const endCutSeconds = config.endCutSeconds;
+          return (startCutSeconds || endCutSeconds) ?
+            <div>
+              <p>前 {startCutSeconds} 毫秒</p>
+              <p>后 {endCutSeconds} 毫秒</p>
+            </div> :
+            <p>无裁剪</p>;
+        }
+      },
+      {
+        title: '更新时间',
+        dataIndex: 'updatetime',
+        key: 'updatetime',
+        render: time => moment(time).format('YYYY-MM-DD HH:mm:ss')
+      },
+      {
+        title: '操作人',
+        dataIndex: 'creatorName',
+        key: 'creatorName'
+      },
+      {
+        title: '操作',
+        key: 'operate',
+        render: (text, record) => {
+          return (
+            <div style={{ minWidth: 64 }}>
+              <a onClick={() => this.props.onEdit(record.id)}
+                href="javascript:void(0)">编辑</a>
+              <span className="ant-divider" />
+              <a onClick={() => this.deleteMethod(record.id, record.name)}
+                className="red"
+                href="javascript:void(0)">删除</a>
+            </div>
+          );
+        }
+      }];
+
+      <Table
+        rowKey="id"
+        columns={this.columns}
+        dataSource={data}
+        loading={loading}
+        pagination={{
+          showSizeChanger: true,
+          showQuickJumper: true,
+          pageSizeOptions: ['10', '20', '40', '60', '80', '100'],
+          pageSize: pageSize,
+          total: total,
+          current: pageNo,
+          onChange: onPageChange,
+          onShowSizeChange: onShowSizeChange
+        }}
+      />
+`;
+
+let copyStr = '没有可复制代码，可选 modal, form, modal2, form2, table';
 switch (process.argv[2]) {
   case 'modal':
     copyStr = modalSnippet;
@@ -271,6 +391,9 @@ switch (process.argv[2]) {
     break;
   case 'form2':
     copyStr = form2Snippet;
+    break;
+  case 'table':
+    copyStr = tableSnippet;
     break;
   default:
     break;
