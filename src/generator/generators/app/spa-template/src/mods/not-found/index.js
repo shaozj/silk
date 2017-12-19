@@ -3,7 +3,7 @@
 import { Button } from 'antd';
 import style from './index.less';
 
-class App extends React.Component {
+class Page extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,4 +29,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default Page;

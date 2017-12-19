@@ -25,7 +25,7 @@ class ContentWrap extends React.Component {
 
     return (
       <div className={style.contentwrapComponent}>
-        <Sider style={{ height: '100vh', position: 'fixed', left: 0 }}
+        <Sider style={{ height: '100vh', position: 'fixed', left: 0, zIndex: 20 }}
           collapsible
           collapsed={collapsed}
           onCollapse={this.onCollapse}

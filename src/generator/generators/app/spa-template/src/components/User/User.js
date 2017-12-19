@@ -2,7 +2,7 @@
 
 import style from './User.less';
 
-const user = (window.GV && window.GV.loginUser) || {};
+const user = (window.GV && window.GV.user) || {};
 class User extends React.Component {
   render() {
     const mainPage = `https://work.alibaba-inc.com/work/u/${user.empId}`;

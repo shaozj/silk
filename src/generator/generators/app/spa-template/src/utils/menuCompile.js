@@ -3,7 +3,7 @@ import { Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 const SubMenu = Menu.SubMenu;
 
-export default function menuCompile({menuMap, match, location, authority, isAuthority = false}){
+export default function menuCompile({menuMap, location, authority, isAuthority = false}){
   let authorityData = [];
   const getAuthorityData = (authorityTree) => {
     authorityTree && authorityTree.map((i) => {
@@ -50,17 +50,16 @@ export default function menuCompile({menuMap, match, location, authority, isAuth
 
 
   const routeMap = (menuMap, route) => {
-    let cur = '';
+    let cur = null;
     for(let j = 0; j < Object.keys(menuMap).length; j++){
       let i = Object.keys(menuMap)[j];
       if(menuMap[i].subMenus){
-
         cur = routeMap(menuMap[i].subMenus, route);
         if(cur){
           break;
         }
       }else if(menuMap[i].path == route){
-         cur = i;
+         cur = { data:menuMap[i], key:i };
          break;
       }
     }
@@ -78,12 +77,12 @@ export default function menuCompile({menuMap, match, location, authority, isAuth
     return openKey;
   };
 
-  const curKey = routeMap( menuMap, location.pathname );
+  const curMenu = routeMap( menuMap, location.pathname );
   const menus = getMenu(menuMap);
   const openKey = getOpenKey(menuMap);
   const menu = (
     <Menu theme="dark" mode="inline"
-      defaultSelectedKeys={[curKey || '1']}
+      defaultSelectedKeys={[ (curMenu && curMenu.key) || '1' ]}
       className="side-menu"
       defaultOpenKeys={openKey}
     >
@@ -91,18 +90,7 @@ export default function menuCompile({menuMap, match, location, authority, isAuth
     </Menu>
   );
 
-  const getContent = ({ match, menuMap }) => {
-    let url = match.url;
-    let now = null;
-    menuMap && Object.keys(menuMap).map((i) => {
-      if(menuMap[i].path == url){
-        now = menuMap[i];
-      }
-    });
-    return now && now.component;
-  };
-
-  const content = getContent({ match, menuMap });
+  const content = curMenu && curMenu.data.component;
   return (
     <ContentWrap menu={menu}>
       { content }

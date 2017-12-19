@@ -3,10 +3,10 @@ import { Layout, Menu } from 'antd';
 import style from './index.less';
 import Environment from 'components/Environment/Environment';
 import User from 'components/User/User';
-import { IndexPageRoute, NextPageRoute } from './menu';
+import { IndexPageRoute, NotPageRoute, SecondPageRoute } from './menu';
+const { Header, Footer } = Layout;
 import history from './history';
 
-const { Header, Footer } = Layout;
 const RouteMap = {
   '/': '1',
   '/pageView': '1',
@@ -43,15 +43,15 @@ class Wrapper extends React.PureComponent {
               defaultSelectedKeys={[ curKey || '1']}
               className={style.menu}
             >
-              <Menu.Item key="1"><Link to="/pageView/notfound">一级导航1</Link></Menu.Item>
-              <Menu.Item key="2"><Link to="/pageView1/notfound">一级导航2</Link></Menu.Item>
+              <Menu.Item key="1"><Link to="/pageView/list">一级导航1</Link></Menu.Item>
+              <Menu.Item key="2"><Link to="/pageView2/notfound">一级导航2</Link></Menu.Item>
             </Menu>
           </Header>
           <Switch>
-            <Route exact path="/" render={() => <Redirect to="/pageView/notfound"/>} />
-            <Route path="/pageView/:subMenuId" component={IndexPageRoute} />
-            <Route path="/pageView1/:subMenuId" component={NextPageRoute} />
-            <Route path="*" component={NextPageRoute} />
+            <Route exact path="/" render={() => <Redirect to="/pageView/material"/>} />
+            <Route path="/pageView/:subMenuId" component={ IndexPageRoute }/>
+            <Route path="/pageView2/:subMenuId" component={ SecondPageRoute }/>
+            <Route path="*" component={ NotPageRoute }/>
           </Switch>
           <Footer style={{ textAlign: 'center' }}>
             优酷管理平台 ©2017 Created by 优酷管理平台团队

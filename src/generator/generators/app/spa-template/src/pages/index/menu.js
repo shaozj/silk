@@ -1,52 +1,59 @@
 import MenuCompile from 'utils/menuCompile';
-import NotFoundPage from 'mods/not-found/Loadable';
-import ForbiddenPage from 'mods/forbidden/Loadable';
-import ListPage from 'mods/list/Loadable';
+import NotFound from 'mods/not-found/Loadable';
+import Forbidden from 'mods/forbidden/Loadable';
+import List from 'mods/list/Loadable';
+import Data from 'mods/dataview/Loadable';
+import Material from 'mods/Material/Loadable';
+import MaterialVideo from 'mods/MaterialVideo/Loadable';
 
-function IndexPageRoute({ match, location }) {
+function IndexPageRoute({ match, location }){
   const navMap = {
-    'notfound': {
-      path: '/pageView/notfound',
-      component: <NotFoundPage />,
+    'materialpage': {
+      icon: 'database',
+      path: '/pageView/material',
+      component: <Material />,
       isNotNav: false,
-      title: '404页面'
-    },
-    'forbidden': {
-      icon: 'unlock',
-      path: '/pageView/forbidden',
-      component: <ForbiddenPage />,
-      isNotNav: false,
-      title: '没权限页面'
+      title: '素材库'
     },
     'listpage': {
-      icon: 'unlock',
+      icon: 'file-ppt',
       path: '/pageView/list',
-      component: <ListPage />,
+      component: <List />,
       isNotNav: false,
       title: '列表表单'
     },
+    'materialvideopage': {
+      icon: 'database',
+      path: '/pageView/material-video',
+      component: <MaterialVideo />,
+      isNotNav: true,
+      title: '素材库'
+    },
     'xspace-cms-report-nav': {
-      icon: 'unlock',
-      path: '/pageView/source2',
+      icon: 'line-chart',
       title: '数据统计',
       subMenus: {
         'xspace-cms-report-by-delivery-project': {
-          icon: 'unlock',
+          icon: 'area-chart',
           path: '/pageView/source3',
           title: '按项目维度统计',
-          component: null
-        },
-        'xspace-cms-report-by-delivery-task': {
-          icon: 'unlock',
-          path: '/pageView/source4',
-          title: '按资源位维度统计'
-        },
-        'xspace-cms-report-by-material': {
-          icon: 'unlock',
-          path: '/pageView/source5',
-          title: '按素材维度统计'
+          component: <Data />
         }
       }
+    },
+    'notfound': {
+      path: '/pageView/notfound',
+      component: <NotFound />,
+      isNotNav: false,
+      icon: 'meh-o',
+      title: '404页面'
+    },
+    'forbidden': {
+      icon: 'frown',
+      path: '/pageView/forbidden',
+      component: <Forbidden />,
+      isNotNav: false,
+      title: '没权限页面'
     }
   };
   return <MenuCompile match={match} location={location} menuMap={navMap} />;
@@ -56,8 +63,20 @@ function NextPageRoute({ match, location }) {
   const navMap = {
     'notfound': {
       path: '/pageView1/notfound',
-      component: <NotFoundPage />,
+      component: <NotFound />,
       isNotNav: false,
+      title: '404页面'
+    }
+  };
+  return <MenuCompile match={match} location={location} menuMap={navMap} />;
+}
+
+function SecondPageRoute({ match, location }) {
+  const navMap = {
+    'notfound': {
+      path: '/pageView2/notfound',
+      component: <NotFound />,
+      isNotNav: true,
       title: '404页面'
     }
   };
@@ -66,6 +85,7 @@ function NextPageRoute({ match, location }) {
 
 export default {
   IndexPageRoute,
-  NextPageRoute
+  NextPageRoute,
+  SecondPageRoute
 };
 

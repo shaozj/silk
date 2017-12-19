@@ -26,7 +26,7 @@ export default class Page extends React.Component {
   }
 
   componentDidMount() {
-    this.getTableValue();
+    //this.getTableValue();
   }
 
   // 获取 table 内容
@@ -43,7 +43,7 @@ export default class Page extends React.Component {
         pageNo: pageNo,
         pageSize: PAGE_SIZE,
         configType: 'skin'
-      }
+      };
     } else {
       Object.keys(values).map(key => {
         if (values[key] == undefined) {
@@ -68,7 +68,7 @@ export default class Page extends React.Component {
           content: '搜索换肤方案出错，' + data.message
         });
       }
-    })
+    });
   }
 
   // 添加换肤方案
@@ -88,7 +88,7 @@ export default class Page extends React.Component {
     .then(data => {
       if (data.success == true) {
         if (type == 'copy') {
-          data.data.title = data.data.title + '_复制'
+          data.data.title = data.data.title + '_复制';
         }
         this.setState({
           id,

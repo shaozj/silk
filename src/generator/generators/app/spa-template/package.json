@@ -30,12 +30,14 @@
   "dependencies": {
     "@ali/uniform-react-components": "^0.0.24",
     "antd": "^2.13.3",
+    "fetch-jsonp": "^1.0.5",
+    "g2": "^2.3.13",
+    "g2-react": "^1.3.2",
     "prop-types": "^15.6.0",
     "react": "^15.0.0",
     "react-dom": "^15.0.0",
     "react-loadable": "^5.3.1",
     "react-router-dom": "^4.2.2",
-    "whatwg-fetch": "^2.0.1",
-    "fetch-jsonp": "^1.0.5"
+    "whatwg-fetch": "^2.0.1"
   }
 }
