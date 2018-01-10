@@ -2,32 +2,14 @@
 
 window.GV = window.GV || {};
 window.GV.user = {
-    "userid": "zhenjiang.szj",
-    "dep": "阿里文化娱乐集团(筹)-大优酷事业群-产品技术平台-业务平台部-智能服务后台-前端组",
-    "cname": "澜嵚",
-    "lastName": "邵振江",
-    "workid": "87196",
-    "siteLanguage": "zh-CN",
-    "bucid": 111171290,
-    "login": "zhenjiang.szj",
-    "email": "zhenjiang.szj@alibaba.net",
-    "name": "澜嵚",
-    "html_url": "https://work.alibaba-inc.com/work/u/87196",
-    "avatar_url": "https://work.alibaba-inc.com/photo/87196.220x220.jpg",
-    "im_url": "https://work.alibaba-inc.com/new_amos_im_alisoft_com/msg.aw?v=2&uid=%E6%BE%9C%E5%B5%9A&site=cntaobao&charset=utf-8&s=1",
-    "umid": "CV1cz58eae95c7438232a007e5e01adff",
-    "token": "ce12a407950442b288b405a933aec906a056da00",
-    "tokenDt": 1506583406894
-};
-
-window.GV.user = {
   "corpId": "",
   "corpUserId": "",
   "empId": "87196",
   "id": 111171290,
   "language": "zh-CN",
   "lastName": "邵振江",
-  "nickNameCn": "澜嵚"
+  "nickNameCn": "澜嵚",
+  "avatar_url": "https://work.alibaba-inc.com/photo/87196.220x220.jpg"
 };
 
 window.GV.fileList = [
@@ -150,5 +132,59 @@ window.GV.fileList = [
     videoCount: 934,
     scope: 'all',
     showImg: 'https://udemo.alibaba-inc.com/system/extracted/12/48/89/52/02da85511c75ede0b94926cc/%E8%92%B2%E5%85%AC%E8%8B%B112%E6%9C%88_0.1/images/%E7%B4%A0%E6%9D%90%E4%B8%AD%E5%BF%83/u704.png'
+  }
+];
+
+
+window.GV.listA = [
+  {
+    id:1,
+    name:'方案1',
+    status: 1,
+    page: '主客',
+    startTime:1513683356743,
+    endTime:1513683356743,
+    creator:'冰浠',
+    img:'https://img.alicdn.com/tfs/TB1X6LQcPuhSKJjSspjXXci8VXa-64-64.png'
+  },
+  {
+    id:2,
+    name:'方案12',
+    status: 1,
+    page: '主客',
+    startTime:1513683356743,
+    endTime:1513683356743,
+    creator:'冰浠',
+    img:'https://img.alicdn.com/tfs/TB1X6LQcPuhSKJjSspjXXci8VXa-64-64.png'
+  },
+  {
+    id:3,
+    name:'方案13',
+    status: 1,
+    page: '主客',
+    startTime:1513683356743,
+    endTime:1513683356743,
+    creator:'冰浠',
+    img:'https://img.alicdn.com/tfs/TB1X6LQcPuhSKJjSspjXXci8VXa-64-64.png'
+  },
+  {
+    id:4,
+    name:'方案14',
+    status: 1,
+    page: '主客',
+    startTime:1513683356743,
+    endTime:1513683356743,
+    creator:'冰浠',
+    img:'https://img.alicdn.com/tfs/TB1X6LQcPuhSKJjSspjXXci8VXa-64-64.png'
+  },
+  {
+    id:5,
+    name:'方案15',
+    status: 1,
+    page: '主客',
+    startTime:1513683356743,
+    endTime:1513683356743,
+    creator:'冰浠',
+    img:'https://img.alicdn.com/tfs/TB1X6LQcPuhSKJjSspjXXci8VXa-64-64.png'
   }
 ];

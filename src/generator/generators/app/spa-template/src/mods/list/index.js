@@ -1,172 +1,184 @@
 'use strict';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import {Modal} from 'antd';
+
+import { Modal } from 'antd';
 import Fetcher from './Fetcher';
-import SearchForm from './SearchForm/SearchForm';
-import MyTable from './MyTable/MyTable';
+import QueryForm from './QueryForm/QueryForm';
+import List from './List/List';
 import EditForm from './EditForm/EditForm';
-import style from './index.less';
 
-const PAGE_SIZE = 10;
-
-export default class Page extends React.Component {
+export default class OutManage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      visible: false,
-      data:[],
-      searchValues: null, // 搜索参数
-      pageNo: 1,
-      total: 0, // 搜索到的总的换肤方案个数
-      id: null,
-      type: 'add',
-      modalTitle: '创建换肤方案'
+      loading: true,            // 列表数据是否加载中
+      visible: false,           // modal 框是否可见
+      listData: [],             // 列表数据
+      queryValues: {},          // 查询参数
+      curData: null,            // 当前处理的数据
+      isAdd: true,              // 是否为添加方案，true 为添加，false 为编辑
+      modalTitle: '添加方案',    // modal 框 title
+      pageNo: 1,                // 页码
+      pageSize: 20,             // 每页显示个数
+      total: 0                  // 搜索到的总数
     };
   }
 
   componentDidMount() {
-    //this.getTableValue();
+    this.getList();
   }
 
-  // 获取 table 内容
-  getTableValue() {
-    this.searchMethod();
-  }
-
-  // 搜索方案
-  searchMethod = (values, pageNo=1) => {
-    this.setState({searchValues: values});
-    let params = null;
-    if (!values) {
-      values = {
-        pageNo: pageNo,
-        pageSize: PAGE_SIZE,
-        configType: 'skin'
-      };
-    } else {
-      Object.keys(values).map(key => {
-        if (values[key] == undefined) {
-          delete values[key];
-        }
-      });
-      values.pageNo = pageNo;
-      values.pageSize = PAGE_SIZE;
-      values.configType = 'skin';
+  // 获取列表数据
+  getList = (
+    query=this.state.queryValues,
+    pageSize=this.state.pageSize,
+    pageNo=this.state.pageNo
+  ) => {
+    this.setState({ loading: true });
+    if (query !== this.state.queryValues) {
+      this.setState({ queryValues: query });
     }
-    params = {data: JSON.stringify(values)};
-    Fetcher.searchMethod(params)
-    .then(data => {
-      if (data.success == true) {
-        this.setState({
-          data: data.data.data,
-          total: data.data.totalCount
-        });
-      } else {
-        Modal.error({
-          title: '接口失败',
-          content: '搜索换肤方案出错，' + data.message
-        });
-      }
-    });
-  }
+    if (pageNo !== this.state.pageNo) {
+      this.setState({ pageNo });
+    }
+    query.pageSize = pageSize;
+    query.pageNo = pageNo;
 
-  // 添加换肤方案
-  addMethod = () => {
-    this.setState({
-      curMethodData: {},
-      visible: true,
-      type: 'add',
-      modalTitle: '创建换肤方案'
-    });
-  }
-
-  // 编辑或拷贝换肤方案
-  editOrCopyMethod = (type, id) => {
-    // 获取当前皮肤方案信息
-    Fetcher.getMethodInfo(id)
-    .then(data => {
-      if (data.success == true) {
-        if (type == 'copy') {
-          data.data.title = data.data.title + '_复制';
-        }
-        this.setState({
-          id,
-          type,
-          curMethodData: data.data,
-          visible: true,
-          modalTitle: type == 'edit' ? '编辑换肤方案' : '复制换肤方案'
-        });
-      } else {
+    Fetcher.getList(query)
+    .then(res => {
+      this.setState({ loading: false });
+      if (res.success !== true) {
         Modal.error({
           title: '接口出错',
-          content: '获取当前换肤方案信息出错，' + data.message
+          content: '获取列表数据出错，' + res.message
         });
+        return;
       }
+      this.setState({
+        listData: res.data.data,
+        total: res.data.totalCount
+      });
     });
   }
 
-  handleModalOk() {
+  // 添加方案
+  handleAdd = () => {
+    this.setState({
+      curData: {},
+      isAdd: true,
+      visible: true,
+      modalTitle: '添加方案'
+    });
+  }
+
+  // 编辑方案
+  handleEdit = (id) => {
+    Fetcher.get(id)
+    .then(res => {
+      if (res.success !== true) {
+        Modal.error({
+          title: '接口出错',
+          content: '获取一条方案出错，' + res.message
+        });
+        return;
+      }
+      this.setState({
+        curData: res.data,
+        isAdd: false,
+        visible: true,
+        modalTitle: '编辑方案'
+      });
+    });
+  }
+
+  // 点击 modal 框保存
+  handleModalOk = () => {
     this.setState({ visible: false });
   }
 
-  handleModalCancel() {
+  // 点击 modal 框取消
+  handleModalCancel = () => {
     this.setState({ visible: false });
   }
 
   // 刷新页面
   refresh = () => {
     this.setState({ visible: false });
-    const { searchValues, pageNo } = this.state;
-    this.searchMethod(searchValues, pageNo);
+    this.getList();
   }
 
   // 处理表格页码变化
   handlePageChange = (pageNo) => {
-    const {searchValues} = this.state;
-    this.setState({pageNo});
-    this.searchMethod(searchValues, pageNo);
+    const { pageSize, queryValues } = this.state;
+    this.setState({ pageNo });
+    this.getList(queryValues, pageSize, pageNo);
+  }
+
+  // 处理每页显示个数变化
+  handleShowSizeChange = (pageNo, pageSize) => {
+    const { queryValues } = this.state;
+    this.setState({ pageNo, pageSize });
+    this.getList(queryValues, pageSize, pageNo);
   }
 
   render() {
-    const {data, visible, pageNo, total, modalTitle, id, type, curMethodData} = this.state;
+    const {
+      loading,
+      visible,
+      listData,
+      curData,
+      isAdd,
+      modalTitle,
+      pageNo,
+      pageSize,
+      total
+    } = this.state;
 
     return (
-      <div className={style.skinConfigComponent}>
-        <div className={style.mod}>
-          <SearchForm
-            onAdd={this.addMethod}
-            onSearch={this.searchMethod}
+      <div className="outManageComponent">
+        <div className="box">
+          <div className="query-form__title-bar">
+            筛选条件
+          </div>
+          <QueryForm
+            onAdd={this.handleAdd}
+            onQuery={this.getList}
           />
         </div>
-        <div className="mod">
-          <MyTable data={data}
-            onEditOrCopy={this.editOrCopyMethod}
+        <div className="box">
+          <List
+            loading={loading}
+            data={listData}
             pageNo={pageNo}
+            pageSize={pageSize}
             total={total}
             onPageChange={this.handlePageChange}
-            refresh={this.refresh} />
+            onShowSizeChange={this.handleShowSizeChange}
+            onEdit={this.handleEdit}
+            onDistributeEdit={this.handleDistributeEdit}
+            refresh={this.refresh}
+          />
         </div>
         <Modal
           key={visible}
           visible={visible}
           title={modalTitle}
-          width={760}
+          width={window.g_MODAL_WIDTH}
           wrapClassName="vertical-center-modal"
           footer={null}
-          onOk={::this.handleModalOk}
-          onCancel={::this.handleModalCancel}
+          onOk={this.handleModalOk}
+          onCancel={this.handleModalCancel}
           maskClosable={false}
         >
           <div className="modal-content-wrapper">
+          {
             <EditForm
-              type={type}
-              id={id}
-              data={curMethodData}
+              isAdd={isAdd}
+              data={curData}
+              onOk={this.handleModalOk}
+              onCancel={this.handleModalCancel}
               refresh={this.refresh}
-              onOk={::this.handleModalOk}
-              onCancel={::this.handleModalCancel}
             />
+          }
           </div>
         </Modal>
       </div>

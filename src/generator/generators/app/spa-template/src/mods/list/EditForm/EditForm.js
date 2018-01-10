@@ -1,150 +1,150 @@
 'use strict';
 
 import React from 'react';
-import { Form, Input, Button, message, DatePicker, Alert, Radio, Modal } from 'antd';
-import moment from 'moment';
-import Switch from '@ali/uniform-react-components/lib/Switch/index';
-import UploadImg from '@ali/uniform-react-components/lib/UploadImg/index';
+import {
+  Form,
+  Input,
+  Button,
+  message,
+  Radio,
+  Modal,
+  Icon
+} from 'antd';
 import Fetcher from '../Fetcher';
-import './EditForm.less';
+import style from './EditForm.less';
+
 const FormItem = Form.Item;
-const RangePicker = DatePicker.RangePicker;
 const RadioGroup = Radio.Group;
 
-const BottomSkinArr = [
-  {
-    label: '首页icon'
-  },
-  {
-    label: '发现icon'
-  },
-  {
-    label: '会员icon'
-  },
-  {
-    label: '星球icon'
-  },
-  {
-    label: '我的icon'
-  }
-];
-
+let uuid = 0;
 class EditForm extends React.Component {
   constructor(props) {
     super(props);
-  
+
     this.state = {
 
     };
   }
 
-  save() {
-    // get form data & submit
+  componentDidMount() {
+    const { data } = this.props || {};
+    // 处理投放渠道帐号数据结构
+    const accounts = data.projectAccounts;
+    this.channelAccountArr = accounts && accounts.map(item => item.channel);
+    this.initKeys(this.channelAccountArr);
+  }
+
+  // 初始化动态增减表单项的 keys
+  initKeys(data) {
+    uuid = 0;
+    let keys = [];
+    if (data) {
+      for (let i = 0; i < data.length; i++) {
+        keys.push(uuid);
+        uuid ++;
+      }
+    }
+    this.props.form.setFieldsValue({ keys });
+    if (keys.length <= 0) {
+      this.add(); // 创建方案时默认显示一行
+    }
+  }
+
+  // 删除一行动态增减表单项
+  remove = (k) => {
+    const { form } = this.props;
+    const keys = form.getFieldValue('keys');
+    if (keys.length === 1) {
+      return;
+    }
+
+    form.setFieldsValue({
+      keys: keys.filter(key => key !== k)
+    });
+  }
+
+  // 增加一行动态增减表单项
+  add = () => {
+    const { form } = this.props;
+    const keys = form.getFieldValue('keys');
+    const nextKeys = keys.concat(uuid);
+    form.setFieldsValue({
+      keys: nextKeys
+    });
+    uuid++;
+  }
+
+  // 保存
+  save = () => {
+    // 校验表单，校验成功后提交数据
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log('values: ', values);
         const data = {
-          ...values,
-          startTime: values.rangeTime && values.rangeTime[0] && values.rangeTime[0].format('x'),
-          endTime: values.rangeTime && values.rangeTime[1] && values.rangeTime[1].format('x'),
-          configType: 'skin' // 写死
+          ...values
+        };
+        data.accounts = data.accounts.filter(item => !!item);
+
+        const { isAdd } = this.props;
+        if (isAdd) {
+          Fetcher.add(data)
+          .then(data => {
+            if (data.success == true) {
+              message.success('添加方案成功！');
+              this.props.refresh && this.props.refresh();
+            } else {
+              Modal.error({
+                title: '接口出错',
+                content: '添加方案出错，' + data.message
+              });
+            }
+          });
+        } else {
+          const id = this.props.data.id;
+          Fetcher.update(id, data)
+          .then(data => {
+            if (data.success == true) {
+              message.success('编辑方案成功！');
+              this.props.refresh && this.props.refresh();
+            } else {
+              Modal.error({
+                title: '接口出错',
+                content: '编辑方案出错，' + data.message
+              });
+            }
+          });
         }
-        const {type} = this.props;
-        switch(type) {
-          case 'add':
-            Fetcher.addMethod({
-              data: JSON.stringify(data)
-            })
-            .then(data => {
-              if (data.success == true) {
-                message.success('添加皮肤方案成功！');
-                this.props.refresh && this.props.refresh();
-              } else {
-                Modal.error({
-                  title: '接口出错',
-                  content: '添加皮肤方案出错，' + data.message
-                })
-              }
-            });
-            break;
-          case 'edit':
-            data.id = this.props.id;
-            Fetcher.updateMethod({
-              data: JSON.stringify(data)
-            })
-            .then(data => {
-              if (data.success == true) {
-                message.success('编辑皮肤方案成功！');
-                this.props.refresh && this.props.refresh();
-              } else {
-                Modal.error({
-                  title: '接口出错',
-                  content: '编辑皮肤方案出错，' + data.message
-                })
-              }
-            });
-            break;
-          default:
-            break;
-        }
-        
       }
     });
   }
 
-  validatorCouple = (field) => {
-    // a 变了，重新设置 b 的值，这样触发 b 校验
-    const {getFieldValue, setFieldsValue} = this.props.form;
-    const value = getFieldValue(field);
-    const obj = {};
-    obj[field] = value;
-    setFieldsValue(obj);
-  }
-
-  cancel() {
-    this.props.onCancel();
-  }
-
   render() {
+    const { isAdd, onCancel } = this.props;
     const data = this.props.data || {};
-    let config = data.config;
-    const {getFieldDecorator, getFieldsValue} = this.props.form;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
     const formItemLayout = {
-      labelCol: { span: 6 },
-      wrapperCol: { span: 11 }
+      labelCol: { span: 4 },
+      wrapperCol: { span: 17 }
     };
 
-    const values = getFieldsValue();
-    const curPage = values.page || data.page || 'MAIN'; // 表单中当前的 page 值
-
-    if (config) {
-      try {
-        config = JSON.parse(config);
-      } catch (err) {
-        console.error('解析 config 出错，', err); // eslint-disable-line
-      }
-    }
-
-    const curConfig = values.config || config; // 表单中当前的 config 值
-
-    let rangeTime = undefined;
-    if (data.startTime && data.endTime) {
-      rangeTime = [moment(data.startTime, 'x'), moment(data.endTime, 'x')];
-    }
-
-    // iconName
-    getFieldDecorator('config.bottom[0].iconName', { initialValue: config && config.bottom[0].iconName || '首页' });
-    getFieldDecorator('config.bottom[1].iconName', { initialValue: config && config.bottom[1].iconName || '发现' });
-    getFieldDecorator('config.bottom[2].iconName', { initialValue: config && config.bottom[2].iconName || '会员' });
-    getFieldDecorator('config.bottom[3].iconName', { initialValue: config && config.bottom[3].iconName || '星球' });
-    getFieldDecorator('config.bottom[4].iconName', { initialValue: config && config.bottom[4].iconName || '我的' });
+    // 动态增减表单项
+    getFieldDecorator('keys', { initialValue: [] });
+    const keys = getFieldValue('keys');
+    let formItems;
+    formItems = keys.map((k) => (
+      <FormItem key={k} wrapperCol={{offset: 4, span: 17}}>
+        {getFieldDecorator(`accounts[${k}]`, {
+          initialValue: this.channelAccountArr && this.channelAccountArr[k]
+        })(
+          <Input />
+        )}
+      </FormItem>
+    ));
 
     return (
-      <Form className="editformComponent">
+      <Form className="out-manage-editformComponent modal-form">
         <FormItem
           {...formItemLayout}
           label='方案名称'
-          required={true}
         >
           {getFieldDecorator('name', {
             initialValue: data.name,
@@ -153,42 +153,33 @@ class EditForm extends React.Component {
             <Input placeholder="方案名称" />
           )}
         </FormItem>
+        <div className={style.formLabel}>投放渠道：</div>
+        {
+          formItems
+        }
+        {
+          isAdd ?
+          <Button type="dashed" onClick={this.add} style={{marginBottom: 15, marginLeft: '30%', width: '30%'}}>
+            <Icon type="plus" /> 添加
+          </Button> : null
+        }
         <FormItem
           {...formItemLayout}
-          label="生效时间"
-          required={true}
+          label='内容要求'
         >
-          {getFieldDecorator('rangeTime',
-            {
-              initialValue: rangeTime,
-              rules: [{ required: true, type: 'array', message: '请选择生效时间'}]
-            })(
-              <RangePicker style={{width: '100%'}} showTime format="YYYY-MM-DD HH:mm:ss" />
-          )}
-        </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label='描述'
-        >
-          {getFieldDecorator('description', {
-            initialValue: data.description
+          {getFieldDecorator('type', {
+            initialValue: '1'
           })(
-            <Input type="textarea" placeholder="描述" />
+            <RadioGroup>
+              <Radio value="1">基础模式</Radio>
+              <Radio value="2">进阶模式</Radio>
+            </RadioGroup>
           )}
         </FormItem>
-        <FormItem
-          {...formItemLayout}
-          label="上下线"
-          required={true}
-        >
-          {getFieldDecorator('status', { initialValue: data.status == 0 ? 0 : 1})(
-            <Switch checkedChildren={'上线'} unCheckedChildren={'下线'} />
-          )}
-        </FormItem>
-        
+
         <div className="modal-footer">
-          <Button type="primary" size="large" onClick={::this.save}>保存</Button>
-          <Button size="large" style={{ marginLeft: 16 }} onClick={::this.cancel}>取消</Button>
+          <Button type="primary" size="large" onClick={this.save}>保存</Button>
+          <Button size="large" style={{ marginLeft: 16 }} onClick={onCancel}>取消</Button>
         </div>
       </Form>
     );

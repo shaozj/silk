@@ -1,0 +1,38 @@
+:global{
+  .filecardComponent {
+    box-sizing: content-box;
+    border: 1px solid #e8e8e8;
+    width: 224px;
+    height: 224px;
+    margin: 0 10px 30px 0;
+    transition: all .3s;
+
+    &:hover {
+      box-shadow: 0 1px 6px #108ee9;
+      border-color: #108ee9;
+    }
+
+    img {
+      width: 224px;
+      height: 126px;
+    }
+
+    .filecard-bottom {
+      padding: 6px;
+
+      .filecard-title {
+        color: #333;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+
+      .filecard-tag-list {
+        margin-top: 6px;
+      }
+
+      .bottom-tag {
+        margin: 9px 0;
+      }
+    }
+  }
+}

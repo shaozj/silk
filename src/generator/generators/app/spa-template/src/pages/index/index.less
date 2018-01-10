@@ -1,69 +1,12 @@
-.wrapper{
-  .menu {
-    height: 50px;
-    line-height: 50px;
-    font-size: 15px;
-  }
+// 全局生效的样式
 
-  .header {
-    background: #fff;
-    height: 50px;
-    position: fixed;
-    left: 0;
-    right: 0;
-    transition: margin-left .2s; // 动画
-  }
-
-  .right {
-    position: absolute;
-    top: 0;
-    right: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 50px;
-    margin-right: 24px;
-  }
-}
-
-:global{
+:global {
   .box {
     position: relative;
     background-color: #fff;
     border-radius: 4px;
     padding: 10px;
     margin-bottom: 10px;
-  }
-  .page-header {
-    background: #fff;
-    height: 50px;
-    position: fixed;
-    left: 0;
-    right: 0;
-    transition: margin-left .2s; // 动画
-  }
-  .ant-layout-right {
-    transition: margin-left .2s; // 动画
-  }
-  .ant-layout-sider-trigger {
-    background: transparent; // 防止动画不一致影响视觉效果
-  }
-  .ant-layout-header {
-    z-index: 999;
-    box-shadow: 0 2px 6px 0 rgba(64,110,128,.1), inset 0 -1px 0 0 #eeeff5;
-  }
-  .ant-layout-sider-children {
-    height: auto;
-  }
-  .ant-menu-item-selected.ant-menu-item > a {
-    color: #108ee9;
-  }
-  .ant-layout.ant-layout-has-sider{
-    flex-direction: column;
-  }
-  ul.header-menu{
-    border: none;
-    font-size: 15px;
   }
   // modal 框相关
   .ant-modal-wrap{
@@ -103,6 +46,35 @@
   }
   .vertical-center-modal .ant-form-horizontal{
     padding-bottom: 40px;
+  }
+  // 查询表单的标题（筛选条件）样式
+  .query-form__title-bar {
+    height: 31px;
+    line-height: 21px;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    border-bottom: solid 1px #cccccc;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  // table 宽度样式相关
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
+    min-width: 40px;
+    max-width: 200px;
+    white-space: normal;
+  }
+  // 颜色
+  .red {
+    color: #f04134;
+  }
+  // modal 框中的表单，需要有 padding
+  .modal-form {
+    padding-bottom: 20px;
+  }
+  // label
+  label {
+    font-weight: 700;
   }
 }
 

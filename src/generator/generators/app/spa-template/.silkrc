@@ -12,7 +12,10 @@
   "autoprefixer": null,
   "proxy": [
     {
-      "context": [],
+      "context": [
+        "/output/**"
+      ],
+      "target": "http://11.162.210.168",
       "secure": false
     }
   ],

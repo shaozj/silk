@@ -22,9 +22,9 @@ const FileCardGallery = ({
       <Pagination
         showSizeChanger
         showQuickJumper
-        total={total}
-        pageSize={pageSize}
-        current={current}
+        total={total || 10}
+        pageSize={pageSize || 20}
+        current={current || 1}
         onChange={onPageChange}
         onShowSizeChange={onShowSizeChange}
         pageSizeOptions={['20', '40', '60', '80', '100', '200']}

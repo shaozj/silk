@@ -25,12 +25,12 @@ class Material extends React.Component {
     });
   }
 
-  onSearch = (e) => {
-    console.log(e.target.value);
+  onSearch = () => {
+
   }
 
   onButtonSearch = () => {
-    console.log(this.state.searchValue);
+
   }
 
   // 处理列表展示模式变化
@@ -115,7 +115,7 @@ class Material extends React.Component {
           key={visible}
           visible={visible}
           title={modalTitle}
-          width={800}
+          width={window.g_MODAL_WIDTH}
           wrapClassName="vertical-center-modal"
           footer={null}
           onOk={this.handleModalOk}
@@ -138,5 +138,4 @@ class Material extends React.Component {
 }
 
 Material.displayName = 'Material';
-
 export default Material;

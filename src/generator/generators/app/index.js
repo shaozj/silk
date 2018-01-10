@@ -93,7 +93,6 @@ class AppGenerator extends Generators.Base {
   writing() {
     const excludeList = [
       'LICENSE',
-      'README.md',
       'CHANGELOG.md',
       'node_modules',
       'package.json',
@@ -103,6 +102,7 @@ class AppGenerator extends Generators.Base {
 
     // Get all files in our repo and copy the ones we should
     fs.readdir(this.sourceRoot(), (err, items) => {
+      console.log('items: ', items);
       for(let item of items) {
 
         // Skip the item if it is in our exclude list
@@ -117,9 +117,9 @@ class AppGenerator extends Generators.Base {
         } else {
           if (item === '.npmignore') {
             this.copy(item, '.gitignore');
-          } else if (item === '_README.md') {
+          } else if (item === 'README.md') {
             this.fs.copyTpl(
-              this.templatePath(`${this.sourceRoot()}/_README.md`),
+              this.templatePath(`${this.sourceRoot()}/README.md`),
               this.destinationPath('README.md'),
               this
             )
