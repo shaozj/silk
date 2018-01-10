@@ -10,8 +10,8 @@ export default function(){
     <BrowserRouter>
       <Switch>
         {
-          routes.map((route) => (
-            <Route exact path={route.path} render={ (props) => {
+          routes.map((route, k) => (
+            <Route exact key={k} path={route.path} render={(props) => {
               if (route.redirectTo) {
                 return <Redirect to={route.redirectTo} />;
               } else if (route.component) {
