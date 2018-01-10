@@ -30,6 +30,8 @@ class AppGenerator extends Generators.Base {
   }
 
   configuring() {
+    this.appType = this.config.get('appType');
+
     // Use our plain template as source
     const templatePath = path.join(baseRootPath, this.pageTemplate);
     this.sourceRoot(templatePath);
@@ -70,11 +72,15 @@ class AppGenerator extends Generators.Base {
         }
 
         // Copy all items to our root
+        let destPath = 'src/pages';
+        if (this.appType === 'spa') {
+          destPath = 'src/mods';
+        }
         let fullPath = path.join(this.myTemplatePath, item);
         if(fs.lstatSync(fullPath).isDirectory()) {
-          this.bulkDirectory(item, path.join('src/pages', this.name, item));
+          this.bulkDirectory(item, path.join(destPath, this.name, item));
         } else {
-          this.copy(item, path.join('src/pages', this.name, item));
+          this.copy(item, path.join(destPath, this.name, item));
         }
       }
     });
