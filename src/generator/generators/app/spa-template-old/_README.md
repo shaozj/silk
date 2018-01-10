@@ -1,6 +1,0 @@
-# <%= appName %>
-
-## Introduction
-
-
-## Getting start

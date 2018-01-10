@@ -37,7 +37,6 @@ class AppGenerator extends Generators.Base {
     console.log('baseRootPath: ' + baseRootPath);
     // Change our package.json. Make sure to also include the required dependencies for template page
     let defaultSettings = this.fs.readJSON(`${process.cwd()}/package.json`);
-    this.log('defaultSettings: ', JSON.stringify(defaultSettings));
     let packageSettings = defaultSettings;
     packageSettings.dependencies = packageSettings.dependencies;
 
@@ -83,9 +82,9 @@ class AppGenerator extends Generators.Base {
 
   install() {
 
-    if(!this.options['skip-install']) {
-      this.installDependencies({ bower: false });
-    }
+    // if(!this.options['skip-install']) {
+    //   this.installDependencies({ bower: false });
+    // }
 
   }
 }

@@ -1,84 +1,72 @@
 'use strict';
 // 换肤管理页面的请求接口管理
 
-import {fetchGet, fetchPost} from 'components/RequestManager/RequestManager';
+import { fetchGet, fetchPost } from '@ali/uniform-react-components/lib/UniFetch/index';
 
 class Fetcher {
   /**
-   * 搜索皮肤方案
-   * @param data
-   * @param data.page
-   * @param data.name
-   * @param data.creator
-   * @param data.device  unnecessary
-   * @param data.version  unnecessary
-   * @param data.status
-   * @param data.configType 写死 'skin'
+   * 获取方案列表
+   * @param query
+   * @param query.accountid
+   * @param query.status
+   * @param query.projectname
+   * @param query.pageNo
+   * @param qeury.pageSize
    */
-  static searchMethod(data) {
-    return fetchGet('/config/query.json', data);
+  static getList(query) {
+    return fetchGet('/output/project/query.json', { query: JSON.stringify(query) });
   }
 
   /**
-   * 根据 id 获取皮肤方案信息
+   * 新增方案
+   * @param project:
+   *           name： 方案名称， 必传
+   *           category: 分类， 字符串，逗号分隔的汉字
+   *           categoryBlock: 屏蔽分类
+   *           showIds:  剧集指定，字符串，逗号分隔的 id
+   *           showIdsBlock: 屏蔽剧集，同上
+   *           pygIds: 指定蒲公英账号，逗号分隔的id
+   *           pgyIdsBlock: 屏蔽蒲公英账号, 同上
+   *           ownerIds: 自媒体 指定， 逗号分隔的 id
+   *           ownerIdsBlock: 屏蔽自媒体，同上
+   *           ownerNames: 自媒体指定， 逗号分隔 的 name
+   *           ownerNames: 屏蔽自媒体， 同上
+   *           isExclusive: 是否独播， 0 否 1 是
+   *           notExclusive: 是否非独播， 0 否 1 是
+   *           isUpgc: 是否Upgc， 0 否 1 是
+   *           isPublicCopywright: 是否独播， 0 否 1 是
+   *           accounts: 关联账号： list list 中是账号map， 具体格式：{"userinfoChannelId":100,"outputChannel":"jinxiao","account":"jinxiaotest"}
+   * @see https://lark.alipay.com/asam9t/actwte/izb320#1%E3%80%81%E6%96%B0%E5%A2%9E%E6%96%B9%E6%A1%88
+   */
+  static add(param) {
+    return fetchPost('/output/project/add.json', { project: JSON.stringify(param) });
+  }
+
+  /**
+   * 更新方案
+   * @param id
+   * @param project
+   * @see https://lark.alipay.com/asam9t/actwte/izb320#2%E3%80%81%E7%BC%96%E8%BE%91%E6%96%B9%E6%A1%88
+   */
+  static update(id, param) {
+    return fetchPost(`/output/project/${id}/update.json`, { project: JSON.stringify(param) });
+  }
+
+  /**
+   * 获取单个方案详情
    * @param id
    */
-  static getMethodInfo(id) {
-    return fetchGet('/config/queryById.json', {id});
+  static get(id) {
+    return fetchGet(`/output/project/${id}/detail.json`);
   }
 
   /**
-   * 创建皮肤方案
-   * @param data
-   * @param data.name
-   * @param data.page
-   * @param data.device
-   * @param data.version
-   * @param data.status
-   * @param data.description
-   * @param data.startTime
-   * @param data.endTime
-   * @param data.configType = "skin"
-   * @param data.config
-   * @param data.config.header
-   * @param data.config.header.img
-   * @param data.config.header.textColor
-   * @param data.config.bottom array
-   * {
-   *   "iconName": "图1",
-   *   "selected": "test2.jpg",
-   *   "unselected": "test3.jpg"
-   * }
+   * 设置方案状态
+   * @param id
+   * @param status
    */
-  static addMethod(data) {
-    return fetchPost('/config/add.json', data);
-  }
-
-  /**
-   * 修改换肤方案
-   * @param data
-   * @param data.id
-   * 其它参数同 addMethod
-   */
-  static updateMethod(data) {
-    return fetchPost('/config/update.json', data);
-  }
-
-  /**
-   * 删除换肤方案
-   */
-  static deleteMethod(id) {
-    return fetchPost('/config/delete.json', {id});
-  }
-
-  /**
-   * 修改换肤方案状态
-   * @param data
-   * @param data.id
-   * @param data.status
-   */
-  static updateMethodStatus(data) {
-    return fetchPost('/config/updateStatus.json', data);
+  static setStatus(id, status) {
+    return fetchPost(`/output/project/${id}/update.json`, { project: JSON.stringify({ status }) });
   }
 
 }

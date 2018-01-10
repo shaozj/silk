@@ -102,7 +102,6 @@ class AppGenerator extends Generators.Base {
 
     // Get all files in our repo and copy the ones we should
     fs.readdir(this.sourceRoot(), (err, items) => {
-      console.log('items: ', items);
       for(let item of items) {
 
         // Skip the item if it is in our exclude list
