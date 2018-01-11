@@ -6,7 +6,6 @@ const path = require('path');
 const fs = require('fs');
 const packageInfo = require('../../package.json');
 
-
 const baseRootPath = path.join(__dirname, 'react-webpack-multipage-template');
 const spaRootPath = path.join(__dirname, 'spa-template');
 
@@ -14,9 +13,7 @@ const spaRootPath = path.join(__dirname, 'spa-template');
  * Base generator. Will copy all required files from react-webpack-multipage-template
  */
 class AppGenerator extends Generators.Base {
-
   constructor(args, options) {
-
     super(args, options);
 
     // Make options available
