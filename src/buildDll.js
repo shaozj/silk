@@ -1,5 +1,4 @@
 import chalk from 'chalk';
-import fs from 'fs-extra';
 import webpack from 'webpack';
 import getPaths from './utils/paths';
 import getConfig from './utils/getConfig';

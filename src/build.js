@@ -47,7 +47,7 @@ let outputPath;
 let appBuild;
 let config;
 
-let startTime, endTime; // 计算编译时间
+let startTime; // 计算编译时间
 
 export function build(argv) {
   const paths = getPaths(argv.cwd);

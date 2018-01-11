@@ -45,7 +45,7 @@ const argv = require('yargs')
 let rcConfig;
 let config;
 let entries; // 页面入口，当页面入口发生变化时（新建页面时），重启服务器
-let startTime, endTime; // 计算编译时间
+let startTime; // 计算编译时间
 
 function clearConsoleWrapped() {
   if (process.env.CLEAR_CONSOLE !== 'NONE') {
