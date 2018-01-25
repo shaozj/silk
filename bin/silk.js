@@ -52,7 +52,7 @@ program
   .description('new a react app/page/component')
   .action(function (app, cmd) {
     // check update
-    request('http://registry.npmjs.org/silki/latest', function (error, response, body) {
+    request('https://registry.npm.taobao.org/silki/latest', function (error, response, body) {
       if (!error && response.statusCode == 200) {
         var pkg;
         try {
