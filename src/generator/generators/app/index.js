@@ -5,6 +5,7 @@ const prompts = require('./prompts');
 const path = require('path');
 const fs = require('fs');
 const packageInfo = require('../../package.json');
+const download = require('../../../../scripts/download');
 
 const baseRootPath = path.join(__dirname, 'react-webpack-multipage-template');
 const spaRootPath = path.join(__dirname, 'spa-template');
@@ -25,6 +26,9 @@ class AppGenerator extends Generators.Base {
     this.option('skip-install', {
       defaults: true
     });
+
+    // 是否从 gitlab 拉取最新 spa-template 代码
+    this.remote = options && options.remote;
 
     // Use our plain template as source
     this.sourceRoot(baseRootPath);
@@ -97,7 +101,14 @@ class AppGenerator extends Generators.Base {
       '.istanbul.yml',
       '.travis.yml'
     ];
-    const sourceRoot = this.sourceRoot();
+    let sourceRoot = this.sourceRoot();
+
+    if (this.appType === 'spa' && this.remote) {
+      // 直接拉取 gitlab 上的模板代码
+      const url = 'http://gitlab.alibaba-inc.com/tvadmin/spa-template/repository/archive.zip?ref=master';
+      download(url, 'cache', () => {});
+      return;
+    }
 
     // Get all files in our repo and copy the ones we should
     fs.readdir(sourceRoot, (err, items) => {

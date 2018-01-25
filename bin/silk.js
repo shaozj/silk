@@ -33,12 +33,12 @@ if (((major * 10) + (minor * 1)) < 65) {
 require('atool-monitor').emit();
 
 // generate app
-function generateApp(app) {
+function generateApp(app, options) {
   app = app || 'app';
   var generator = 'generator-react-multipage:' + app;
   yo(generator, [], function () {
     console.log('yo ' + app  + ' success!');
-  });
+  }, options);
 }
 
 var result;
@@ -48,8 +48,9 @@ program
 
 program
   .command('new [app]')
+  .option('-r, --remote', 'get spa template from gitlab')
   .description('new a react app/page/component')
-  .action(function (app) {
+  .action(function (app, cmd) {
     // check update
     request('http://registry.npmjs.org/silki/latest', function (error, response, body) {
       if (!error && response.statusCode == 200) {
@@ -62,16 +63,16 @@ program
            } else {
              console.log(chalk.bold.green('✌  current version is the latest version\n'));
            }
-           generateApp(app);
+           generateApp(app, { remote: cmd.remote });
         } catch(err) {
           console.log(chalk.bold.red('☹  parse silki package.json error'), err);
           console.log('\n');
-          generateApp(app);
+          generateApp(app, { remote: cmd.remote });
         }
       } else {
         console.log(chalk.bold.red('☹  Check latest version failed'));
         console.log('\n');
-        generateApp(app);
+        generateApp(app, { remote: cmd.remote });
       }
     })
   });

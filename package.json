@@ -34,7 +34,8 @@
     "test": "npm run lint && npm run build && cross-env NODE_ENV=test nyc mocha --no-timeouts test/**/*-test.js",
     "debug": "cross-env NODE_ENV=test mocha --require babel-register --no-timeouts test/**/*-test.js",
     "report": "nyc report --reporter=html",
-    "coveralls": "nyc report --reporter=text-lcov | coveralls"
+    "coveralls": "nyc report --reporter=text-lcov | coveralls",
+    "get-spa": "node ./scripts/download-spa-template.js"
   },
   "nyc": {
     "include": [
@@ -107,6 +108,7 @@
     "style-loader": "^0.19.0",
     "system-bell-webpack-plugin": "^1.0.0",
     "underscore.string": "^3.2.2",
+    "unzip": "^0.1.11",
     "url-loader": "^0.6.2",
     "webpack": "^3.0.0",
     "webpack-dev-server": "^2.4.5",

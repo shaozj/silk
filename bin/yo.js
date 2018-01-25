@@ -5,8 +5,7 @@ function resolveName(name) {
   return name.replace(/^(generator-)?(.+)$/, 'generator-$2');
 }
 
-module.exports = function yo(name, args, cb) {
-  var cy = this;
+module.exports = function yo(name, args, cb, options) {
   var type = name.split(':')[0];
   var sub = name.split(':')[1] || 'app';
   var genName = resolveName(type);
@@ -36,7 +35,8 @@ module.exports = function yo(name, args, cb) {
     env: {
       cwd: process.cwd()
     },
-    name: name
+    name: name,
+    remote: options && options.remote || false
   });
 
   generator.run(cb);
