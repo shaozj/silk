@@ -17,10 +17,12 @@ $ sudo npm install silki -g
 
 ## 使用
 
-> 新建一个 react 多页面应用
+> 新建一个 react 应用
 
 ```bash
 $ silk new
+$ silk new -r  # or
+$ silk new --remote  # 从远程（gitlab）拉取框架代码 
 ```
 
 > 新建一个页面
