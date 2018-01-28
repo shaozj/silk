@@ -1,6 +1,6 @@
 {
   "name": "silki",
-  "version": "3.0.10",
+  "version": "3.0.11",
   "description": "Cli tool for build react app, based on generator-react-multipage, create-react-app, roadhog. Support react multiple pages app develop.",
   "bin": {
     "silk": "./bin/silk.js"
@@ -26,7 +26,8 @@
   "files": [
     "bin",
     "src",
-    "lib"
+    "lib",
+    "scripts"
   ],
   "scripts": {
     "build": "rimraf lib && babel src --out-dir lib --ignore=generator/* && cp -r src/generator lib/generator",
