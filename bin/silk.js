@@ -30,8 +30,6 @@ if (((major * 10) + (minor * 1)) < 65) {
   process.exit(1);
 }
 
-require('atool-monitor').emit();
-
 // generate app
 function generateApp(app, options) {
   app = app || 'app';
