@@ -30,7 +30,7 @@
         "scripts"
     ],
     "scripts": {
-        "build": "rimraf lib && babel src --out-dir lib --ignore=generator/* && cp -r src/generator lib/generator",
+        "build": "rimraf lib && babel src --out-dir lib --ignore=generator/*  && cp -r src/generator lib/generator",
         "lint": "eslint --ext .js src",
         "test": "npm run lint && npm run build && cross-env NODE_ENV=test nyc mocha --no-timeouts test/**/*-test.js",
         "debug": "cross-env NODE_ENV=test mocha --require babel-register --no-timeouts test/**/*-test.js",
@@ -103,7 +103,7 @@
         "recursive-readdir": "^2.1.0",
         "request": "^2.79.0",
         "sass-loader": "^6.0.6",
-        "shelljs": "^0.7.6",
+        "shelljs": "^0.7.8",
         "strip-ansi": "^3.0.1",
         "strip-json-comments": "^2.0.1",
         "style-loader": "^0.19.0",

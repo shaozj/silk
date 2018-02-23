@@ -200,7 +200,7 @@ program
   .command("demo")
   .description("new a markdown demo file")
   .action(function(name) {
-    var generator = "generator-sy-template:d";
+    var generator = "generator-sy-template:demo";
     yo(generator, "", function() {
       console.log("create demo page " + name + " success!");
     });
@@ -210,7 +210,7 @@ program
   .command("readme")
   .description("new a markdown readme file")
   .action(function(name) {
-    var generator = "generator-sy-template:demo";
+    var generator = "generator-sy-template:readme";
     // 第二个name为必须参数
     yo(generator, "", function() {
       console.log("create readme markdown file " + name + " success!");
