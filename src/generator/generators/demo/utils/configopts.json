@@ -1,0 +1,26 @@
+{
+    "frame": {
+        "options": [{
+                "name": "antd",
+                "value": "antd"
+            },
+            {
+                "name": "react",
+                "value": "react"
+            }
+        ],
+        "default": "antd"
+    },
+    "platform": {
+        "options": [{
+                "name": "pc",
+                "value": "pc"
+            },
+            {
+                "name": "mobile",
+                "value": "mobile"
+            }
+        ],
+        "default": "pc"
+    }
+}
