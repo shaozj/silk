@@ -11,7 +11,8 @@ const mkdirp = require("mkdirp");
 const cwd = process.cwd();
 // 源文件的路径
 const shell = require("shelljs");
-
+const packJsBundle = require("./utils/build");
+const indexTestJS = path.join(cwd, "./src/index.test.js");
 /**
  * url是否是git仓库的正则表达式
  */
@@ -162,14 +163,20 @@ ${this.config.get("when2Use")}
 ## API
 ${this.config.get("api")}
 `;
-
-    // 下面的内容放到demo文件夹下
-    const markdownDemoTemplate = `---
+    const demoPath = path.join(cwd, "./demo");
+    // 直接打包到build目录下就可以了，每次清空就可以了~~~
+    packJsBundle(indexTestJS, (generatedFiles, id, sourceCode, specifiers) => {
+      if (generatedFiles) {
+        let dependencies = [];
+        // 生成模板dependencies
+        for (let i = 0, len = generatedFiles.length; i < len; i++) {
+          dependencies.push(`- ${dailyAssetsUrlPrefix}${generatedFiles[i]}.js`);
+        }
+        //  前面必须顶格才能没有空格~~~
+        const markdownDemoTemplate = `---
 title: ${this.config.get("chineseName")}
 dependencies:
-- ${dailyAssetsUrlPrefix}/vendor.js
-- ${dailyAssetsUrlPrefix}/index.js
-- ${dailyAssetsUrlPrefix}/index.css
+${dependencies.join("\n")}
 ---
 
 ## ${this.config.get("demoTitle")}
@@ -177,132 +184,146 @@ dependencies:
 ${this.config.get("desc")}
 
 \`\`\`css
-<!-- 这里是内联的css -->
+<!-- 这里是内联的css(如果没有可以不填写) -->
 \`\`\`
 
 \`\`\`js
-//这里是内联的js
+/**
+ * ${specifiers
+   .reduce((prev, cur) => {
+     if (!/^\d*$/.test(cur)) {
+       prev.push(cur);
+     }
+     return prev;
+   }, [])
+   .join(",")}等你需要的这些变量已经在全局window变量上，你无需关心
+ * 
+ */
+${sourceCode}
 \`\`\`
 
 \`\`\`html
-<!-- 这里是内联的html -->
-<div id="react-content"></div>
+<div id="${id}"></div>
 \`\`\`
-`;
-    const demoPath = path.join(cwd, "./demo");
-
-    async.parallel(
-      [
-        callback => {
-          fs.writeFile(
-            path.join(cwd, "./readme.md"),
-            markdownReadmeTemplate,
-            function() {
-              callback(null, true);
-              console.log("README文件写入完毕!");
+    `;
+        async.parallel(
+          [
+            callback => {
+              fs.writeFile(
+                path.join(cwd, "./readme.md"),
+                markdownReadmeTemplate,
+                function() {
+                  callback(null, true);
+                  console.log("README文件写入完毕!");
+                }
+              );
+            },
+            callback => {
+              mkdirp(demoPath, err => {
+                fs.writeFile(
+                  demoPath + "/basic.md",
+                  markdownDemoTemplate,
+                  function() {
+                    callback(null, true);
+                    console.log("使用实例文件写入完毕!");
+                  }
+                );
+              });
             }
-          );
-        },
-        callback => {
-          mkdirp(demoPath, err => {
-            fs.writeFile(
-              demoPath + "/basic.md",
-              markdownDemoTemplate,
-              function() {
-                callback(null, true);
-                console.log("使用实例文件写入完毕!");
-              }
-            );
-          });
-        }
-      ],
-      (err, callback) => {
-        if (err) {
-          this.log("创建规范站点发布文件失败,程序将退出......");
-          process.exit(1);
-        } else {
-          const needPublish = this.config.get("publish");
-          if (!this.config.get("publish")) {
-            this.log("规范站点需要的文件已经生成成功，你可以手动为package.json添加std:true要求发布......");
-          } else {
-            let pkg = {};
-            pkg = JSON.parse(fileContent);
-            pkg["std"] = true;
-            // package.json设置repository配置
-            if (!matchGitRepository(fullRepositoryUrl)) {
-              this.log("package.json和你输入的仓库地址都是不合法的,程序将退出......");
+          ],
+          (err, callback) => {
+            /** 1.下面这种方式是调用npm run build，但是无法直接expose特定的变量，导致window上无法挂载
+             *  2.其实是先发布具体的代码，然后才开始写readme，而不是先写readme再发布~~~
+             * **/
+            if (err) {
+              this.log("创建规范站点发布文件失败,程序将退出......");
               process.exit(1);
             } else {
-              pkg.repository = {
-                type: "git",
-                url: fullRepositoryUrl
-              };
-            }
-            // git remote add origin git@gitlab.alibaba-inc.com:silvermine/tv-lottery-test.git
-            fs.writeFileSync(
-              path.join(cwd, "./package.json"),
-              JSON.stringify(pkg, null, 10)
-            );
-            // 1.编译build组件并checkout到一个分支，准备发布CDN
-            if (shell.which("npm")) {
-              const buildCode = shell.exec(`npm run build`).code;
-              if (!buildCode) {
-                this.log("demo发布需要依赖CDN文件，准备发布文件.......");
-                // 下面是异步推送错误的几种原因
-                if (shell.which("git")) {
-                  // 首先推送一个master分支到gitlab上并设置为默认的分支，防止报错
-                  const masterPushStatus = shell.exec(
-                    `git init && git remote add origin ${fullRepositoryUrl} && git add -A && git commit -m "发布master分支" && git push origin master`
-                  ).code;
-                  // 推送master分支成功
-                  if (!masterPushStatus) {
-                    this.log("master分支已经推送到gitlab上,准备推送当前分支....");
-                  } else {
+              const needPublish = this.config.get("publish");
+              if (!this.config.get("publish")) {
+                this.log(
+                  "规范站点需要的文件已经生成成功，你可以手动为package.json添加std:true要求发布......"
+                );
+              } else {
+                let pkg = {};
+                pkg = JSON.parse(fileContent);
+                pkg["std"] = true;
+                // package.json设置repository配置
+                if (!matchGitRepository(fullRepositoryUrl)) {
+                  this.log("package.json和你输入的仓库地址都是不合法的,程序将退出......");
+                  process.exit(1);
+                } else {
+                  pkg.repository = {
+                    type: "git",
+                    url: fullRepositoryUrl
+                  };
+                }
+                // git remote add origin git@gitlab.alibaba-inc.com:silvermine/tv-lottery-test.git
+                fs.writeFileSync(
+                  path.join(cwd, "./package.json"),
+                  JSON.stringify(pkg, null, 10)
+                );
+                // 1.编译build组件并checkout到一个分支，准备发布CDN
+                if (shell.which("npm")) {
+                  if (shell.which("git")) {
+                    // 首先推送一个master分支到gitlab上并设置为默认的分支，防止报错
                     const masterPushStatus = shell.exec(
-                      `git add -A && git commit -m "发布master分支"  && git push origin master`
+                      `git init && git remote add origin ${fullRepositoryUrl} && git add -A && git commit -m "发布master分支" && git push origin master`
                     ).code;
-
+                    // 推送master分支成功
                     if (!masterPushStatus) {
                       this.log("master分支已经推送到gitlab上,准备推送当前分支....");
                     } else {
-                      this.log("master分支推送失败，程序将会退出.....");
-                      process.exit(1);
+                      const masterPushStatus = shell.exec(
+                        `git add -A && git commit -m "发布master分支"  && git push origin master`
+                      ).code;
+
+                      if (!masterPushStatus) {
+                        this.log("master分支已经推送到gitlab上,准备推送当前分支....");
+                      } else {
+                        this.log("master分支推送失败，程序将会退出.....");
+                        process.exit(1);
+                      }
                     }
+
+                    const stdError = shell.exec(
+                      `git checkout -b daily/${currentBranch} `,
+                      { silent: true }
+                    ).stderr;
+
+                    // 1.Generator如果能自己写一个disk文件，这样用户只需要输入一次就可以了，我们的this.config.save干的就是这个事情~~~~~~
+                    //   查看你的.yo-rc.json，直接通过this.config.get就可以获取了。不过这都是后续优化的内容了~~~~
+                    // 2.解析index.test.js的内容，直接把里面的东西插入到demo的basic里面
+                    if (/fatal/g.test(stdError)) {
+                      // 该分支已经存在了
+                    } else if (/on/g.test(stdError)) {
+                      // 已经在该分支上了,切换分支成功
+                    }
+                    const pushCode = shell.exec(
+                      `git push origin daily/${currentBranch}`
+                    ).stdout;
+                  } else {
+                    this.log("demo发布的依赖的CDN文件发布失败.......");
                   }
-
-                  const stdError = shell.exec(
-                    `git checkout -b daily/${currentBranch} `,
-                    { silent: true }
-                  ).stderr;
-
-                  // Generator如果能自己写一个文件夹，这样用户只需要输入一次就可以了~~~~~~
-
-                  if (/fatal/g.test(stdError)) {
-                    // 该分支已经存在了
-                  } else if (/on/g.test(stdError)) {
-                    // 已经在该分支上了,切换分支成功
-                  }
-                  const pushCode = shell.exec(
-                    `git push origin daily/${currentBranch}`
-                  ).stdout;
-
-                  console.log("我继续切换错误消息为===" + pushCode);
                 }
-              } else {
-                this.log("demo发布的依赖的CDN文件发布失败.......");
               }
             }
           }
-        }
+        );
       }
-    );
+    });
+
+    /**
+  * 下面开始发布index.test.js，发布完成后再写readme文件
+  */
   }
 
   install() {}
 
   end() {
     this.log("Generator执行完成，准备退出.....");
-    process.exit(0);
+    // process.exit(0);
+    // 异步调用不要随意调用process.exit(0)，否则回调还没有触发就直接退出了~~~~~导致异步回调函数根本没有调用~~~~
   }
 }
 module.exports = AppGenerator;
