@@ -334,6 +334,15 @@ Example:
 
 每次 build 时不清理 build 目录。默认 false，希望不清理时设为 true。
 
+### useBabelCmd                                        
+
+使用 babel 直接编译命令
+
+```
+"useBabelCmd": false
+
+```
+
 
 ## 智能重启
 

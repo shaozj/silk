@@ -85,7 +85,7 @@ export default function (config, cwd) {
             options: config.useBabelrc ? {} : {
               babelrc: false,
               presets: [
-                require.resolve('babel-preset-env'),
+                [require.resolve('babel-preset-env'), {"modules": false}],
                 require.resolve('babel-preset-react'),
                 require.resolve('babel-preset-stage-0'),
               ].concat(config.extraBabelPresets || []),
