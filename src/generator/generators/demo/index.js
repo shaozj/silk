@@ -3,6 +3,7 @@ const fs = require("fs");
 const async = require("async");
 // 工具函数
 const prompts = require("./prompts");
+const chalk = require("chalk");
 // 默认要填写的内容
 const path = require("path");
 const glob = require("glob");
@@ -10,6 +11,8 @@ const mkdirp = require("mkdirp");
 const uuidv1 = require("uuid/v1");
 // 批量移动文件的方法
 const cwd = process.cwd();
+const packJsBundle = require("./utils/build");
+const indexTestJS = path.join(cwd, "./src/index.test.js");
 // 源文件的路径
 // https://ivweb.io/topic/59999645e85cf527bb60f0d5
 class AppGenerator extends Generators.Base {
@@ -48,11 +51,18 @@ class AppGenerator extends Generators.Base {
    * 产生一个demo文件夹，将我们的文件移动到里面
    */
   writing() {
-    
+    const demoJSLists = this.config.get("demoJSLists");
+    const sourceCode = this.config.get("sourceCode");
+    const id = this.config.get("id");
+    // 严格按照顺序:必须先生成readme
+    if (!this.config.get("readmeGenerated")) {
+      this.log(chalk.red("你需要先运行silk readme产生readme文件,程序将退出....."));
+      process.exit(0);
+    }
     const markdownDemoTemplate = `---
 title: ${this.config.get("demoName")}
 dependencies:
-- https://unpkg.com/react/dist/react.js
+${demoJSLists}
 ---
 
 ## ${this.config.get("demoName")}
@@ -60,27 +70,27 @@ dependencies:
 ${this.config.get("desc")}
 
 \`\`\`css
-<!-- 这里是内联的css -->
+
 \`\`\`
 
 \`\`\`js
-//这里是内联的js
+${sourceCode}
 \`\`\`
 
 \`\`\`html
-<!-- 这里是内联的html -->
-<div id="react-content"></div>
+<div id="${id}"></div>
 \`\`\`
 `;
 
     const demoPath = path.join(cwd, "./demo");
-
+// silk demo的时候没有推送到gitlab，是否自动推送？
     mkdirp(demoPath, err => {
       fs.writeFile(
         demoPath + `/${uuidv1()}.md`,
         markdownDemoTemplate,
-        function() {
-          console.log("使用实例文件写入完毕!");
+        ()=> {
+          this.log(chalk.green("使用实例文件写入完毕...."));
+          this.log(chalk.green("你可以在js代码块修改你的代码...."));
         }
       );
     });
@@ -89,7 +99,7 @@ ${this.config.get("desc")}
   install() {}
 
   end() {
-    this.log("Generator执行完成，准备退出.....");
+    this.log(chalk.green("Generator执行完成，准备退出....."));
     process.exit(0);
   }
 }

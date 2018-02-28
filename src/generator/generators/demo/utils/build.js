@@ -10,7 +10,6 @@ const BASIC_PATH_PREFIX = path.join(ROOT, "./src");
 // 组件的位置
 const components = "./src/components";
 const DEFAULT_WEBPACK_MODULES_PATH = path.join(ROOT, "./node_modules");
-const indexTestJS = path.join(process.cwd(), "./src/index.test.js");
 // "./node_modules"
 const program = {
   cwd: ROOT,
@@ -39,26 +38,18 @@ function getFullPath(array) {
 }
 
 /**
- * 打包具体的文件"./src/test.js"
- * 
+ * 产生demo的内容
  */
 function packJsBundle(jsFile, callback) {
   fs.readFile(jsFile, "utf8", (err, data) => {
     const id0imports = transform(data);
-    // console.log('组件名称为==='+id0imports.componentName);
-    const componentName = id0imports.componentName;
-    const relativeExports = id0imports.relativeExports;
     let fullPath = getFullPath(id0imports.imports);
-
-    const antdImports = id0imports.antdExports;
     const inputAst = id0imports.inputAst;
     const sourceCode = generator(inputAst, null, data).code;
     //   已经知道每一个文件的完整路径，我们需要构建webpack.config.js来完成构建打包到window上，借助async来顺序完成
     const rules = [],
       outputFiles = [],
-      entry = {
-        main: require.resolve(indexTestJS)
-      };
+      entry = {};
     for (let i = 0, len = fullPath.length; i < len; i++) {
       const specifier = id0imports.specifiers[i];
       entry[`${specifier}`] = fullPath[i];
@@ -80,25 +71,11 @@ function packJsBundle(jsFile, callback) {
       });
     }
 
-    for (let i = 0, len = relativeExports.length; i < len; i++) {
-      const { key, imports, source } = relativeExports[i];
-      // "./2exports.js";
-      rules.push({
-        test: require.resolve(path.join(BASIC_PATH_PREFIX, source)),
-        use: [
-          {
-            loader: require.resolve("expose-loader"),
-            options: key
-          }
-        ]
-      });
-    }
-
     const webpackConfig = {
       entry,
-      resolve: {
-        modules: [DEFAULT_WEBPACK_MODULES_PATH, "node_modules"]
-      },
+        resolve: {
+          modules: [DEFAULT_WEBPACK_MODULES_PATH, "node_modules"]
+        },
       output: {
         path: path.join(ROOT, "./build")
       },
@@ -143,20 +120,13 @@ function packJsBundle(jsFile, callback) {
       }
     };
     program.config = webpackConfig;
-    // console.log("webpack打包的配置为:" + JSON.stringify(webpackConfig));
+    console.log("webpack打包的配置为:" + JSON.stringify(webpackConfig));
+
     webpack(program, (err, stats) => {
       if (!err) {
         console.log("打包demo资源成功.....");
         // 回调:打包输出文件+div#id+源码+specifiers
-        callback(
-          outputFiles,
-          id0imports.id,
-          sourceCode,
-          id0imports.specifiers,
-          antdImports,
-          relativeExports,
-          componentName
-        );
+        callback(outputFiles, id0imports.id, sourceCode, id0imports.specifiers);
       }
     });
   });

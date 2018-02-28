@@ -43,21 +43,21 @@ module.exports = [
     name: "when2Use",
     message: "何时使用"
   },
-  {
-    type: "input",
-    name: "api",
-    message: "API基本描述"
-  },
+  // {
+  //   type: "input",
+  //   name: "api",
+  //   message: "API基本描述"
+  // },
   {
     type: "input",
     name: "developer",
     message: "开发者"
   },
-  {
-    type: "input",
-    name: "email",
-    message: "开发者邮箱"
-  },
+  // {
+  //   type: "input",
+  //   name: "email",
+  //   message: "开发者邮箱"
+  // },
   {
     type: "input",
     name: "respository",

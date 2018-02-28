@@ -44,57 +44,17 @@ function shouldHaveFocus(path) {
 module.exports = function transformer(content) {
   let imports = [],
     id = "",
-    componentName = "",
-    specifiers = [],
-    relativeExports = [],
-    antdExports = [];
+    specifiers = [];
   const inputAst = parser(content);
   traverse(inputAst, {
     ImportDeclaration: function(importPath) {
       const importPathNode = importPath.node;
       const importSource = importPathNode.source && importPathNode.source.value;
-      // import { Form, Button } from 'antd';
-      const specifiersWithoutDefault = importPathNode.specifiers;
-      if (
-        specifiersWithoutDefault[0] &&
-        specifiersWithoutDefault[0].type == "ImportSpecifier" &&
-        importSource == "antd"
-      ) {
-        for (let i = 0, len = specifiersWithoutDefault.length; i < len; i++) {
-          const antdModel =
-            specifiersWithoutDefault[i] &&
-            specifiersWithoutDefault[i].imported &&
-            specifiersWithoutDefault[i].imported.name;
-          antdExports.push(antdModel);
-        }
-      }
-      // 处理import {name,sex} from "./index.js";这种相对路径引入非antd的格式
-      if (
-        specifiersWithoutDefault[0] &&
-        specifiersWithoutDefault[0].type == "ImportSpecifier" &&
-        importSource != "antd"
-      ) {
-        const localeRelativeInput = {
-          key: generateRandomKey(),
-          source: importSource,
-          imports: []
-        };
-        for (let i = 0, len = specifiersWithoutDefault.length; i < len; i++) {
-          const antdModel =
-            specifiersWithoutDefault[i] &&
-            specifiersWithoutDefault[i].imported &&
-            specifiersWithoutDefault[i].imported.name;
-          localeRelativeInput.imports.push(antdModel);
-        }
-        relativeExports.push(localeRelativeInput);
-      }
-
       const specifier =
         importPathNode.specifiers &&
         importPathNode.specifiers[0] &&
         importPathNode.specifiers[0].local &&
         importPathNode.specifiers[0].local.name;
-
       if (specifier) {
         specifiers.push(specifier);
       }
@@ -106,34 +66,6 @@ module.exports = function transformer(content) {
         imports.push(importSource);
       }
       importPath.remove();
-    },
-    /**
-     * ExpressionStatemeent
-     */
-    ExpressionStatement: function(ExpressionPath) {
-      const ExpressionPathNode = ExpressionPath.node;
-      // AssignmentExpression
-      if (
-        ExpressionPathNode.expression &&
-        ExpressionPathNode.expression.type &&
-        ExpressionPathNode.expression.type == "AssignmentExpression"
-      ) {
-        const ExpressionNode = ExpressionPathNode.expression;
-        const { left, right } = ExpressionNode || {};
-        let property = "";
-        if (
-          left &&
-          left.type == "MemberExpression" &&
-          left.object &&
-          left.object.name == "window"
-        ) {
-          property = left.property.name;
-          const name = right.name;
-          if (property == name) {
-            componentName = name;
-          }
-        }
-      }
     },
     /**
      * 处理require('xx')这种类型
@@ -189,12 +121,6 @@ module.exports = function transformer(content) {
     // import的地址
     specifiers,
     // ReactDOM等
-    inputAst,
-    // import {Button} from "antd"
-    antdExports,
-    relativeExports,
-    // import {name,sex} from "./index.js"
-    componentName
-    // 组件本身名称
+    inputAst
   };
 };
