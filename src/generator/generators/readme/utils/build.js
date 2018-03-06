@@ -182,7 +182,7 @@ function packJsBundle(jsFile, callback) {
         if (err) {
           console.log(`并发读取文件失败,程序将会退出!`);
         }
-
+        // 这里是result类型
         for (let t = 0, len = results.length; t < len; t++) {
           const documentation = reactDocs.parse(results[t]);
           componentInfoArray.push({

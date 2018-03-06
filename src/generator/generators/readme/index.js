@@ -210,6 +210,7 @@ class AppGenerator extends Generators.Base {
             * ${relativeRawCodeDescription}
             */`;
           }
+        
           const bitTables = MarkdownTable.generateBitMarkdownTable(
             componentInfoArray
           );

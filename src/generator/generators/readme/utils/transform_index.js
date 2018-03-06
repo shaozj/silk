@@ -70,7 +70,9 @@ function filterNotExportedLib(imports, exportNames) {
 module.exports = function transformer(content) {
   let imports = [],
     exportNames = [],
-    globalExportDefaultName = "";
+    globalExportDefaultName = "",
+    classExportsDefaultName = "",
+    isClssDefaultExport = false;
   const inputAst = parser(content);
   traverse(inputAst, {
     ImportDeclaration: function(importPath) {
@@ -93,7 +95,22 @@ module.exports = function transformer(content) {
       const exportDefaultName =
         (ExportDefaultPathNode.declaration &&
           ExportDefaultPathNode.declaration.name) ||
+        (ExportDefaultPathNode.declaration &&
+          ExportDefaultPathNode.declaration.id &&
+          ExportDefaultPathNode.declaration.id.name) ||
         "";
+      if (
+        ExportDefaultPathNode.declaration &&
+        ExportDefaultPathNode.declaration.id &&
+        ExportDefaultPathNode.declaration.id.name
+      ) {
+        isClssDefaultExport = true;
+        classExportsDefaultName =
+          ExportDefaultPathNode.declaration &&
+          ExportDefaultPathNode.declaration.id &&
+          ExportDefaultPathNode.declaration.id.name;
+      }
+      // 后面这种是class分类
       globalExportDefaultName = exportDefaultName;
     },
 
@@ -112,11 +129,21 @@ module.exports = function transformer(content) {
       }
     }
   });
-  imports = filterNotExportedLib(imports, exportNames);
+
   // export default和export都导出的情况
   if (globalExportDefaultName) {
     exportNames.push(globalExportDefaultName);
     exportNames = unique(exportNames);
+  }
+  imports = filterNotExportedLib(imports, exportNames);
+  console.log("导出的exportNames为===" + JSON.stringify(exportNames));
+  console.log("imports===" + JSON.stringify(imports));
+  if (isClssDefaultExport) {
+    // class默认导出策略
+    imports.push({
+      source: "./index.js",
+      name: classExportsDefaultName
+    });
   }
   return {
     imports,
