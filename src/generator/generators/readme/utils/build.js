@@ -1,5 +1,5 @@
 const webpack = require("@ali/webpackcc/lib/build");
-// const nativeWebpack = require("webpack");
+const reactDocs = require("react-docgen");
 const path = require("path");
 const fs = require("fs");
 const transform = require("./transformer");
@@ -11,6 +11,10 @@ const BASIC_PATH_PREFIX = path.join(ROOT, "./src");
 const components = "./src/components";
 const DEFAULT_WEBPACK_MODULES_PATH = path.join(ROOT, "./node_modules");
 const indexTestJS = path.join(process.cwd(), "./src/index.test.js");
+const EXPORTS_FILE_PATH = path.join(process.cwd(), "./src/index.js");
+const DEFAULT_FOLDER_PATH = path.join(process.cwd(), "./src");
+const indexTransformer = require("./transform_index");
+
 // "./node_modules"
 const program = {
   cwd: ROOT,
@@ -40,7 +44,10 @@ function getFullPath(array) {
 
 /**
  * 打包具体的文件"./src/test.js"
- * 
+ * nodejs中fs.readFile这些方法返回的对象都是什么?
+ * [{"source":"./lib/AutoSeekCtr/index.js","name":"AutoSeekCtr"},{"source":"./lib/MaterialUps/index.js","name":"MaterialUps"},{"source":"./lib/VideoPreview/index.js","name":"VideoPreview"},{"source":"./lib/YouKuH5Player/index.js","name":"KuVideo"}]
+ * 导出的对象为====["AutoSeekCtr","MaterialUps","VideoPreview","KuVideo"]
+
  */
 function packJsBundle(jsFile, callback) {
   fs.readFile(jsFile, "utf8", (err, data) => {
@@ -144,20 +151,63 @@ function packJsBundle(jsFile, callback) {
     };
     program.config = webpackConfig;
     // console.log("webpack打包的配置为:" + JSON.stringify(webpackConfig));
-    webpack(program, (err, stats) => {
-      if (!err) {
-        console.log("打包demo资源成功.....");
-        // 回调:打包输出文件+div#id+源码+specifiers
-        callback(
-          outputFiles,
-          id0imports.id,
-          sourceCode,
-          id0imports.specifiers,
-          antdImports,
-          relativeExports,
-          componentName
-        );
+    // 下面是准备对index.test.js中的所有模块进行打包，打包之前，我先解析index.js，得到打包后应该生成的table内容
+    // 开始解析index.js，此处可以使用async,await
+    fs.readFile(EXPORTS_FILE_PATH, "utf8", (err, data) => {
+      if (err) {
+        console.log("文件下不存在index.js，程序将会退出...");
+        process.exit(0);
       }
+      const { imports, exportNames } = indexTransformer(data);
+      // exportNames表示导出的对象名称
+      const indexExposeModules = imports.map((item, index) => {
+        return path.join(DEFAULT_FOLDER_PATH, item.source);
+      });
+      const functionPools = [],
+        componentInfoArray = [];
+      // 产生函数数组
+      for (let i = 0, len = indexExposeModules.length; i < len; i++) {
+        const localFunc = function(callback) {
+          return fs.readFile(indexExposeModules[i], "utf8", (err, data) => {
+            if (err) {
+              console.log(`读取文件${indexExposeModules[i]}失败!`);
+            }
+            callback(null, data);
+          });
+        };
+        functionPools.push(localFunc);
+      }
+      // 得到所有的index.js中exports的组件的文档信息,然后开始开始打包index.test.js将所有的exports组件信息导出用于生成文档
+      async.parallel(functionPools, (err, results) => {
+        if (err) {
+          console.log(`并发读取文件失败,程序将会退出!`);
+        }
+
+        for (let t = 0, len = results.length; t < len; t++) {
+          const documentation = reactDocs.parse(results[t]);
+          componentInfoArray.push({
+            specifier: exportNames[t],
+            documentation
+          });
+        }
+        webpack(program, (err, stats) => {
+          if (!err) {
+            console.log("打包demo资源成功.....");
+            // 回调:打包输出文件+div#id+源码+specifiers
+            callback(
+              outputFiles,
+              id0imports.id,
+              sourceCode,
+              id0imports.specifiers,
+              antdImports,
+              relativeExports,
+              componentName,
+              componentInfoArray
+            );
+          }
+        });
+      });
+      // 准备生成表格内容
     });
   });
 }

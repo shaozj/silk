@@ -1,6 +1,6 @@
-// import Generators from "yeoman-generator";
 const Generators = require("yeoman-generator");
 const fs = require("fs");
+const table = require("markdown-table");
 const async = require("async");
 // 工具函数
 const prompts = require("./prompts");
@@ -14,6 +14,7 @@ const cwd = process.cwd();
 const shell = require("shelljs");
 const packJsBundle = require("./utils/build");
 const indexTestJS = path.join(cwd, "./src/index.test.js");
+const MarkdownTable = require("./utils/generateTable");
 let NOTICE = ``;
 /**
  * url是否是git仓库的正则表达式
@@ -147,26 +148,6 @@ class AppGenerator extends Generators.Base {
       dailyAssetsUrlPrefix = `http://g-assets.daily.taobao.net/${group}/${repository}/${currentBranch}/`;
     }
 
-    //  需要顶格，否则有多余的空格
-    const markdownReadmeTemplate = `---
-category: ${this.config.get("category")}
-name: ${this.config.get("appName")}
-desc: ${this.config.get("chineseName")}
-frame:
-- ${this.config.get("frame")}
-platform:
-- ${this.config.get("platform")}
----
-
-${this.config.get("overallDesc")}
-
-## 何时使用
-
-${this.config.get("when2Use")}
-
-## API
-下面是开发者写的该组件支持的API:
-`;
     const demoPath = path.join(cwd, "./demo");
     // 直接打包到build目录下就可以了，每次清空就可以了~~~
     packJsBundle(
@@ -178,7 +159,8 @@ ${this.config.get("when2Use")}
         specifiers,
         antdImports,
         relativeExports,
-        componentName
+        componentName,
+        componentInfoArray
       ) => {
         // console.log("产生的文件列表为:" + JSON.stringify(generatedFiles));
         if (generatedFiles) {
@@ -228,6 +210,36 @@ ${this.config.get("when2Use")}
             * ${relativeRawCodeDescription}
             */`;
           }
+          const bitTables = MarkdownTable.generateBitMarkdownTable(
+            componentInfoArray
+          );
+          const componentUsageTables = bitTables.reduce((prev, cur) => {
+            prev += `组件${cur.specifier}接受的API如下:\n\n${cur.bitTable}\n\n\n`;
+            return prev;
+          }, "");
+
+          //  需要顶格，否则有多余的空格
+          const markdownReadmeTemplate = `---
+category: ${this.config.get("category")}
+name: ${this.config.get("appName")}
+desc: ${this.config.get("chineseName")}
+frame:
+- ${this.config.get("frame")}
+platform:
+- ${this.config.get("platform")}
+---
+
+${this.config.get("overallDesc")}
+
+## 何时使用
+
+${this.config.get("when2Use")}
+
+## API
+下面是开发者写的该组件支持的参数:
+
+${componentUsageTables}
+`;
 
           //  前面必须顶格才能没有空格~~~
           const markdownDemoTemplate = `---
