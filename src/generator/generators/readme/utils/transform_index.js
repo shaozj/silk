@@ -101,6 +101,15 @@ module.exports = function transformer(content) {
         "";
       if (
         ExportDefaultPathNode.declaration &&
+        ExportDefaultPathNode.declaration.name
+      ) {
+        isClssDefaultExport = true;
+        classExportsDefaultName =
+          ExportDefaultPathNode.declaration &&
+          ExportDefaultPathNode.declaration.name;
+      }
+      if (
+        ExportDefaultPathNode.declaration &&
         ExportDefaultPathNode.declaration.id &&
         ExportDefaultPathNode.declaration.id.name
       ) {
@@ -138,6 +147,7 @@ module.exports = function transformer(content) {
   imports = filterNotExportedLib(imports, exportNames);
   console.log("导出的exportNames为===" + JSON.stringify(exportNames));
   console.log("imports===" + JSON.stringify(imports));
+  console.log("isClssDefaultExport====" + isClssDefaultExport);
   if (isClssDefaultExport) {
     // class默认导出策略
     imports.push({

@@ -159,13 +159,16 @@ function packJsBundle(jsFile, callback) {
         process.exit(0);
       }
       const { imports, exportNames } = indexTransformer(data);
+
       // exportNames表示导出的对象名称
       const indexExposeModules = imports.map((item, index) => {
         return path.join(DEFAULT_FOLDER_PATH, item.source);
       });
+     
       const functionPools = [],
         componentInfoArray = [];
       // 产生函数数组
+
       for (let i = 0, len = indexExposeModules.length; i < len; i++) {
         const localFunc = function(callback) {
           return fs.readFile(indexExposeModules[i], "utf8", (err, data) => {
@@ -182,6 +185,7 @@ function packJsBundle(jsFile, callback) {
         if (err) {
           console.log(`并发读取文件失败,程序将会退出!`);
         }
+
         // 这里是result类型
         for (let t = 0, len = results.length; t < len; t++) {
           const documentation = reactDocs.parse(results[t]);
