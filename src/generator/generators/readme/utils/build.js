@@ -115,15 +115,30 @@ function packJsBundle(jsFile, callback) {
         console.log(".silkrc读取异常，进程将退出.....");
         process.exit(0);
       }
+      let useBabelrc = false;
       let disableCSSModules = false;
+      let silkrcJSON = {};
+      try {
+        silkrcJSON = JSON.parse(data);
+      } catch (error) {
+        console.log(".silkrc解析为JSON失败，程序退出...");
+        process.exit(0);
+      }
       try {
         disableCSSModules = JSON.parse(data).disableCSSModules;
       } catch (error) {
         console.log(".silkrc文件不符合JSON...disableCSSModules默认设置为false");
       }
+      try {
+        useBabelrc = JSON.parse(data).useBabelrc;
+      } catch (error) {
+        console.log(".silkrc文件不符合JSON...useBabelrc默认设置为false");
+      }
       const webpackConfig = {
         entry,
         disableCSSModules: disableCSSModules,
+        useBabelrc: useBabelrc,
+        // 是否使用userBabelrc文件
         resolve: {
           modules: [DEFAULT_WEBPACK_MODULES_PATH, "node_modules"]
         },
@@ -170,6 +185,11 @@ function packJsBundle(jsFile, callback) {
           rules
         }
       };
+      // extraBabelPlugins和extraBabelPresets只有在useBabelrc为false的情况下使用
+      if (!silkrcJSON.useBabelrc) {
+        webpackConfig.extraBabelPlugins = silkrcJSON.extraBabelPlugins;
+        webpackConfig.extraBabelPresets = silkrcJSON.extraBabelPresets;
+      }
       program.config = webpackConfig;
 
       // console.log("webpack打包的配置为:" + JSON.stringify(webpackConfig));
