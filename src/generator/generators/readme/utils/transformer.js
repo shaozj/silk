@@ -105,14 +105,14 @@ module.exports = function transformer(content) {
       if (shouldHaveFocus(importSource)) {
         imports.push(importSource);
       }
-      importPath.remove();
+      // importPath.remove();
     },
     /**
      * ExpressionStatemeent
      */
     ExpressionStatement: function(ExpressionPath) {
       const ExpressionPathNode = ExpressionPath.node;
-      // AssignmentExpression
+   
       if (
         ExpressionPathNode.expression &&
         ExpressionPathNode.expression.type &&

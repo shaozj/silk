@@ -3,6 +3,7 @@ const reactDocs = require("react-docgen");
 const path = require("path");
 const fs = require("fs");
 const transform = require("./transformer");
+const transformHOC = require("./transform_hoc");
 const async = require("async");
 const ROOT = process.cwd();
 const generator = require("babel-generator").default;
@@ -68,8 +69,16 @@ function packJsBundle(jsFile, callback) {
       };
     for (let i = 0, len = fullPath.length; i < len; i++) {
       const specifier = id0imports.specifiers[i];
+      const localCaseSpecifier = specifier.toLowerCase();
+      // 1.entry中不需要react-dom和react,否则会单独产生react-dom和react挂载到window上
+      // 2.react,react-dom也没有expose出去，这样打包index.test.js的时候react,react-dom会单独打包进去,不会依赖于外部react,react-dom
+      if (localCaseSpecifier == "react" || localCaseSpecifier == "reactdom") {
+        continue;
+      }
       entry[`${specifier}`] = fullPath[i];
+
       outputFiles.push(specifier);
+
       const TEST = /^\//.test(fullPath[i])
         ? require.resolve(fullPath[i])
         : require.resolve(fullPath[i], {
@@ -89,7 +98,7 @@ function packJsBundle(jsFile, callback) {
 
     for (let i = 0, len = relativeExports.length; i < len; i++) {
       const { key, imports, source } = relativeExports[i];
-      // "./2exports.js";
+      // "./2exports.js";直接挂载到window的一个随机数上~~~~
       rules.push({
         test: require.resolve(path.join(BASIC_PATH_PREFIX, source)),
         use: [
@@ -101,117 +110,133 @@ function packJsBundle(jsFile, callback) {
       });
     }
 
-    const webpackConfig = {
-      entry,
-      resolve: {
-        modules: [DEFAULT_WEBPACK_MODULES_PATH, "node_modules"]
-      },
-      output: {
-        path: path.join(ROOT, "./build")
-      },
-      node: {
-        child_process: "empty",
-        cluster: "empty",
-        dgram: "empty",
-        dns: "empty",
-        fs: "empty",
-        module: "empty",
-        net: "empty",
-        readline: "empty",
-        repl: "empty",
-        tls: "empty",
-        "aws-sdk": "empty",
-        console: false,
-        url: false
-      },
-      resolve: {
-        extensions: [
-          ".web.js",
-          ".web.jsx",
-          ".web.ts",
-          ".web.tsx",
-          ".js",
-          ".json",
-          ".jsx",
-          ".ts",
-          "tsx"
-        ],
-        alias: {
-          components: `${BASIC_PATH_PREFIX}/components/`,
-          containers: `${BASIC_PATH_PREFIX}/containers/`,
-          utils: `${BASIC_PATH_PREFIX}/utils/`,
-          mods: `${BASIC_PATH_PREFIX}/mods/`,
-          images: `${BASIC_PATH_PREFIX}/images/`,
-          "react/lib/ReactMount": "react-dom/lib/ReactMount"
-        }
-      },
-      module: {
-        rules
-      }
-    };
-    program.config = webpackConfig;
-    // console.log("webpack打包的配置为:" + JSON.stringify(webpackConfig));
-    // 下面是准备对index.test.js中的所有模块进行打包，打包之前，我先解析index.js，得到打包后应该生成的table内容
-    // 开始解析index.js，此处可以使用async,await
-    fs.readFile(EXPORTS_FILE_PATH, "utf8", (err, data) => {
+    fs.readFile(path.join(process.cwd(), "./.silkrc"), (err, data) => {
       if (err) {
-        console.log("文件下不存在index.js，程序将会退出...");
+        console.log(".silkrc读取异常，进程将退出.....");
         process.exit(0);
       }
-      const { imports, exportNames } = indexTransformer(data);
-
-      // exportNames表示导出的对象名称
-      const indexExposeModules = imports.map((item, index) => {
-        return path.join(DEFAULT_FOLDER_PATH, item.source);
-      });
-     
-      const functionPools = [],
-        componentInfoArray = [];
-      // 产生函数数组
-
-      for (let i = 0, len = indexExposeModules.length; i < len; i++) {
-        const localFunc = function(callback) {
-          return fs.readFile(indexExposeModules[i], "utf8", (err, data) => {
-            if (err) {
-              console.log(`读取文件${indexExposeModules[i]}失败!`);
-            }
-            callback(null, data);
-          });
-        };
-        functionPools.push(localFunc);
+      let disableCSSModules = false;
+      try {
+        disableCSSModules = JSON.parse(data).disableCSSModules;
+      } catch (error) {
+        console.log(".silkrc文件不符合JSON...disableCSSModules默认设置为false");
       }
-      // 得到所有的index.js中exports的组件的文档信息,然后开始开始打包index.test.js将所有的exports组件信息导出用于生成文档
-      async.parallel(functionPools, (err, results) => {
-        if (err) {
-          console.log(`并发读取文件失败,程序将会退出!`);
-        }
-
-        // 这里是result类型
-        for (let t = 0, len = results.length; t < len; t++) {
-          const documentation = reactDocs.parse(results[t]);
-          componentInfoArray.push({
-            specifier: exportNames[t],
-            documentation
-          });
-        }
-        webpack(program, (err, stats) => {
-          if (!err) {
-            console.log("打包demo资源成功.....");
-            // 回调:打包输出文件+div#id+源码+specifiers
-            callback(
-              outputFiles,
-              id0imports.id,
-              sourceCode,
-              id0imports.specifiers,
-              antdImports,
-              relativeExports,
-              componentName,
-              componentInfoArray
-            );
+      const webpackConfig = {
+        entry,
+        disableCSSModules: disableCSSModules,
+        resolve: {
+          modules: [DEFAULT_WEBPACK_MODULES_PATH, "node_modules"]
+        },
+        output: {
+          path: path.join(ROOT, "./build")
+        },
+        node: {
+          child_process: "empty",
+          cluster: "empty",
+          dgram: "empty",
+          dns: "empty",
+          fs: "empty",
+          module: "empty",
+          net: "empty",
+          readline: "empty",
+          repl: "empty",
+          tls: "empty",
+          "aws-sdk": "empty",
+          console: false,
+          url: false
+        },
+        resolve: {
+          extensions: [
+            ".web.js",
+            ".web.jsx",
+            ".web.ts",
+            ".web.tsx",
+            ".js",
+            ".json",
+            ".jsx",
+            ".ts",
+            "tsx"
+          ],
+          alias: {
+            components: `${BASIC_PATH_PREFIX}/components/`,
+            containers: `${BASIC_PATH_PREFIX}/containers/`,
+            utils: `${BASIC_PATH_PREFIX}/utils/`,
+            mods: `${BASIC_PATH_PREFIX}/mods/`,
+            images: `${BASIC_PATH_PREFIX}/images/`,
+            "react/lib/ReactMount": "react-dom/lib/ReactMount"
           }
+        },
+        module: {
+          rules
+        }
+      };
+      program.config = webpackConfig;
+
+      // console.log("webpack打包的配置为:" + JSON.stringify(webpackConfig));
+      // 下面是准备对index.test.js中的所有模块进行打包，打包之前，我先解析index.js，得到打包后应该生成的table内容
+      // 开始解析index.js，此处可以使用async,await
+      fs.readFile(EXPORTS_FILE_PATH, "utf8", (err, data) => {
+        if (err) {
+          console.log("文件下不存在index.js，程序将会退出...");
+          process.exit(0);
+        }
+        const { imports, exportNames } = indexTransformer(data);
+
+        // exportNames表示导出的对象名称
+        const indexExposeModules = imports.map((item, index) => {
+          return path.join(DEFAULT_FOLDER_PATH, item.source);
         });
+
+        const functionPools = [],
+          componentInfoArray = [];
+        // 产生函数数组
+
+        for (let i = 0, len = indexExposeModules.length; i < len; i++) {
+          const localFunc = function(callback) {
+            return fs.readFile(indexExposeModules[i], "utf8", (err, data) => {
+              if (err) {
+                console.log(`读取文件${indexExposeModules[i]}失败!`);
+              }
+              callback(null, data);
+            });
+          };
+          functionPools.push(localFunc);
+        }
+        // 得到所有的index.js中exports的组件的文档信息,然后开始开始打包index.test.js将所有的exports组件信息导出用于生成文档
+        async.parallel(functionPools, (err, results) => {
+          if (err) {
+            console.log(`并发读取文件失败,程序将会退出!`);
+          }
+          // 这里是result类型
+          for (let t = 0, len = results.length; t < len; t++) {
+            const ast = transformHOC(results[t]).inputAst;
+            const sourceCode = generator(ast, null, results[t]).code;
+            const documentation = reactDocs.parse(sourceCode);
+            // console.log('documentation===='+JSON.stringify(documentation));
+            componentInfoArray.push({
+              specifier: exportNames[t],
+              documentation
+            });
+          }
+          webpack(program, (err, stats) => {
+            if (!err) {
+              console.log("打包demo资源成功.....");
+              // 回调:打包输出文件+div#id+源码+specifiers
+              callback(
+                outputFiles,
+                id0imports.id,
+                sourceCode,
+                id0imports.specifiers,
+                antdImports,
+                relativeExports,
+                componentName,
+                componentInfoArray
+              );
+            }
+          });
+        });
+        // 准备生成表格内容
       });
-      // 准备生成表格内容
     });
   });
 }

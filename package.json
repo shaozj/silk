@@ -49,7 +49,7 @@
     "instrument": false
   },
   "dependencies": {
-    "@ali/webpackcc": "^0.0.12",
+    "@ali/webpackcc": "^0.0.14",
     "acorn": "^4.0.3",
     "async": "^2.6.0",
     "atool-monitor": "^0.4.3",

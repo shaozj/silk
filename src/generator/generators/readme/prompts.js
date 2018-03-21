@@ -43,21 +43,11 @@ module.exports = [
     name: "when2Use",
     message: "何时使用"
   },
-  // {
-  //   type: "input",
-  //   name: "api",
-  //   message: "API基本描述"
-  // },
   {
     type: "input",
     name: "developer",
     message: "开发者"
   },
-  // {
-  //   type: "input",
-  //   name: "email",
-  //   message: "开发者邮箱"
-  // },
   {
     type: "input",
     name: "respository",
@@ -66,14 +56,15 @@ module.exports = [
   {
     type: "input",
     name: "demoTitle",
-    message: "demo标题"
+    message: "demo标题",
+    default:'基本用法'
   },
   {
     type: "input",
     name: "desc",
-    message: "demo描述"
+    message: "demo描述",
+    default:'下面是如何使用组件的代码'
   }
 ];
 
-// 1.最好能够将demo+readme的输入进行分割线分割，多个prompt就可以了啊
-// 2.控制台弹出一个table用于输入markdown
+// 1.第一次先写yoeman本地文件，然后第二次不用所有都读取一遍

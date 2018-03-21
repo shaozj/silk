@@ -211,6 +211,7 @@ class AppGenerator extends Generators.Base {
             */`;
           }
         
+          // console.log('准备产生表格数据为===='+JSON.stringify(componentInfoArray));
           const bitTables = MarkdownTable.generateBitMarkdownTable(
             componentInfoArray
           );
