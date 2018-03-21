@@ -4,6 +4,7 @@ const path = require("path");
 const fs = require("fs");
 const transform = require("./transformer");
 const transformHOC = require("./transform_hoc");
+const resolve = require("resolve");
 const async = require("async");
 const ROOT = process.cwd();
 const generator = require("babel-generator").default;
@@ -81,9 +82,10 @@ function packJsBundle(jsFile, callback) {
 
       const TEST = /^\//.test(fullPath[i])
         ? require.resolve(fullPath[i])
-        : require.resolve(fullPath[i], {
-            paths: [DEFAULT_WEBPACK_MODULES_PATH]
-          });
+        : resolve.sync(fullPath[i], { basedir: DEFAULT_WEBPACK_MODULES_PATH });
+      //  require.resolve(fullPath[i], {
+      //     paths: [DEFAULT_WEBPACK_MODULES_PATH]
+      //   });
       rules.push({
         test: TEST,
         // 这里的require.resolve会是相对于silk来说的，所以找不到jquery这个库
