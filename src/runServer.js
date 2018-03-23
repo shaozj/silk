@@ -80,7 +80,7 @@ function readWebpackConfig() {
 
 function setupCompiler(host, port, protocol) {
   compiler = webpack(config);
-
+// console.log('silk的webpack配置为===='+JSON.stringify(config));
   compiler.plugin('invalid', () => {
     if (isInteractive) {
       clearConsoleWrapped();
@@ -158,7 +158,8 @@ function addMiddleware(devServer) {
       ['text/html', '*/*'],
   }));
   // TODO: proxy index.html, ...
-  devServer.use(devServer.middleware);
+  devServer.use(devServer.middleware)
+  ;
 }
 
 function runDevServer(host, port, protocol) {

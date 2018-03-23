@@ -68,36 +68,44 @@ function packJsBundle(jsFile, callback) {
       entry = {
         main: require.resolve(indexTestJS)
       };
+    
     for (let i = 0, len = fullPath.length; i < len; i++) {
       const specifier = id0imports.specifiers[i];
-      const localCaseSpecifier = specifier.toLowerCase();
-      // 1.entry中不需要react-dom和react,否则会单独产生react-dom和react挂载到window上
-      // 2.react,react-dom也没有expose出去，这样打包index.test.js的时候react,react-dom会单独打包进去,不会依赖于外部react,react-dom
-      if (localCaseSpecifier == "react" || localCaseSpecifier == "reactdom") {
-        continue;
+      if (/^\//.test(fullPath[i])) {
+        // 非npm包，相对路径直接expose出去并输出为一个单独文件到output目录
+        entry[`${specifier}`] = fullPath[i];
+        outputFiles.push(specifier);
+        rules.push({
+          // 在低版本情况下已经是绝对路径，require.resolve即使忽略第二个参数也无所谓
+          test: require.resolve(fullPath[i], {
+            basedir: DEFAULT_WEBPACK_MODULES_PATH
+          }),
+          use: [
+            {
+              loader: require.resolve("expose-loader"),
+              options: specifier
+            }
+          ]
+        });
+      } else {
+        //  此时是npm包，expose出去不需要添加到entry中
+        rules.push({
+          test: require.resolve(
+            resolve.sync(fullPath[i], {
+              basedir: DEFAULT_WEBPACK_MODULES_PATH
+            })
+          ),
+          use: [
+            {
+              loader: require.resolve("expose-loader"),
+              options: specifier
+            }
+          ]
+        });
       }
-      entry[`${specifier}`] = fullPath[i];
-
-      outputFiles.push(specifier);
-
-      const TEST = /^\//.test(fullPath[i])
-        ? require.resolve(fullPath[i])
-        : resolve.sync(fullPath[i], { basedir: DEFAULT_WEBPACK_MODULES_PATH });
-      //  require.resolve(fullPath[i], {
-      //     paths: [DEFAULT_WEBPACK_MODULES_PATH]
-      //   });
-      rules.push({
-        test: TEST,
-        // 这里的require.resolve会是相对于silk来说的，所以找不到jquery这个库
-        use: [
-          {
-            loader: require.resolve("expose-loader"),
-            options: specifier
-          }
-        ]
-      });
     }
 
+    //通过相对路径引入的，比如"./UserSelect""将会被挂载到window.UserSelect中
     for (let i = 0, len = relativeExports.length; i < len; i++) {
       const { key, imports, source } = relativeExports[i];
       // "./2exports.js";直接挂载到window的一个随机数上~~~~
@@ -234,12 +242,15 @@ function packJsBundle(jsFile, callback) {
             const ast = transformHOC(results[t]).inputAst;
             const sourceCode = generator(ast, null, results[t]).code;
             const documentation = reactDocs.parse(sourceCode);
-            // console.log('documentation===='+JSON.stringify(documentation));
             componentInfoArray.push({
               specifier: exportNames[t],
               documentation
             });
           }
+          // fs.readFile('/Users/qinliang.ql/Desktop/search-form/src/index.js',(err,data)=>{
+          //   console.log('data=='+data);
+          // });
+          // console.log("打包的最后配置为====" + JSON.stringify(program.config));
           webpack(program, (err, stats) => {
             if (!err) {
               console.log("打包demo资源成功.....");
