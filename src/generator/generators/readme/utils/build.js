@@ -105,6 +105,7 @@ function packJsBundle(jsFile, callback) {
       }
     }
 
+    //  console.log('rules=====>'+JSON.stringify(rules));
     //通过相对路径引入的，比如"./UserSelect""将会被挂载到window.UserSelect中
     for (let i = 0, len = relativeExports.length; i < len; i++) {
       const { key, imports, source } = relativeExports[i];
