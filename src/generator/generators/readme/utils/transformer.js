@@ -69,11 +69,15 @@ module.exports = function transformer(content) {
         }
       }
       // 处理import {name,sex} from "./index.js";这种相对路径引入非antd的格式
+      // [{"key":"5283966432807465","source":"./hello.js","imports":["name","age","sex"]}]
+      // 这种情况只能通过这种方式来处理，把它挂载到window[${key}]上
+      // 这里未处理import {A,B} from "C";其中C为第三方类库的情况，这种情况直接挂载到C上面
       if (
         specifiersWithoutDefault[0] &&
         specifiersWithoutDefault[0].type == "ImportSpecifier" &&
         importSource != "antd"
       ) {
+        // components/或者"./"或者"jquery"
         const localeRelativeInput = {
           key: generateRandomKey(),
           source: importSource,
@@ -94,7 +98,6 @@ module.exports = function transformer(content) {
         importPathNode.specifiers[0] &&
         importPathNode.specifiers[0].local &&
         importPathNode.specifiers[0].local.name;
-
       if (specifier) {
         specifiers.push(specifier);
       }
@@ -105,14 +108,14 @@ module.exports = function transformer(content) {
       if (shouldHaveFocus(importSource)) {
         imports.push(importSource);
       }
-      // importPath.remove();
+      importPath.remove();
     },
     /**
      * ExpressionStatemeent
      */
     ExpressionStatement: function(ExpressionPath) {
       const ExpressionPathNode = ExpressionPath.node;
-   
+
       if (
         ExpressionPathNode.expression &&
         ExpressionPathNode.expression.type &&

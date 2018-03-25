@@ -1,4 +1,5 @@
 const webpack = require("@ali/webpackcc/lib/build");
+const nativeWebpack = require("webpack");
 const reactDocs = require("react-docgen");
 const path = require("path");
 const fs = require("fs");
@@ -52,13 +53,15 @@ function getFullPath(array) {
 
  */
 function packJsBundle(jsFile, callback) {
+  // 这里是处理index.test.js内容，我关心的是里面的import {A,B,C} from "c";未导入的组件我并不关系
   fs.readFile(jsFile, "utf8", (err, data) => {
     const id0imports = transform(data);
-    // console.log('组件名称为==='+id0imports.componentName);
+    const localIds = JSON.parse(JSON.stringify(id0imports));
+    delete localIds.inputAst;
+    // console.log("组件名称++++为===" + JSON.stringify(localIds));
     const componentName = id0imports.componentName;
     const relativeExports = id0imports.relativeExports;
     let fullPath = getFullPath(id0imports.imports);
-
     const antdImports = id0imports.antdExports;
     const inputAst = id0imports.inputAst;
     const sourceCode = generator(inputAst, null, data).code;
@@ -68,12 +71,13 @@ function packJsBundle(jsFile, callback) {
       entry = {
         main: require.resolve(indexTestJS)
       };
-    
+
     for (let i = 0, len = fullPath.length; i < len; i++) {
-      const specifier = id0imports.specifiers[i];
+      let specifier = id0imports.specifiers[i];
       if (/^\//.test(fullPath[i])) {
         // 非npm包，相对路径直接expose出去并输出为一个单独文件到output目录
-        entry[`${specifier}`] = fullPath[i];
+        // entry[`${specifier}`] = fullPath[i];
+        // 不需要单独输出一个文件，直接expose-loader出去
         outputFiles.push(specifier);
         rules.push({
           // 在低版本情况下已经是绝对路径，require.resolve即使忽略第二个参数也无所谓
@@ -89,6 +93,28 @@ function packJsBundle(jsFile, callback) {
         });
       } else {
         //  此时是npm包，expose出去不需要添加到entry中
+        //  对于antd这种import {A,B} from "xxx";要暴露到window上的临时做法
+        if (fullPath[i] == "antd") {
+          specifier = "antd";
+        }
+        //第三方类库，查看es目录+require.resolve出来的目录
+        const resolvedLoc = resolve.sync(fullPath[i], {
+          basedir: DEFAULT_WEBPACK_MODULES_PATH
+        });
+        // console.log("resolvedLoc=====>" + resolvedLoc);
+        const esDirLoc = resolvedLoc.split("lib").join("es");
+        // console.log("esDirLoc=====>" + esDirLoc);
+        if (fs.existsSync(esDirLoc) && esDirLoc !== resolvedLoc) {
+          rules.push({
+            test: require.resolve(esDirLoc),
+            use: [
+              {
+                loader: require.resolve("expose-loader"),
+                options: specifier
+              }
+            ]
+          });
+        }
         rules.push({
           test: require.resolve(
             resolve.sync(fullPath[i], {
@@ -104,8 +130,7 @@ function packJsBundle(jsFile, callback) {
         });
       }
     }
-
-    //  console.log('rules=====>'+JSON.stringify(rules));
+    console.log("rules=====>" + JSON.stringify(rules));
     //通过相对路径引入的，比如"./UserSelect""将会被挂载到window.UserSelect中
     for (let i = 0, len = relativeExports.length; i < len; i++) {
       const { key, imports, source } = relativeExports[i];
@@ -145,6 +170,16 @@ function packJsBundle(jsFile, callback) {
       } catch (error) {
         console.log(".silkrc文件不符合JSON...useBabelrc默认设置为false");
       }
+      // 目前只考虑antd这种情况，后续要优化第三方类库
+      const requirePlusLoaders = {
+        antd: "antd"
+      };
+      const concatPlugin = {};
+      // "antdExports":["Button","Alert"]
+      for (let t = 0, len = antdImports.length; t < len; t++) {
+        concatPlugin[`${antdImports[t]}`] = `window.antd.${antdImports[t]}`;
+      }
+
       const webpackConfig = {
         entry,
         disableCSSModules: disableCSSModules,
@@ -153,6 +188,13 @@ function packJsBundle(jsFile, callback) {
         resolve: {
           modules: [DEFAULT_WEBPACK_MODULES_PATH, "node_modules"]
         },
+        enableRequirePlusLoader: true,
+        // 启动该Loader添加require命令
+        requirePlusLoaders,
+        concatPlugin,
+        // concatPlugin添加的内容
+        fromSilki: true,
+        // 来源于siki
         output: {
           path: path.join(ROOT, "./build")
         },
@@ -194,13 +236,23 @@ function packJsBundle(jsFile, callback) {
         },
         module: {
           rules
-        }
+        },
+        plugins: [
+          new nativeWebpack.DefinePlugin({
+            __DEVELOPMENT__: false,
+            __CLIENT__: true,
+            __SERVER__: false,
+            __DEVELOPMENT__: false,
+            __DEVTOOLS__: false
+          })
+        ]
       };
       // extraBabelPlugins和extraBabelPresets只有在useBabelrc为false的情况下使用
       if (!silkrcJSON.useBabelrc) {
         webpackConfig.extraBabelPlugins = silkrcJSON.extraBabelPlugins;
         webpackConfig.extraBabelPresets = silkrcJSON.extraBabelPresets;
       }
+
       program.config = webpackConfig;
 
       // console.log("webpack打包的配置为:" + JSON.stringify(webpackConfig));
