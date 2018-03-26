@@ -3,7 +3,7 @@ const fs = require("fs");
 const table = require("markdown-table");
 const async = require("async");
 // 工具函数
-const prompts = require("./prompts");
+const generatePrompts = require("./generatePrompts");
 // 默认要填写的内容
 const path = require("path");
 const mkdirp = require("mkdirp");
@@ -63,6 +63,8 @@ class AppGenerator extends Generators.Base {
 
   prompting() {
     this.log("当你运行该命令的时候表示你需要发布你的组件到demo站点中,请知悉......");
+    const prevPrompts = this.config;
+    const prompts = generatePrompts(prevPrompts);
     return this.prompt(prompts).then(answers => {
       //如果用户输入的组件名称和默认的不一致，需要设置为默认的组件名称
       this.publish = answers.publish;
@@ -210,7 +212,7 @@ class AppGenerator extends Generators.Base {
             * ${relativeRawCodeDescription}
             */`;
           }
-        
+
           // console.log('准备产生表格数据为===='+JSON.stringify(componentInfoArray));
           const bitTables = MarkdownTable.generateBitMarkdownTable(
             componentInfoArray

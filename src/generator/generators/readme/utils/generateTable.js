@@ -37,7 +37,7 @@ function generateBitMarkdownTable(data) {
       // 默认值
       tables.push([
         attr,
-        !description ? "作者比较懒，请联系作者" : description,
+        !description ? "-" : description,
         type,
         !value ? "-" : JSON.stringify(stripLineBreak(value))
       ]);

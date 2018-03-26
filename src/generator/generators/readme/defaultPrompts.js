@@ -1,5 +1,4 @@
 const utils = require("./utils/all");
-
 module.exports = [
   {
     type: "confirm",
@@ -57,14 +56,12 @@ module.exports = [
     type: "input",
     name: "demoTitle",
     message: "demo标题",
-    default:'基本用法'
+    default: "基本用法"
   },
   {
     type: "input",
     name: "desc",
     message: "demo描述",
-    default:'下面是如何使用组件的代码'
+    default: "下面是如何使用组件的代码"
   }
 ];
-
-// 1.第一次先写yoeman本地文件，然后第二次不用所有都读取一遍
