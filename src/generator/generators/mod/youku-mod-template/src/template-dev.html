@@ -8,13 +8,33 @@
   <meta name="apple-mobile-web-app-title" content="YOOUKU"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <title><%= htmlWebpackPlugin.options.title %></title>  
-  
+  <title><%= htmlWebpackPlugin.options.title %></title>
+  <script charset="utf-8">
+    document.getElementsByTagName("html")[0].style["font-size"] = document.documentElement.clientWidth / 10 + "px";
+  </script>
   <link rel="stylesheet" href="http://g-assets.daily.taobao.net/ykui/lib/1.0.0/reset.css">
+  <script charset="utf-8" src="//g.alicdn.com/hollywood/??hollywood-lib/2.0.22/index.js"></script>
+  <script charset="utf-8" src="//g-assets.daily.taobao.net/hollywood/hollywood-kit/1.0.6/index.js"></script>
   <script src="//g-assets.daily.taobao.net/ykui/lib/1.0.0/react@15.5.4/react.js"></script>
   <script src="//g-assets.daily.taobao.net/ykui/lib/1.0.0/react@15.5.4/react-dom.js"></script>
+  <script src="//g.alicdn.com/ykui/yk-base/1.0.14/index.js"></script>
 </head>
 <body>
+  <style>
+    html,body{
+      width: 100%;
+      height: 100%;
+    }
+    #app {
+      width: 100%;
+      height: 100%;
+      margin-top: 0;
+      margin-left: 0;
+      -webkit-transform: translateX(0);
+      -ms-transform: translateX(0);
+      transform: translateX(0);
+    }
+  </style>
   <div id="app"></div>
 
 </body>
