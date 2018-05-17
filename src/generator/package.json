@@ -34,7 +34,8 @@
   "main": "generators/app/index.js",
   "files": [
     "generators",
-    "utils"
+    "utils",
+    "package.json"
   ],
   "repository": {
     "type": "https",
